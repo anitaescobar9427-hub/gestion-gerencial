@@ -224,13 +224,12 @@ input[type="checkbox"]{accent-color:var(--pri)}
 .area-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
 .area-card{background:var(--card);border:1.5px solid;border-radius:var(--radius);padding:14px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
 .area-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
-.area-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
 .area-icon{font-size:24px;margin-bottom:6px}
 .area-name{font-weight:800;font-size:15px;margin-bottom:4px}
 .area-identity{font-size:11px;color:var(--g400);font-style:italic;margin-bottom:10px;min-height:30px;line-height:1.4}
 .area-stats{display:flex;gap:10px;font-size:11px;color:var(--g500);font-weight:600;margin-bottom:8px}
 .area-stats .chip{background:rgba(107,143,113,.1);padding:3px 8px;border-radius:10px}
-.area-spark{height:32px;width:100%;margin-top:6px}
+.area-spark{height:32px;width:100%;margin-top:6px;pointer-events:none;display:block}
 .area-streak-mini{font-size:11px;font-weight:700}
 /* Tabla stacking */
 .stack-table{width:100%;border-collapse:collapse;font-size:12px}
@@ -1609,18 +1608,18 @@ html+='<div class="area-icon">'+a.icon+'</div>';
 html+='<div class="area-name" style="color:'+a.color+'">'+a.name+'</div>';
 html+='<div class="area-identity">'+(ident?esc(ident.statement):'<em>Define tu identidad →</em>')+'</div>';
 html+='<div class="area-stats"><span class="chip">'+habits.length+' hábitos</span><span class="chip">🔥 '+streak+' días</span></div>';
-html+='<canvas class="area-spark" id="spark-'+a.id+'"></canvas>';
+html+='<div style="position:relative;height:32px;width:100%;margin-top:6px;pointer-events:none"><canvas class="area-spark" id="spark-'+a.id+'"></canvas></div>';
 html+='</div>';
 });
 el.innerHTML=html;
 // dibujar sparklines
-setTimeout(function(){AREAS.forEach(function(a){
+setTimeout(function(){if(typeof Chart==='undefined')return;AREAS.forEach(function(a){try{
 var c=document.getElementById('spark-'+a.id);if(!c)return;
 var habits=D.habits.filter(function(x){return x.area===a.id});
 var data=[];for(var i=13;i>=0;i--){var d=new Date();d.setDate(d.getDate()-i);var iso=d.toISOString().slice(0,10);var log=D.habitLog[iso]||{};var done=0;habits.forEach(function(h){if(log[h.id])done++});data.push(habits.length?(done/habits.length)*100:0)}
 if(c._chart)c._chart.destroy();
-c._chart=new Chart(c,{type:'bar',data:{labels:data.map(function(_,i){return i}),datasets:[{data:data,backgroundColor:a.color,borderRadius:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false,min:0,max:100}}}})
-})},50);
+c._chart=new Chart(c,{type:'bar',data:{labels:data.map(function(_,i){return i}),datasets:[{data:data,backgroundColor:a.color,borderRadius:2}]},options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false,min:0,max:100}}}})
+}catch(e){console.warn('spark',e)}})},100);
 }
 function showAreaDetail(areaId){
 var a=getArea(areaId);if(!a)return;
