@@ -258,6 +258,7 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <div class="nav-tabs">
 <button class="tab-btn active" onclick="showTab('inicio')" data-tab="inicio">🏠 Inicio</button>
 <button class="tab-btn" onclick="showTab('areas')" data-tab="areas">🏢 Áreas</button>
+<button class="tab-btn" onclick="showTab('plan')" data-tab="plan">📋 Plan Diario</button>
 <button class="tab-btn" onclick="showTab('identidad')" data-tab="identidad">🪞 Identidad</button>
 <button class="tab-btn" onclick="showTab('habitos')" data-tab="habitos">🧬 Hábitos</button>
 <button class="tab-btn" onclick="showTab('stacking')" data-tab="stacking">🔗 Stacking</button>
@@ -279,14 +280,18 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <button class="tab-btn" onclick="showTab('revision')" data-tab="revision">📋 Revisión</button>
 </div></div>
 <div id="tab-inicio" class="section active">
-<div id="home-affirmation" class="affirmation" style="display:none"><div class="affirmation-text" id="affirmation-text"></div><div class="affirmation-sub">Cada hábito es un voto por la persona que quieres ser</div></div>
-<div class="card"><div class="card-title">🧬 Cadena de hoy</div><div id="home-chain" class="chain-view"></div></div>
-<div class="card"><div class="card-title">✅ Hábitos del día <span id="home-habit-pct" style="margin-left:auto;font-size:12px;color:var(--g400)"></span></div><div id="home-habits-quick"></div></div>
-<div id="rev-reminder" class="banner" style="display:none"><div><div class="banner-t">⏰ Revisión Semanal</div><div class="banner-s">15 min. La constancia empieza aquí.</div></div><button class="btn-white" onclick="showTab('revision')">Ir →</button></div>
-<div class="card"><div class="card-title">🔥 No Olvidar!!! <button class="btn btn-pri btn-sm ml" onclick="openHomeTaskModal()">+ Tarea a Meta</button></div>
+<div id="home-hero" class="card" style="background:linear-gradient(135deg,var(--priGlow),transparent);border-left:4px solid var(--pri)">
+<div id="home-greeting" style="font-size:18px;font-weight:700"></div>
+<div id="home-affirmation-line" style="font-size:13px;color:var(--g500);margin-top:4px;font-style:italic"></div>
+</div>
+<div class="kpi-grid" id="home-kpis"></div>
+<div class="card"><div class="card-title">📋 Plan de Hoy <span id="home-plan-pct" style="margin-left:auto;font-size:12px;color:var(--g400)"></span></div><div id="home-plan-today"></div></div>
+<div class="card"><div class="card-title">🌅 Plan de Mañana <span id="home-plan-tomorrow-count" style="margin-left:auto;font-size:12px;color:var(--g400)"></span> <button class="btn btn-out btn-sm" onclick="showTab('plan');setTimeout(function(){var d=new Date();d.setDate(d.getDate()+1);document.getElementById('plan-date').value=d.toISOString().slice(0,10);renderDailyPlan()},100)">✏️ Editar</button></div><div id="home-plan-tomorrow"></div></div>
+<div class="card"><div class="card-title">🏢 Resumen por área (últimos 7 días)</div><div id="home-area-summary"></div></div>
+<div class="card"><div class="card-title">🔥 No Olvidar <button class="btn btn-pri btn-sm ml" onclick="openHomeTaskModal()">+ Tarea</button></div>
 <div class="add-row" style="margin-bottom:8px"><input class="inp" id="qt-text" placeholder="Agregar recordatorio…" onkeydown="if(event.key==='Enter')addQuickTask()"><button class="btn btn-pri btn-sm" onclick="addQuickTask()">+</button></div>
-<div id="quick-task-list"></div>
-<div id="home-upcoming-tasks" style="margin-top:10px"></div></div>
+<div id="quick-task-list"></div></div>
+<details style="margin-bottom:14px"><summary style="padding:8px;cursor:pointer;color:var(--g500);font-size:12px;font-weight:600">▼ Ver vistas secundarias (semana, calendario, rutinas, metas)</summary>
 <div class="ov-grid" id="ov-grid"></div>
 <div class="card"><div class="card-title">📅 Semana</div><div id="hw-strip"></div></div>
 <div class="card"><div class="card-title" id="hw-detail-title">📋 Programación del día</div><div id="hw-detail"></div></div>
@@ -294,6 +299,10 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <div class="card"><div class="card-title">🔁 Rutina de hoy</div><div id="home-rutina-hoy"></div></div>
 <div class="card"><div class="card-title">🔴 Vencidas</div><div id="overdue-list"></div></div>
 <div class="card"><div class="card-title">🎯 Metas y proyectos</div><div id="home-goals"></div></div>
+<div id="home-upcoming-tasks"></div>
+<div id="home-habits-quick" style="display:none"></div>
+<div id="home-chain" style="display:none"></div>
+</details>
 <div class="card"><div class="card-title">☁️ Sincronización <span id="sync-indicator" style="font-size:11px;font-weight:500;color:var(--g400);margin-left:auto"></span></div>
 <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
 <button class="btn btn-pri btn-sm" onclick="cloudPush()">⬆️ Subir</button>
@@ -310,6 +319,27 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <div style="font-size:12px;color:var(--g400);margin-bottom:12px">Cada área tiene su identidad, sus hábitos y su racha. Haz clic en una para editar.</div>
 <div id="areas-grid" class="area-grid"></div></div>
 <div id="area-detail" class="card" style="display:none"></div>
+</div>
+<div id="tab-plan" class="section">
+<div class="card"><div class="card-title">📋 Plan Diario
+<input type="date" id="plan-date" class="inp" style="max-width:160px;margin-left:auto" onchange="renderDailyPlan()">
+<button class="btn btn-out btn-sm" onclick="copyYesterdayPlan()">📄 Copiar ayer</button>
+</div>
+<div style="font-size:12px;color:var(--g400);margin-bottom:10px">Planifica tu día: cada actividad vinculada a un área. Marca 🎯 los 3 MIT (Most Important Tasks).</div>
+<div id="plan-mit-summary" style="background:var(--priGlow);padding:10px;border-radius:8px;margin-bottom:10px;font-size:12px"></div>
+<div id="plan-list"></div>
+<div style="margin-top:12px;padding:12px;background:var(--g100);border-radius:8px">
+<div style="font-weight:700;font-size:12px;margin-bottom:8px;color:var(--g600)">+ Nueva actividad</div>
+<div class="row2"><input type="time" class="inp" id="plan-time" placeholder="Hora"><input type="number" class="inp" id="plan-dur" placeholder="Min" min="5" step="5" value="30"></div>
+<input class="inp" id="plan-title" placeholder="¿Qué vas a hacer?" style="margin-top:6px">
+<div class="row2" style="margin-top:6px">
+<select class="inp" id="plan-area"><option value="">— Área —</option></select>
+<select class="inp" id="plan-mit"><option value="0">Secundaria</option><option value="1">🎯 MIT</option></select>
+</div>
+<button class="btn btn-pri btn-sm" style="margin-top:8px;width:100%" onclick="addPlanItem()">+ Agregar al plan</button>
+</div>
+</div>
+<div class="card"><div class="card-title">🧭 Resumen por área (del día)</div><div id="plan-area-summary"></div></div>
 </div>
 <div id="tab-stacking" class="section">
 <div class="card"><div class="card-title">🔗 Habit Stacking — 1ª Ley: Hacerlo Obvio</div>
@@ -344,7 +374,7 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <div class="card"><div class="card-title">📊 Votos por identidad</div><div id="identity-votes"></div></div>
 </div>
 <div id="tab-habitos" class="section">
-<div class="card"><div class="card-title">🧬 Mis Hábitos Atómicos <button class="btn btn-out btn-sm ml" onclick="openRetroModal()">📅 Registrar día pasado</button> <button class="btn btn-pri btn-sm" onclick="openAtomicHabitModal()">+ Hábito</button></div>
+<div class="card"><div class="card-title">🧬 Mis Hábitos Atómicos <button class="btn btn-out btn-sm ml" onclick="toggleHabitGrouping()" id="grp-btn">🏢 Agrupar por área</button> <button class="btn btn-out btn-sm" onclick="openRetroModal()">📅 Día pasado</button> <button class="btn btn-pri btn-sm" onclick="openAtomicHabitModal()">+ Hábito</button></div>
 <div id="atomic-habit-list"></div></div>
 <div class="card"><div class="card-title">🔗 Apilamiento de Hábitos</div>
 <div style="font-size:12px;color:var(--g400);margin-bottom:10px">Después de [hábito actual] haré [hábito nuevo]</div>
@@ -594,7 +624,7 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <div class="modal-btns"><button class="btn btn-pri" onclick="saveGoalTaskModal()">Guardar</button><button class="btn btn-out" onclick="closeModal('gt-modal')">Cancelar</button><button class="btn btn-danger btn-sm" id="gtm-del-btn" style="display:none" onclick="delGoalTaskModal()">🗑️ Eliminar</button></div></div></div>
 <div class="overlay" id="identity-modal"><div class="modal"><div class="modal-title" id="idm-title">Nueva Identidad</div>
 <input type="hidden" id="idm-idx" value="-1">
-<div class="fg"><label>Soy una persona que...</label><input class="inp" id="idm-statement" placeholder="ej: cuida su salud y se ejercita diariamente"></div>
+<div class="fg"><label>Soy...</label><input class="inp" id="idm-statement" placeholder="ej: disciplinada, una líder que decide con datos, alguien que cuida su salud"></div>
 <div class="fg"><label>Área / Unidad de Negocio</label><select class="inp" id="idm-area"><option value="">— Sin área —</option></select></div>
 <div class="fg"><label>Color</label><select class="inp" id="idm-color"><option value="#6B8F71">🟢 Verde</option><option value="#C4704B">🟠 Terracota</option><option value="#D4A853">🟡 Dorado</option><option value="#7BACA3">🔵 Cyan</option><option value="#9B7EC8">🟣 Púrpura</option><option value="#D95B5B">🔴 Rojo</option></select></div>
 <div class="modal-btns"><button class="btn btn-pri" onclick="saveIdentity()">Guardar</button><button class="btn btn-out" onclick="closeModal('identity-modal')">Cancelar</button><button class="btn btn-danger btn-sm" id="idm-del-btn" style="display:none" onclick="delIdentity()">Eliminar</button></div></div></div>
@@ -1390,14 +1420,22 @@ h+='<div class="prog-bar" style="height:6px;background:var(--g200);border-radius
 h+='<div style="font-size:11px;color:var(--g400);margin-top:2px">'+last30+' votos en 30 días · '+habits.length+' hábito'+(habits.length!==1?'s':'')+'</div></div>'});
 el.innerHTML=h}
 // ATOMIC HABITS
+function fillIdentitySelect(areaId){
+var idSel=document.getElementById('ahm-identity');if(!idSel)return;
+var curVal=idSel.value;
+idSel.innerHTML='<option value="">Sin vincular</option>';
+var filtered=D.identities.filter(function(x){return !areaId||x.area===areaId||!x.area});
+filtered.forEach(function(id){var areaLabel=id.area?(getArea(id.area)||{}).icon||'':'';idSel.innerHTML+='<option value="'+id.id+'">'+areaLabel+' '+esc(id.statement)+'</option>'});
+// restaurar valor si sigue en lista
+if(curVal&&filtered.some(function(x){return x.id==curVal}))idSel.value=curVal;
+}
 function openAtomicHabitModal(idx){
 document.getElementById('ahm-idx').value=idx!==undefined?idx:'-1';
-var idSel=document.getElementById('ahm-identity');idSel.innerHTML='<option value="">Sin vincular</option>';
-D.identities.forEach(function(id){idSel.innerHTML+='<option value="'+id.id+'">'+esc(id.statement)+'</option>'});
 var stackSel=document.getElementById('ahm-stack');stackSel.innerHTML='<option value="">No apilar</option>';
 D.habits.forEach(function(h,i){if(idx===undefined||i!==idx)stackSel.innerHTML+='<option value="'+h.id+'">'+esc(h.name)+'</option>'});
 // fill área select
-var ahmArea=document.getElementById('ahm-area');if(ahmArea){ahmArea.innerHTML='<option value="">— Sin área —</option>'+AREAS.map(function(a){return'<option value="'+a.id+'">'+a.icon+' '+a.name+'</option>'}).join('')}
+var ahmArea=document.getElementById('ahm-area');if(ahmArea){ahmArea.innerHTML='<option value="">— Sin área —</option>'+AREAS.map(function(a){return'<option value="'+a.id+'">'+a.icon+' '+a.name+'</option>'}).join('');ahmArea.onchange=function(){fillIdentitySelect(this.value)}}
+fillIdentitySelect(idx!==undefined&&D.habits[idx]?D.habits[idx].area:'');
 if(idx!==undefined&&D.habits[idx]){var h=D.habits[idx];
 if(ahmArea)ahmArea.value=h.area||'';
 document.getElementById('ahm-name').value=h.name;document.getElementById('ahm-target').value=h.target||7;
@@ -1428,14 +1466,11 @@ else{obj.id=Date.now();obj.done=false;D.habits.push(obj)}
 save();closeModal('atomic-habit-modal');renderAll();toast('🧬 Hábito guardado')}
 function delAtomicHabit(){var idx=+document.getElementById('ahm-idx').value;
 if(idx>=0){D.habits.splice(idx,1);save();closeModal('atomic-habit-modal');renderAll();toast('Hábito eliminado')}}
-function renderAtomicHabits(){
-var el=document.getElementById('atomic-habit-list');if(!el)return;
-if(!D.habits.length){el.innerHTML='<div class="empty">Agrega tu primer hábito atómico</div>';return}
-var h='';D.habits.forEach(function(hab,i){
+function habitCardHTML(hab,i){
 var idObj=hab.identityId?D.identities.find(function(x){return x.id===hab.identityId}):null;
 var streak=calcStreak(hab.id);
 var scoreClass=hab.score==='+'?'score-plus':hab.score==='-'?'score-minus':'score-neutral';
-h+='<div class="habit-card"><div class="habit-header">';
+var h='<div class="habit-card"><div class="habit-header">';
 h+='<div class="habit-check'+(hab.done?' done':'')+'" onclick="event.stopPropagation();toggleHabit('+hab.id+')">'+( hab.done?'✓':'')+'</div>';
 h+='<div style="flex:1;cursor:pointer" onclick="openAtomicHabitModal('+i+')">';
 h+='<div class="habit-name">'+esc(hab.name)+'</div>';
@@ -1452,7 +1487,43 @@ if(hab.response)h+='<div class="law-item"><div class="law-icon">🎯</div><div><
 if(hab.reward)h+='<div class="law-item"><div class="law-icon">🏆</div><div><div class="law-label">Recompensa</div><div class="law-text">'+esc(hab.reward)+'</div></div></div>';
 if(hab.twoMin)h+='<div class="two-min"><div class="two-min-label">2️⃣ Versión de 2 minutos</div>'+esc(hab.twoMin)+'</div>';
 h+='</div></details>'}
-h+='</div>'});el.innerHTML=h}
+h+='</div>';return h;
+}
+function saveAreaCollapse(id,collapsed){if(!D._collapsed)D._collapsed={};D._collapsed[id]=collapsed;localStorage.setItem('areaCollapsed',JSON.stringify(D._collapsed))}
+function expandAllAreas(open){D._collapsed={};if(!open){AREAS.forEach(function(a){D._collapsed[a.id]=true});D._collapsed['__noarea']=true}localStorage.setItem('areaCollapsed',JSON.stringify(D._collapsed));renderAtomicHabits()}
+function toggleHabitGrouping(){D._grouped=!D._grouped;localStorage.setItem('habitGrouping',D._grouped?'1':'0');var btn=document.getElementById('grp-btn');if(btn)btn.textContent=D._grouped?'📋 Ver lista plana':'🏢 Agrupar por área';renderAtomicHabits()}
+function renderAtomicHabits(){
+var el=document.getElementById('atomic-habit-list');if(!el)return;
+if(D._grouped===undefined)D._grouped=localStorage.getItem('habitGrouping')==='1';
+var btn=document.getElementById('grp-btn');if(btn)btn.textContent=D._grouped?'📋 Ver lista plana':'🏢 Agrupar por área';
+if(!D.habits.length){el.innerHTML='<div class="empty">Agrega tu primer hábito atómico</div>';return}
+if(!D._grouped){var h='';D.habits.forEach(function(hab,i){h+=habitCardHTML(hab,i)});el.innerHTML=h;return}
+// modo agrupado por ÁREA
+var groups={};var noArea=[];
+D.habits.forEach(function(hab,i){if(hab.area){if(!groups[hab.area])groups[hab.area]=[];groups[hab.area].push({hab:hab,i:i})}else{noArea.push({hab:hab,i:i})}});
+var out='';
+if(!D._collapsed)D._collapsed=JSON.parse(localStorage.getItem('areaCollapsed')||'{}');
+AREAS.forEach(function(a){var arr=groups[a.id];if(!arr||!arr.length)return;
+var done=arr.filter(function(x){return x.hab.done}).length;
+var ident=D.identities.find(function(x){return x.area===a.id});
+var isOpen=!D._collapsed[a.id];
+out+='<details '+(isOpen?'open':'')+' style="margin-bottom:10px" ontoggle="saveAreaCollapse(\''+a.id+'\',!this.open)">';
+out+='<summary style="background:'+a.color+'15;border-left:4px solid '+a.color+';padding:10px 12px;border-radius:8px;cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px">';
+out+='<div style="flex:1"><div style="font-weight:800;color:'+a.color+';font-size:14px">'+a.icon+' '+a.name+'</div>';
+if(ident)out+='<div style="font-size:11px;color:'+a.color+';font-style:italic;margin-top:2px">🪞 '+esc(ident.statement)+'</div>';
+out+='<div style="font-size:11px;color:var(--g400);margin-top:2px">'+done+'/'+arr.length+' hoy · '+arr.length+' hábitos</div></div>';
+out+='<div style="font-size:16px;color:'+a.color+';margin-left:auto">▾</div></summary>';
+out+='<div style="margin-top:8px">';
+arr.forEach(function(x){out+=habitCardHTML(x.hab,x.i)});
+out+='</div></details>'});
+if(noArea.length){var naOpen=!D._collapsed['__noarea'];
+out+='<details '+(naOpen?'open':'')+' style="margin-bottom:10px" ontoggle="saveAreaCollapse(\'__noarea\',!this.open)">';
+out+='<summary style="background:var(--g200);padding:10px 12px;border-radius:8px;color:var(--g500);cursor:pointer;list-style:none;display:flex;align-items:center"><div style="flex:1"><b>Sin área asignada</b> ('+noArea.length+')</div><div>▾</div></summary>';
+out+='<div style="margin-top:8px">';noArea.forEach(function(x){out+=habitCardHTML(x.hab,x.i)});out+='</div></details>'}
+// controles expandir/contraer todo
+out='<div style="display:flex;gap:8px;margin-bottom:10px"><button class="btn btn-out btn-sm" onclick="expandAllAreas(true)">▾ Expandir todo</button><button class="btn btn-out btn-sm" onclick="expandAllAreas(false)">▸ Contraer todo</button></div>'+out;
+el.innerHTML=out;
+}
 function renderHabitStacking(){
 var el=document.getElementById('habit-stacking');if(!el)return;
 var chains=[];var used={};
@@ -1588,7 +1659,8 @@ var AREAS=[
 {id:'colfarming',name:'Colfarming',icon:'🌱',color:'#22C55E'},
 {id:'cientoonce',name:'Ciento Once',icon:'🏢',color:'#8B5CF6'},
 {id:'inmoglobal',name:'Inmoglobal',icon:'🏠',color:'#EF4444'},
-{id:'cafelatribuna',name:'Café La Tribuna',icon:'☕',color:'#D97706'}
+{id:'cafelatribuna',name:'Café La Tribuna',icon:'☕',color:'#D97706'},
+{id:'cabalgas',name:'Cabalgas',icon:'🐴',color:'#0EA5E9'}
 ];
 function getArea(id){return AREAS.find(function(a){return a.id===id})||null}
 function ensureAreaFields(){
@@ -1648,7 +1720,7 @@ html+='</div></div>';
 el.innerHTML=html;el.style.display='block';
 }
 function openIdentityModalForArea(areaId){openIdentityModal();setTimeout(function(){var sel=document.getElementById('idm-area');if(sel)sel.value=areaId},50)}
-function openAtomicHabitModalForArea(areaId){openAtomicHabitModal();setTimeout(function(){var sel=document.getElementById('ahm-area');if(sel)sel.value=areaId},50)}
+function openAtomicHabitModalForArea(areaId){openAtomicHabitModal();setTimeout(function(){var sel=document.getElementById('ahm-area');if(sel){sel.value=areaId;fillIdentitySelect(areaId)}},50)}
 // ============ STACKING & FRICTION ============
 function renderStackTable(){
 var el=document.getElementById('stack-table');if(!el)return;
@@ -1691,6 +1763,164 @@ if(_auditChart)_auditChart.destroy();
 _auditChart=new Chart(cv,{type:'line',data:{labels:weeks,datasets:datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:10},boxWidth:10}}},scales:{y:{min:0,max:10}}}});
 }
 // ============ THEME TOGGLE ============
+// ============ HOME EJECUTIVO ============
+function renderHomeExec(){
+var greet=document.getElementById('home-greeting');if(!greet)return;
+var h=new Date().getHours();var saludo=h<12?'Buenos días':h<19?'Buenas tardes':'Buenas noches';
+greet.textContent=saludo+', Ana 🌱';
+// afirmación: una identidad aleatoria
+var affEl=document.getElementById('home-affirmation-line');
+if(D.identities&&D.identities.length){var rnd=D.identities[new Date().getDate()%D.identities.length];affEl.textContent='"Soy '+rnd.statement+'"'}
+else affEl.textContent='Define tu primera identidad en la pestaña 🏢 Áreas';
+// KPIs
+var today=todayStr();
+var habitsToday=D.habits||[];var doneToday=habitsToday.filter(function(x){return x.done}).length;
+var habitPct=habitsToday.length?Math.round(doneToday/habitsToday.length*100):0;
+// racha global: días consecutivos con al menos 1 hábito hecho
+var streakG=0;var d=new Date();for(var i=0;i<365;i++){var iso=d.toISOString().slice(0,10);var log=D.habitLog&&D.habitLog[iso]||{};var any=Object.values(log).some(function(v){return v});if(any)streakG++;else if(i>0)break;d.setDate(d.getDate()-1)}
+// plan hoy
+var plan=(D.dailyPlan&&D.dailyPlan[today])||[];var planDone=plan.filter(function(p){return p.done}).length;
+var mits=plan.filter(function(p){return p.mit});var mitsDone=mits.filter(function(p){return p.done}).length;
+// audit última semana
+var wk=getIsoWeek();var a=D.weeklyAudit&&D.weeklyAudit[wk]||{};var vals=Object.values(a);var audAvg=vals.length?(vals.reduce(function(x,y){return x+y},0)/vals.length).toFixed(1):'—';
+// tareas pendientes totales
+var pendCount=countAllPending();
+// render KPIs
+var kpis=[
+{l:'Racha',v:streakG+'d',c:'var(--pri)',i:'🔥'},
+{l:'Hábitos hoy',v:doneToday+'/'+habitsToday.length,c:habitPct>=70?'var(--green)':habitPct>=40?'var(--amber)':'var(--red)',i:'✅'},
+{l:'MIT hoy',v:mitsDone+'/'+mits.length,c:'var(--pri3)',i:'🎯'},
+{l:'Plan hoy',v:planDone+'/'+plan.length,c:'var(--cyan)',i:'📋'},
+{l:'Audit semana',v:audAvg+'/10',c:'var(--purple)',i:'📈'},
+{l:'Pendientes',v:pendCount,c:pendCount>10?'var(--red)':'var(--g500)',i:'📌'}
+];
+var kel=document.getElementById('home-kpis');
+kel.innerHTML=kpis.map(function(k){return'<div class="kpi-card" style="border-top:3px solid '+k.c+'"><div style="font-size:18px">'+k.i+'</div><div class="kpi-val" style="color:'+k.c+'">'+k.v+'</div><div class="kpi-name">'+k.l+'</div></div>'}).join('');
+// plan de hoy detallado
+var pel=document.getElementById('home-plan-today');
+var now=new Date();var curTime=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+plan.sort(function(x,y){return(x.time||'99:99').localeCompare(y.time||'99:99')});
+if(!plan.length){pel.innerHTML='<div class="empty" style="font-size:12px">Sin plan hoy. <a onclick="showTab(\'plan\')" style="color:var(--pri);cursor:pointer;font-weight:600">Crear plan →</a></div>'}
+else{var ph='';var nextMarked=false;plan.forEach(function(p){var ar=getArea(p.area);var isPast=p.time&&p.time<curTime&&!p.done;var isNext=!p.done&&p.time&&p.time>=curTime&&!nextMarked;if(isNext)nextMarked=true;
+// calcular hora fin si hay duración
+var endTime='';if(p.time&&p.dur){var parts=p.time.split(':');var t=new Date();t.setHours(+parts[0],+parts[1]+(+p.dur),0,0);endTime=String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0')}
+ph+='<div style="display:flex;gap:10px;padding:10px;border-radius:8px;margin-bottom:4px;border-left:4px solid '+(ar?ar.color:'#CFC6B5')+';background:'+(isNext?'var(--priGlow)':'var(--g100)')+';'+(isPast?'opacity:.65':'')+'">';
+// columna hora
+ph+='<div style="min-width:68px;text-align:center;padding:4px 0;border-right:1px solid var(--g200)">';
+if(p.time){ph+='<div style="font-size:14px;font-weight:800;color:'+(ar?ar.color:'var(--g600)')+'">'+p.time+'</div>';if(endTime)ph+='<div style="font-size:10px;color:var(--g400);margin-top:1px">→ '+endTime+'</div>';if(p.dur)ph+='<div style="font-size:9px;color:var(--g400);margin-top:1px">'+p.dur+' min</div>'}
+else ph+='<div style="font-size:11px;color:var(--g400)">sin hora</div>';
+ph+='</div>';
+// contenido
+ph+='<div style="flex:1;'+(p.done?'opacity:.5;text-decoration:line-through':'')+';display:flex;align-items:center;gap:8px">';
+ph+='<input type="checkbox" '+(p.done?'checked':'')+' onchange="togglePlanItem(\''+today+'\',\''+p.id+'\')" style="width:18px;height:18px;cursor:pointer;flex-shrink:0">';
+ph+='<div style="flex:1"><div style="font-weight:600;font-size:13px">'+(p.mit?'🎯 ':'')+esc(p.title)+(isNext?' <span style="background:var(--pri);color:#fff;font-size:9px;padding:2px 6px;border-radius:8px;margin-left:4px;font-weight:700">SIGUIENTE</span>':'')+(isPast?' <span style="color:var(--red);font-size:10px">⏰ vencida</span>':'')+'</div>';
+if(ar)ph+='<div style="font-size:11px;color:'+ar.color+';font-weight:600;margin-top:2px">'+ar.icon+' '+ar.name+'</div>';
+ph+='</div></div></div>'});pel.innerHTML=ph}
+document.getElementById('home-plan-pct').textContent=plan.length?planDone+'/'+plan.length+' ('+Math.round(planDone/plan.length*100)+'%)':'';
+// plan de mañana
+var tmr=new Date();tmr.setDate(tmr.getDate()+1);var tmrIso=tmr.toISOString().slice(0,10);
+var planT=((D.dailyPlan||{})[tmrIso]||[]).slice().sort(function(x,y){return(x.time||'99:99').localeCompare(y.time||'99:99')});
+var tel=document.getElementById('home-plan-tomorrow');
+if(tel){
+if(!planT.length){tel.innerHTML='<div class="empty" style="font-size:12px">Sin plan para mañana. <a onclick="showTab(\'plan\');setTimeout(function(){document.getElementById(\'plan-date\').value=\''+tmrIso+'\';renderDailyPlan()},100)" style="color:var(--pri);cursor:pointer;font-weight:600">Planear mañana →</a></div>'}
+else{var th='';planT.forEach(function(p){var ar=getArea(p.area);
+var endTime='';if(p.time&&p.dur){var parts=p.time.split(':');var t=new Date();t.setHours(+parts[0],+parts[1]+(+p.dur),0,0);endTime=String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0')}
+th+='<div style="display:flex;gap:10px;padding:10px;border-radius:8px;margin-bottom:4px;border-left:4px solid '+(ar?ar.color:'#CFC6B5')+';background:var(--g100)">';
+th+='<div style="min-width:68px;text-align:center;padding:4px 0;border-right:1px solid var(--g200)">';
+if(p.time){th+='<div style="font-size:14px;font-weight:800;color:'+(ar?ar.color:'var(--g600)')+'">'+p.time+'</div>';if(endTime)th+='<div style="font-size:10px;color:var(--g400);margin-top:1px">→ '+endTime+'</div>';if(p.dur)th+='<div style="font-size:9px;color:var(--g400);margin-top:1px">'+p.dur+' min</div>'}
+else th+='<div style="font-size:11px;color:var(--g400)">sin hora</div>';
+th+='</div>';
+th+='<div style="flex:1;display:flex;align-items:center"><div style="flex:1"><div style="font-weight:600;font-size:13px">'+(p.mit?'🎯 ':'')+esc(p.title)+'</div>';
+if(ar)th+='<div style="font-size:11px;color:'+ar.color+';font-weight:600;margin-top:2px">'+ar.icon+' '+ar.name+'</div>';
+th+='</div></div></div>'});tel.innerHTML=th}
+}
+var tctEl=document.getElementById('home-plan-tomorrow-count');
+if(tctEl){var mitsT=planT.filter(function(p){return p.mit}).length;tctEl.textContent=planT.length?(planT.length+' actividad'+(planT.length===1?'':'es')+(mitsT?' · '+mitsT+' MIT':'')):''}
+// pendientes urgentes: overdue del sistema existente + MITs vencidas
+var pnd=document.getElementById('home-pending');
+var pendingItems=[];
+plan.forEach(function(p){if(!p.done&&p.time&&p.time<curTime&&p.mit)pendingItems.push({t:'🎯 '+p.title,s:'MIT vencida · '+(getArea(p.area)||{}).name||'',c:'var(--red)'})});
+// tareas de metas (primero vencidas, luego en progreso, luego pendientes)
+var gTasks=getGoalPendingTasks();
+gTasks.sort(function(x,y){if(x.overdue&&!y.overdue)return -1;if(!x.overdue&&y.overdue)return 1;if(x.status==='en progreso'&&y.status!=='en progreso')return -1;return 0});
+gTasks.slice(0,10).forEach(function(t){pendingItems.push({t:esc(t.title),s:'🎯 '+esc(t.goal)+' · '+t.biz.i+' '+t.biz.n+(t.date?' · '+(t.overdue?'⏰ vencida '+t.date:t.date):''),c:t.overdue?'var(--red)':t.status==='en progreso'?'var(--amber)':'var(--cyan)'})});
+// tareas quickTask
+(D.quickTasks||[]).slice(0,5).forEach(function(q){if(!q.done)pendingItems.push({t:esc(q.text||q.name||'Tarea'),s:'Recordatorio',c:'var(--amber)'})});
+if(!pendingItems.length)pnd.innerHTML='<div style="text-align:center;color:var(--g400);font-size:12px;padding:8px">✨ Sin urgencias. Todo bajo control.</div>';
+else pnd.innerHTML=pendingItems.slice(0,15).map(function(x){return'<div style="display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--g200)"><span style="color:'+x.c+';font-size:16px">●</span><div style="flex:1"><div style="font-size:13px;font-weight:500">'+x.t+'</div><div style="font-size:10px;color:var(--g400)">'+x.s+'</div></div></div>'}).join('')+(pendingItems.length>15?'<div style="text-align:center;font-size:11px;color:var(--g400);margin-top:6px">+ '+(pendingItems.length-15)+' más</div>':'');
+// resumen áreas últimos 7 días
+var asum=document.getElementById('home-area-summary');var ahtml='';
+AREAS.forEach(function(a){var habits=D.habits.filter(function(x){return x.area===a.id});if(!habits.length)return;
+var done7=0,tot7=0;for(var i=0;i<7;i++){var dd=new Date();dd.setDate(dd.getDate()-i);var iso=dd.toISOString().slice(0,10);var log=D.habitLog&&D.habitLog[iso]||{};habits.forEach(function(h){tot7++;if(log[h.id])done7++})}
+var pct=tot7?Math.round(done7/tot7*100):0;
+ahtml+='<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--g200)"><span style="color:'+a.color+';font-weight:700;min-width:130px;font-size:12px">'+a.icon+' '+a.name+'</span><div style="flex:1;background:var(--g200);border-radius:10px;height:8px;overflow:hidden"><div style="width:'+pct+'%;height:100%;background:'+a.color+';border-radius:10px"></div></div><span style="font-size:11px;color:var(--g500);font-weight:600;min-width:36px;text-align:right">'+pct+'%</span></div>'});
+asum.innerHTML=ahtml||'<div class="empty" style="font-size:12px">Asigna hábitos a áreas para ver el resumen</div>';
+}
+function countAllPending(){var n=0;(D.quickTasks||[]).forEach(function(q){if(!q.done)n++});
+['personal','bufalera','colfarming','quesera','vaqueria','admin','inmoglobal','cabalgatas'].forEach(function(b){var biz=D[b];if(!biz)return;(biz.tasks||[]).forEach(function(t){if(t.status!=='completado')n++});(biz.goals||[]).forEach(function(g){if(g.status==='completado')return;(g.tasks||[]).forEach(function(t){if(t.status!=='completado')n++})});});
+var today=todayStr();var plan=(D.dailyPlan&&D.dailyPlan[today])||[];plan.forEach(function(p){if(!p.done)n++});
+return n;
+}
+function getGoalPendingTasks(){var out=[];var bizNames={personal:{n:'Personal',i:'👤',c:'#10B981'},bufalera:{n:'Bufalera',i:'🐃',c:'#6366F1'},colfarming:{n:'Colfarming',i:'🌱',c:'#22C55E'},quesera:{n:'Quesería',i:'🧀',c:'#EAB308'},vaqueria:{n:'Vaquería',i:'🏇',c:'#8B5CF6'},admin:{n:'Ciento Once',i:'🏢',c:'#8B5CF6'},inmoglobal:{n:'Inmoglobal',i:'🏠',c:'#EF4444'},cabalgatas:{n:'Café La Tribuna',i:'☕',c:'#D97706'}};
+Object.keys(bizNames).forEach(function(b){var biz=D[b];if(!biz)return;(biz.goals||[]).forEach(function(g){if(g.status==='completado')return;(g.tasks||[]).forEach(function(t){if(t.status==='completado')return;var overdue=t.date&&t.date<todayStr();out.push({title:t.text||t.name||'Tarea',goal:g.name,biz:bizNames[b],date:t.date,overdue:overdue,status:t.status})})});});return out}
+// ============ PLAN DIARIO ============
+function ensurePlanFields(){if(!D.dailyPlan)D.dailyPlan={}}
+function renderDailyPlan(){
+ensurePlanFields();
+var dInp=document.getElementById('plan-date');if(!dInp)return;
+if(!dInp.value)dInp.value=todayStr();
+var date=dInp.value;
+// llenar select de áreas
+var areaSel=document.getElementById('plan-area');if(areaSel&&areaSel.options.length<=1){areaSel.innerHTML='<option value="">— Área —</option>'+AREAS.map(function(a){return'<option value="'+a.id+'">'+a.icon+' '+a.name+'</option>'}).join('')}
+var plan=D.dailyPlan[date]||[];
+// ordenar por hora
+plan.sort(function(a,b){return(a.time||'99:99').localeCompare(b.time||'99:99')});
+// resumen MIT
+var mits=plan.filter(function(p){return p.mit});var mitDone=mits.filter(function(p){return p.done}).length;
+var sumEl=document.getElementById('plan-mit-summary');
+if(mits.length){sumEl.innerHTML='🎯 <b>'+mitDone+'/'+mits.length+' MIT completadas</b> · '+plan.filter(function(p){return p.done}).length+'/'+plan.length+' totales'}
+else sumEl.innerHTML='<em style="color:var(--g400)">Define tus 3 MIT (Most Important Tasks) marcando las más importantes como 🎯</em>';
+// lista
+var el=document.getElementById('plan-list');
+if(!plan.length){el.innerHTML='<div class="empty">Sin actividades planificadas. Agrega abajo ↓</div>'}
+else{var html='';plan.forEach(function(p){var a=getArea(p.area);
+html+='<div class="t-item" style="border-left:4px solid '+(a?a.color:'#CFC6B5')+'">';
+html+='<input type="checkbox" '+(p.done?'checked':'')+' onchange="togglePlanItem(\''+date+'\',\''+p.id+'\')" style="width:18px;height:18px;cursor:pointer">';
+html+='<div style="flex:1;'+(p.done?'opacity:.5;text-decoration:line-through':'')+'">';
+html+='<div style="font-weight:600;font-size:13px">'+(p.mit?'🎯 ':'')+esc(p.title)+'</div>';
+html+='<div style="font-size:11px;color:var(--g400);margin-top:2px">'+(p.time?'🕐 '+p.time+' ':'')+(p.dur?'· '+p.dur+' min ':'')+(a?'· <span style="color:'+a.color+';font-weight:600">'+a.icon+' '+a.name+'</span>':'')+'</div>';
+html+='</div>';
+html+='<button class="t-del" onclick="delPlanItem(\''+date+'\',\''+p.id+'\')">🗑️</button>';
+html+='</div>'});el.innerHTML=html}
+// resumen por área
+var byArea={};plan.forEach(function(p){if(!p.area)return;if(!byArea[p.area])byArea[p.area]={total:0,done:0,min:0};byArea[p.area].total++;if(p.done)byArea[p.area].done++;byArea[p.area].min+=(+p.dur||0)});
+var asumEl=document.getElementById('plan-area-summary');var ahtml='';
+AREAS.forEach(function(a){var s=byArea[a.id];if(!s)return;ahtml+='<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--g200)"><span style="color:'+a.color+';font-weight:700;min-width:140px">'+a.icon+' '+a.name+'</span><span style="font-size:12px;color:var(--g500)">'+s.done+'/'+s.total+' · '+s.min+' min</span></div>'});
+asumEl.innerHTML=ahtml||'<div class="empty" style="font-size:12px">Sin actividades asignadas a áreas todavía</div>';
+}
+function addPlanItem(){
+ensurePlanFields();
+var date=document.getElementById('plan-date').value;if(!date)return toast('Elige fecha');
+var title=document.getElementById('plan-title').value.trim();if(!title)return toast('Escribe la actividad');
+var time=document.getElementById('plan-time').value;
+var dur=+document.getElementById('plan-dur').value||0;
+var area=document.getElementById('plan-area').value||null;
+var mit=document.getElementById('plan-mit').value==='1';
+if(!D.dailyPlan[date])D.dailyPlan[date]=[];
+D.dailyPlan[date].push({id:'p'+Date.now(),title:title,time:time,dur:dur,area:area,mit:mit,done:false});
+document.getElementById('plan-title').value='';document.getElementById('plan-time').value='';
+save();renderDailyPlan();
+}
+function togglePlanItem(date,id){var arr=D.dailyPlan[date]||[];var it=arr.find(function(x){return x.id===id});if(it){it.done=!it.done;save();renderDailyPlan()}}
+function delPlanItem(date,id){D.dailyPlan[date]=(D.dailyPlan[date]||[]).filter(function(x){return x.id!==id});save();renderDailyPlan()}
+function copyYesterdayPlan(){
+var date=document.getElementById('plan-date').value;if(!date)return;
+var d=new Date(date);d.setDate(d.getDate()-1);var y=d.toISOString().slice(0,10);
+var src=D.dailyPlan[y]||[];if(!src.length)return toast('No hay plan en '+y);
+if(!D.dailyPlan[date])D.dailyPlan[date]=[];
+src.forEach(function(p){D.dailyPlan[date].push({id:'p'+Date.now()+Math.random(),title:p.title,time:p.time,dur:p.dur,area:p.area,mit:p.mit,done:false})});
+save();renderDailyPlan();toast('📄 Copiado de '+y);
+}
 // ============ RETRO (cargar días pasados) ============
 function openRetroModal(){var inp=document.getElementById('retro-date');inp.value=todayStr();renderRetroHabits();openModal('retro-modal')}
 function renderRetroHabits(){
@@ -1716,7 +1946,7 @@ function loadTheme(){var t=localStorage.getItem('theme')||'light';document.docum
 
 // Hook renderAll
 var _origRenderAll=renderAll;
-renderAll=function(){_origRenderAll();try{ensureAreaFields();renderAreasGrid();renderStackTable();renderFriction();renderWeeklyAudit()}catch(e){console.warn(e)}};
+renderAll=function(){_origRenderAll();try{ensureAreaFields();ensurePlanFields();renderAreasGrid();renderStackTable();renderFriction();renderWeeklyAudit();renderDailyPlan();renderHomeExec()}catch(e){console.warn(e)}};
 
 // INIT
 document.addEventListener('DOMContentLoaded',function(){loadTheme();load();renderAll();
