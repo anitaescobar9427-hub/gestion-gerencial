@@ -643,6 +643,13 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <div class="fg"><label>🏆 4a Ley — Recompensa (Hacerlo Satisfactorio)</label><textarea class="inp" id="ahm-reward" rows="2" placeholder="Después de completar me premio con..."></textarea></div>
 <div class="fg"><label>🔗 Apilar después de</label><select class="inp" id="ahm-stack"><option value="">No apilar</option></select></div>
 <div class="modal-btns"><button class="btn btn-pri" onclick="saveAtomicHabit()">Guardar</button><button class="btn btn-out" onclick="closeModal('atomic-habit-modal')">Cancelar</button><button class="btn btn-danger btn-sm" id="ahm-del-btn" style="display:none" onclick="delAtomicHabit()">Eliminar</button></div></div></div>
+<div class="overlay" id="plan-edit-modal"><div class="modal"><div class="modal-title">✏️ Editar actividad</div>
+<input type="hidden" id="pem-date"><input type="hidden" id="pem-id">
+<div class="fg"><label>Actividad</label><input class="inp" id="pem-title"></div>
+<div class="row2"><div class="fg"><label>Hora</label><input type="time" class="inp" id="pem-time"></div><div class="fg"><label>Duración (min)</label><input type="number" class="inp" id="pem-dur" min="5" step="5"></div></div>
+<div class="fg"><label>Área</label><select class="inp" id="pem-area"><option value="">— Área —</option></select></div>
+<div class="fg"><label>Prioridad</label><select class="inp" id="pem-mit"><option value="0">Secundaria</option><option value="1">🎯 MIT</option></select></div>
+<div class="modal-btns"><button class="btn btn-pri" onclick="savePlanEdit()">Guardar</button><button class="btn btn-out" onclick="closeModal('plan-edit-modal')">Cancelar</button><button class="btn btn-out" style="color:var(--red)" onclick="delPlanFromModal()">🗑️ Eliminar</button></div></div></div>
 <div class="overlay" id="retro-modal"><div class="modal"><div class="modal-title">📅 Registrar día pasado</div>
 <div class="fg"><label>Fecha</label><input type="date" class="inp" id="retro-date" onchange="renderRetroHabits()"></div>
 <div style="font-size:11px;color:var(--g400);margin-bottom:8px">Marca los hábitos que SÍ hiciste ese día:</div>
@@ -707,7 +714,8 @@ D.lastDate=today}
 function load(){
 try{D=JSON.parse(localStorage.getItem(STORE))}catch(e){D=null}
 if(!D){D=DEF();['gm-v4','gm-v3','gm-v2'].forEach(k=>{try{const old=JSON.parse(localStorage.getItem(k));if(old)Object.keys(old).forEach(key=>{if(old[key]!==undefined&&old[key]!==null)D[key]=old[key]})}catch(e){}});}
-ensureFields();doDayReset();saveLocal()}
+ensureFields();doDayReset();migrateIdentityStatements();saveLocal()}
+function migrateIdentityStatements(){if(!D.identities)return;var changed=false;D.identities.forEach(function(id){if(id.statement){var orig=id.statement;var s=orig.trim();s=s.replace(/^(soy\s+)?(una\s+persona\s+que|un\s+persona\s+que|alguien\s+que|la\s+persona\s+que|el\s+que|quien)\s+/i,'');if(s!==orig){id.statement=s.trim();changed=true}}});if(changed)saveLocal()}
 // ═══ SUPABASE CLOUD SYNC ═══
 function scheduleCloudSync(){if(_syncTimer)clearTimeout(_syncTimer);_syncTimer=setTimeout(cloudPush,1500)}
 function setSyncIndicator(txt,color){var el=document.getElementById('sync-indicator');if(el){el.textContent=txt;el.style.color=color||'var(--g400)'}}
@@ -727,7 +735,7 @@ supaClient.from('dashboard_data').select('data,updated_at,version').eq('id','mai
 if(res.error){syncStatus('Error: '+res.error.message);setSyncIndicator('Error','var(--red)');return}
 if(!res.data||!res.data.data||Object.keys(res.data.data).length===0){syncStatus('Nube vacia, sube primero');return}
 D=res.data.data;D._cloudVersion=res.data.version||1;_lastCloudTs=res.data.updated_at;
-ensureFields();doDayReset();saveLocal();renderAll();
+ensureFields();doDayReset();migrateIdentityStatements();saveLocal();renderAll();
 setSyncIndicator('Descargado '+new Date().toLocaleTimeString(),'var(--green)');
 syncStatus('Descargado '+new Date().toLocaleTimeString(),true);toast('☁️ Datos descargados')
 }).catch(function(e){syncStatus('Error: '+e.message);setSyncIndicator('Sin conexion','var(--g400)')})}
@@ -742,7 +750,7 @@ var cloudTs=res.data.updated_at?new Date(res.data.updated_at).getTime():0;
 var localTs=D._updatedAt?new Date(D._updatedAt).getTime():0;
 if(cloudTs>localTs){
 D=res.data.data;D._cloudVersion=res.data.version||1;_lastCloudTs=res.data.updated_at;
-ensureFields();doDayReset();saveLocal();renderAll();
+ensureFields();doDayReset();migrateIdentityStatements();saveLocal();renderAll();
 setSyncIndicator('Sincronizado','var(--green)');toast('☁️ Datos actualizados desde la nube')
 }else{setSyncIndicator('Local actualizado','var(--green)');cloudPush()}
 }).catch(function(e){setSyncIndicator('Modo offline','var(--g400)')})}
@@ -1396,12 +1404,12 @@ if(idx>=0){var id=D.identities[idx].id;D.habits.forEach(function(h){if(h.identit
 D.identities.splice(idx,1);save();closeModal('identity-modal');renderAll();toast('Identidad eliminada')}}
 function renderIdentities(){
 var el=document.getElementById('identity-list');if(!el)return;
-if(!D.identities.length){el.innerHTML='<div class="empty">Define quién quieres ser. Ej: "Soy una persona que cuida su salud"</div>';return}
+if(!D.identities.length){el.innerHTML='<div class="empty">Define quién quieres ser. Ej: "Soy disciplinada" o "Soy alguien que cuida su salud"</div>';return}
 var h='';D.identities.forEach(function(id,i){
 var habits=D.habits.filter(function(hab){return hab.identityId===id.id});
 var votes=0;var log=D.habitLog||{};Object.keys(log).forEach(function(d){habits.forEach(function(hab){if(log[d][hab.id])votes++})});
 h+='<div class="id-card" style="border-left-color:'+id.color+'" onclick="openIdentityModal('+i+')">';
-h+='<div class="id-statement">Soy una persona que '+esc(id.statement)+'</div>';
+h+='<div class="id-statement">Soy '+esc(id.statement)+'</div>';
 h+='<div class="id-votes">🗳️ '+votes+' voto'+(votes!==1?'s':'')+' acumulados</div>';
 if(habits.length){h+='<div class="id-habits">';habits.forEach(function(hab){h+='<span class="id-habit-chip">'+esc(hab.name)+'</span>'});h+='</div>'}
 else{h+='<div style="font-size:11px;color:var(--g400);margin-top:4px">Sin hábitos vinculados aún</div>'}
@@ -1623,7 +1631,7 @@ if(!el||!txt)return;
 if(!D.identities.length){el.style.display='none';return}
 el.style.display='block';
 var id=D.identities[Math.floor(Math.random()*D.identities.length)];
-txt.textContent='Soy una persona que '+id.statement;el.style.background=id.color||'var(--pri)'}
+txt.textContent='Soy '+id.statement;el.style.background=id.color||'var(--pri)'}
 function renderHomeHabitsQuick(){
 var el=document.getElementById('home-habits-quick');if(!el)return;
 var pctEl=document.getElementById('home-habit-pct');
@@ -1667,6 +1675,14 @@ function ensureAreaFields(){
 if(!D.weeklyAudit)D.weeklyAudit={};
 D.habits.forEach(function(h){if(h.area===undefined)h.area=null});
 D.identities.forEach(function(i){if(i.area===undefined)i.area=null});
+// migración: limpiar prefijos viejos "una persona que", "alguien que" etc. de statements existentes
+// para que se rendericen bien con el nuevo prefijo "Soy "
+if(!D._identStmtMigrated){
+D.identities.forEach(function(id){if(id.statement){var s=id.statement.trim();
+// quitar prefijos comunes
+s=s.replace(/^(soy\s+)?(una\s+persona\s+que|un\s+persona\s+que|alguien\s+que|la\s+persona\s+que|el\s+que|quien)\s+/i,'');
+id.statement=s.trim()}});
+D._identStmtMigrated=true;save()}
 }
 function getIsoWeek(d){d=d?new Date(d):new Date();var t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));var day=t.getUTCDay()||7;t.setUTCDate(t.getUTCDate()+4-day);var yStart=new Date(Date.UTC(t.getUTCFullYear(),0,1));var wk=Math.ceil(((t-yStart)/86400000+1)/7);return t.getUTCFullYear()+'-W'+String(wk).padStart(2,'0')}
 function renderAreasGrid(){
@@ -1890,6 +1906,7 @@ html+='<div style="flex:1;'+(p.done?'opacity:.5;text-decoration:line-through':''
 html+='<div style="font-weight:600;font-size:13px">'+(p.mit?'🎯 ':'')+esc(p.title)+'</div>';
 html+='<div style="font-size:11px;color:var(--g400);margin-top:2px">'+(p.time?'🕐 '+p.time+' ':'')+(p.dur?'· '+p.dur+' min ':'')+(a?'· <span style="color:'+a.color+';font-weight:600">'+a.icon+' '+a.name+'</span>':'')+'</div>';
 html+='</div>';
+html+='<button class="t-del" style="background:transparent;border:none;cursor:pointer;font-size:16px;padding:4px 6px" title="Editar" onclick="openPlanEdit(\''+date+'\',\''+p.id+'\')">✏️</button>';
 html+='<button class="t-del" onclick="delPlanItem(\''+date+'\',\''+p.id+'\')">🗑️</button>';
 html+='</div>'});el.innerHTML=html}
 // resumen por área
@@ -1911,8 +1928,22 @@ D.dailyPlan[date].push({id:'p'+Date.now(),title:title,time:time,dur:dur,area:are
 document.getElementById('plan-title').value='';document.getElementById('plan-time').value='';
 save();renderDailyPlan();
 }
-function togglePlanItem(date,id){var arr=D.dailyPlan[date]||[];var it=arr.find(function(x){return x.id===id});if(it){it.done=!it.done;save();renderDailyPlan()}}
-function delPlanItem(date,id){D.dailyPlan[date]=(D.dailyPlan[date]||[]).filter(function(x){return x.id!==id});save();renderDailyPlan()}
+function togglePlanItem(date,id){var arr=D.dailyPlan[date]||[];var it=arr.find(function(x){return x.id===id});if(it){it.done=!it.done;save();renderDailyPlan();try{renderHomeExec()}catch(e){}}}
+function delPlanItem(date,id){D.dailyPlan[date]=(D.dailyPlan[date]||[]).filter(function(x){return x.id!==id});save();renderDailyPlan();try{renderHomeExec()}catch(e){}}
+function openPlanEdit(date,id){var it=(D.dailyPlan[date]||[]).find(function(x){return x.id===id});if(!it)return;
+document.getElementById('pem-date').value=date;
+document.getElementById('pem-id').value=id;
+document.getElementById('pem-title').value=it.title||'';
+document.getElementById('pem-time').value=it.time||'';
+document.getElementById('pem-dur').value=it.dur||30;
+var aSel=document.getElementById('pem-area');aSel.innerHTML='<option value="">— Área —</option>'+AREAS.map(function(a){return'<option value="'+a.id+'">'+a.icon+' '+a.name+'</option>'}).join('');aSel.value=it.area||'';
+document.getElementById('pem-mit').value=it.mit?'1':'0';
+openModal('plan-edit-modal')}
+function savePlanEdit(){var date=document.getElementById('pem-date').value;var id=document.getElementById('pem-id').value;var arr=D.dailyPlan[date]||[];var it=arr.find(function(x){return x.id===id});if(!it)return;
+var title=document.getElementById('pem-title').value.trim();if(!title)return toast('Escribe la actividad');
+it.title=title;it.time=document.getElementById('pem-time').value;it.dur=+document.getElementById('pem-dur').value||0;it.area=document.getElementById('pem-area').value||null;it.mit=document.getElementById('pem-mit').value==='1';
+save();closeModal('plan-edit-modal');renderDailyPlan();try{renderHomeExec()}catch(e){}toast('✏️ Actualizada')}
+function delPlanFromModal(){var date=document.getElementById('pem-date').value;var id=document.getElementById('pem-id').value;if(!confirm('¿Eliminar esta actividad?'))return;delPlanItem(date,id);closeModal('plan-edit-modal')}
 function copyYesterdayPlan(){
 var date=document.getElementById('plan-date').value;if(!date)return;
 var d=new Date(date);d.setDate(d.getDate()-1);var y=d.toISOString().slice(0,10);
