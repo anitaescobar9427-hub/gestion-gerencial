@@ -272,7 +272,7 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <button class="tab-btn" onclick="showTab('colfarming')" data-tab="colfarming">🌱 Colfarming</button>
 <button class="tab-btn" onclick="showTab('bufalera')" data-tab="bufalera">🐃 Bufalera</button>
 <button class="tab-btn" onclick="showTab('quesera')" data-tab="quesera">🧀 Quesera</button>
-<button class="tab-btn" onclick="showTab('vaqueria')" data-tab="vaqueria">🏇 Vaquería</button>
+<button class="tab-btn" onclick="showTab('vaqueria')" data-tab="vaqueria">🪢 Lazo Millonario</button>
 <button class="tab-btn" onclick="showTab('admin')" data-tab="admin">🏢 Admin 111</button>
 <button class="tab-btn" onclick="showTab('inmoglobal')" data-tab="inmoglobal">🏠 Inmoglobal</button>
 <button class="tab-btn" onclick="showTab('cabalgatas')" data-tab="cabalgatas">🐴 Cabalgatas</button>
@@ -442,12 +442,90 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <div class="card"><div class="card-title">📝 Notas</div><textarea class="inp" id="notes-quesera" rows="5" placeholder="Notas…" oninput="saveNote('quesera',this.value)"></textarea></div>
 </div>
 <div id="tab-vaqueria" class="section">
+<!-- COUNTDOWN -->
+<div class="card" style="text-align:center;background:linear-gradient(135deg,var(--priGlow),transparent);border-left:4px solid #F59E0B">
+<div style="font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--g400)" id="lm-countdown-label">CONFIGURA LAS FECHAS</div>
+<div style="font-size:clamp(2.5rem,10vw,4rem);font-weight:900;color:#F59E0B;line-height:1" id="lm-countdown-num">?</div>
+<div style="font-size:11px;letter-spacing:.1em;color:var(--g400)">DÍAS RESTANTES</div>
+<div style="display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap">
+<input type="date" class="inp" id="lm-start" style="width:auto;font-size:11px" onchange="saveLmDates()" title="Inicio del plan">
+<input type="date" class="inp" id="lm-comp" style="width:auto;font-size:11px" onchange="saveLmDates()" title="Fecha competencia">
+</div>
+</div>
+<!-- SESIÓN DE LAZOS -->
+<div class="card">
+<div class="card-title">🪢 Sesión de Lazos <button class="btn btn-out btn-sm ml" onclick="resetLmSession()">🔄 Nueva sesión</button></div>
+<!-- Foco del entreno -->
+<div style="margin-bottom:10px">
+<div style="font-size:11px;font-weight:700;color:var(--g400);margin-bottom:6px">🎯 FOCO DEL ENTRENO</div>
+<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px" id="lm-foco-tags"></div>
+<input class="inp" id="lm-foco" placeholder="¿En qué te enfocas hoy?" style="font-size:12px">
+</div>
+<!-- Grid 10 lazos -->
+<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:10px" id="lm-lazos-grid"></div>
+<!-- Resumen sesión -->
+<div style="display:flex;gap:8px;margin-bottom:10px" id="lm-session-summary">
+<div style="flex:1;text-align:center;padding:8px;background:var(--g100);border-radius:8px"><div style="font-size:20px;font-weight:900;color:#22C55E" id="lm-ss-ef">0</div><div style="font-size:10px;color:var(--g400)">Efectivos</div></div>
+<div style="flex:1;text-align:center;padding:8px;background:var(--g100);border-radius:8px"><div style="font-size:20px;font-weight:900;color:#EF4444" id="lm-ss-fa">0</div><div style="font-size:10px;color:var(--g400)">Fallidos</div></div>
+<div style="flex:1;text-align:center;padding:8px;background:var(--g100);border-radius:8px"><div style="font-size:20px;font-weight:900;color:var(--g400)" id="lm-ss-nd">10</div><div style="font-size:10px;color:var(--g400)">Pendientes</div></div>
+</div>
+<!-- Detalle lazo activo -->
+<div id="lm-lazo-detail" style="background:var(--g100);border-radius:8px;padding:12px;margin-bottom:10px">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+<span style="font-weight:900;font-size:15px" id="lm-ld-title">LAZO 1</span>
+<div style="margin-left:auto;display:flex;gap:4px">
+<button class="btn btn-out btn-sm" style="color:#22C55E;border-color:#22C55E" onclick="setLmStatus('efectivo')">✓ Efectivo</button>
+<button class="btn btn-out btn-sm" style="color:#EF4444;border-color:#EF4444" onclick="setLmStatus('fallido')">✗ Fallido</button>
+</div>
+</div>
+<!-- Categorías error -->
+<div id="lm-error-cats" style="display:none;margin-bottom:8px">
+<div style="font-size:10px;font-weight:700;color:var(--g400);margin-bottom:4px">¿CUÁL FUE EL ERROR?</div>
+<div style="display:flex;flex-wrap:wrap;gap:4px" id="lm-cats-wrap"></div>
+</div>
+<textarea class="inp" id="lm-lazo-notes" rows="2" placeholder="Observaciones de este lazo…" style="font-size:12px"></textarea>
+<div style="display:flex;gap:6px;margin-top:6px">
+<button class="btn btn-pri btn-sm" onclick="saveLmLazo()">Guardar lazo →</button>
+<button class="btn btn-out btn-sm" onclick="clearLmLazo()">Limpiar</button>
+</div>
+</div>
+<button class="btn btn-pri" style="width:100%" onclick="saveLmSession()">💾 Guardar sesión completa</button>
+</div>
+<!-- REFLEXIÓN POST-ENTRENO -->
+<div class="card">
+<div class="card-title">📝 Reflexión post-entreno</div>
+<div style="margin-bottom:8px"><div style="font-size:10px;font-weight:700;color:#F59E0B;margin-bottom:4px">1 · PRESENCIA — ¿Cuántos lazos con total presencia?</div><textarea class="inp" id="lm-ref1" rows="2" placeholder="Ej: 8 lazos con presencia. En los otros 2 apareció el miedo pero lo manejé…" style="font-size:12px"></textarea></div>
+<div style="margin-bottom:8px"><div style="font-size:10px;font-weight:700;color:#EF4444;margin-bottom:4px">2 · OVERTHINKING — ¿Cuándo apareció el "¿y si…?" y cómo lo manejaste?</div><textarea class="inp" id="lm-ref2" rows="2" placeholder="Ej: En el lazo 6 empecé a pensar en la competencia. Usé STOP…" style="font-size:12px"></textarea></div>
+<div style="margin-bottom:8px"><div style="font-size:10px;font-weight:700;color:#22C55E;margin-bottom:4px">3 · SENSACIÓN — ¿Qué sentiste cuando ejecutaste bien?</div><textarea class="inp" id="lm-ref3" rows="2" placeholder="Ej: Calma en los hombros, timing fluido, sin tensión…" style="font-size:12px"></textarea></div>
+<button class="btn btn-pri btn-sm" onclick="saveLmReflexion()">💾 Guardar reflexión</button>
+</div>
+<!-- ERRORES RECURRENTES -->
+<div class="card" id="lm-error-analysis-card" style="display:none">
+<div class="card-title">📊 Errores recurrentes</div>
+<div id="lm-error-analysis"></div>
+</div>
+<!-- TÉCNICA STOP -->
+<details style="margin-bottom:10px"><summary class="card-title" style="cursor:pointer;padding:12px;background:var(--card);border-radius:var(--radius);border:1px solid var(--g200)">🧠 Técnica STOP — abrir referencia</summary>
+<div class="card" style="margin-top:4px;border-left:4px solid #EF4444">
+<div style="display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--g200)"><span style="font-weight:900;color:#EF4444;font-size:18px">1</span><span>Di mentalmente: <b>STOP</b> — interrumpe el pensamiento</span></div>
+<div style="display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--g200)"><span style="font-weight:900;color:#EF4444;font-size:18px">2</span><span>Pregunta: <b>¿Qué controlo AHORA?</b> → Solo el siguiente lazo</span></div>
+<div style="display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--g200)"><span style="font-weight:900;color:#EF4444;font-size:18px">3</span><span>Toca tu <b>ancla física</b> + respiración 4-7-8</span></div>
+<div style="display:flex;gap:10px;padding:6px 0"><span style="font-weight:900;color:#EF4444;font-size:18px">4</span><span>Vuelve a tirar con <b>presencia total</b></span></div>
+<div style="margin-top:10px;padding:10px;background:var(--g100);border-radius:8px;font-style:italic;font-size:12px;color:var(--g500)">Si fallas un lazo: no te critiques. Di "<b style="color:var(--text)">Siguiente.</b>" Y pasa al próximo. Eso es exactamente lo que harás en Medellín.</div>
+</div>
+</details>
+<!-- HISTORIAL DE SESIONES -->
+<div class="card">
+<div class="card-title">📖 Historial de sesiones</div>
+<div id="lm-sessions-hist" style="max-height:400px;overflow-y:auto"><em style="font-size:12px;color:var(--g400)">Sin sesiones guardadas aún.</em></div>
+</div>
+<!-- METAS Y TAREAS ORIGINALES (colapsable) -->
+<details style="margin-bottom:10px"><summary style="padding:8px;cursor:pointer;color:var(--g500);font-size:12px;font-weight:600">▼ Metas, KPIs y tareas</summary>
 <div class="card"><div class="card-title">🎯 Metas / Proyectos <button class="btn btn-out btn-sm ml" onclick="openGoalModal('vaqueria')">+ Meta</button></div><div id="goals-vaqueria"></div></div>
 <div class="card"><div class="card-title">📊 KPIs <button class="btn btn-out btn-sm ml" onclick="openKPIModal('vaqueria')">+ KPI</button></div><div id="kpis-vaqueria" class="kpi-grid"></div></div>
 <div class="card"><div class="card-title">📋 Tareas <button class="btn btn-out btn-sm ml" onclick="openTaskModal('vaqueria')">+ Tarea</button></div><div id="tasks-vaqueria"></div></div>
-<div class="card"><div class="card-title">🔁 Rutinas <button class="btn btn-out btn-sm ml" onclick="openRutModal('vaqueria')">+ Rutina</button></div><div id="rut-biz-vaqueria"></div></div>
-<div class="card"><div class="card-title">📅 Actividades <button class="btn btn-out btn-sm ml" onclick="openSchedModal('vaqueria')">+ Actividad</button></div><div id="biz-sched-vaqueria"></div></div>
 <div class="card"><div class="card-title">📝 Notas</div><textarea class="inp" id="notes-vaqueria" rows="5" placeholder="Notas…" oninput="saveNote('vaqueria',this.value)"></textarea></div>
+</details>
 </div>
 <div id="tab-admin" class="section">
 <div class="card"><div class="card-title">🎯 Metas / Proyectos <button class="btn btn-out btn-sm ml" onclick="openGoalModal('admin')">+ Meta</button></div><div id="goals-admin"></div></div>
@@ -594,7 +672,7 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <div class="overlay" id="sch-modal"><div class="modal"><div class="modal-title" id="schm-title">Nueva actividad</div>
 <input type="hidden" id="sm-id">
 <div class="fg"><label>Título</label><input class="inp" id="sm-title" placeholder="ej: Reunión"></div>
-<div class="fg"><label>Línea</label><select class="inp" id="sm-biz"><option value="personal">👤 Personal</option><option value="colfarming">🌱 Colfarming</option><option value="bufalera">🐃 Bufalera</option><option value="quesera">🧀 Quesera</option><option value="vaqueria">🏇 Vaquería</option><option value="admin">🏢 Admin 111</option><option value="inmoglobal">🏠 Inmoglobal</option><option value="cabalgatas">🐴 Cabalgatas Sta Mónica</option></select></div>
+<div class="fg"><label>Línea</label><select class="inp" id="sm-biz"><option value="personal">👤 Personal</option><option value="colfarming">🌱 Colfarming</option><option value="bufalera">🐃 Bufalera</option><option value="quesera">🧀 Quesera</option><option value="vaqueria">🪢 Lazo Millonario</option><option value="admin">🏢 Admin 111</option><option value="inmoglobal">🏠 Inmoglobal</option><option value="cabalgatas">🐴 Cabalgatas Sta Mónica</option></select></div>
 <div class="row2"><div class="fg"><label>Fecha</label><input class="inp" id="sm-date" type="date"></div><div class="fg"><label>Hora</label><input class="inp" id="sm-time" type="time"></div></div>
 <div class="row2"><div class="fg"><label>Prioridad</label><select class="inp" id="sm-pri"><option value="alta">🔴 Alta</option><option value="media" selected>🟡 Media</option><option value="baja">🟢 Baja</option></select></div>
 <div class="fg"><label>Estado</label><select class="inp" id="sm-status"><option value="pendiente">⏳ Pendiente</option><option value="en progreso">🔄 En progreso</option><option value="completado">✅ Completado</option></select></div></div>
@@ -627,7 +705,7 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <input type="hidden" id="gtm-biz"><input type="hidden" id="gtm-gi" value="-1"><input type="hidden" id="gtm-ti" value="-1">
 <div class="fg"><label>Descripción</label><input class="inp" id="gtm-text" placeholder="Descripción de la tarea…"></div>
 <div class="row2"><div class="fg"><label>Fecha límite</label><input class="inp" id="gtm-date" type="date"></div><div class="fg"><label>Urgencia</label><select class="inp" id="gtm-pri"><option value="alta">🔴 Alta</option><option value="media" selected>🟡 Media</option><option value="baja">🟢 Baja</option></select></div></div>
-<div class="row2"><div class="fg"><label>Estado</label><select class="inp" id="gtm-status"><option value="pendiente">⏳ Pendiente</option><option value="en progreso">🔄 En progreso</option><option value="completado">✅ Completado</option></select></div><div class="fg"><label>Línea</label><select class="inp" id="gtm-biz-sel" onchange="document.getElementById('gtm-biz').value=this.value;populateGoalSelect(this.value)"><option value="personal">👤 Personal</option><option value="colfarming">🌱 Colfarming</option><option value="bufalera">🐃 Bufalera</option><option value="quesera">🧀 Quesera</option><option value="vaqueria">🏇 Vaquería</option><option value="admin">🏢 Admin 111</option><option value="inmoglobal">🏠 Inmoglobal</option><option value="cabalgatas">🐴 Cabalgatas</option></select></div></div>
+<div class="row2"><div class="fg"><label>Estado</label><select class="inp" id="gtm-status"><option value="pendiente">⏳ Pendiente</option><option value="en progreso">🔄 En progreso</option><option value="completado">✅ Completado</option></select></div><div class="fg"><label>Línea</label><select class="inp" id="gtm-biz-sel" onchange="document.getElementById('gtm-biz').value=this.value;populateGoalSelect(this.value)"><option value="personal">👤 Personal</option><option value="colfarming">🌱 Colfarming</option><option value="bufalera">🐃 Bufalera</option><option value="quesera">🧀 Quesera</option><option value="vaqueria">🪢 Lazo Millonario</option><option value="admin">🏢 Admin 111</option><option value="inmoglobal">🏠 Inmoglobal</option><option value="cabalgatas">🐴 Cabalgatas</option></select></div></div>
 <div class="fg"><label>Proyecto / Meta</label><select class="inp" id="gtm-goal-sel"></select></div>
 <div class="modal-btns"><button class="btn btn-pri" onclick="saveGoalTaskModal()">Guardar</button><button class="btn btn-out" onclick="closeModal('gt-modal')">Cancelar</button><button class="btn btn-danger btn-sm" id="gtm-del-btn" style="display:none" onclick="delGoalTaskModal()">🗑️ Eliminar</button></div></div></div>
 <div class="overlay" id="identity-modal"><div class="modal"><div class="modal-title" id="idm-title">Nueva Identidad</div>
@@ -672,7 +750,7 @@ var supaClient=null;
 var _syncTimer=null,_syncing=false,_lastCloudTs=null;
 try{supaClient=window.supabase.createClient(SUPA_URL,SUPA_KEY)}catch(e){console.warn('Supabase no disponible, modo offline')}
 const BIZ=['personal','colfarming','bufalera','quesera','vaqueria','admin','inmoglobal','cabalgatas'];
-const BI={personal:{icon:'👤',label:'Personal',c:'#f39c12'},colfarming:{icon:'🌱',label:'Colfarming',c:'#34d399'},bufalera:{icon:'🐃',label:'Bufalera',c:'#60a5fa'},quesera:{icon:'🧀',label:'Quesera',c:'#fbbf24'},vaqueria:{icon:'🏇',label:'Vaquería',c:'#9b59b6'},admin:{icon:'🏢',label:'Admin 111',c:'#e74c3c'},inmoglobal:{icon:'🏠',label:'Inmoglobal',c:'#0984e3'},cabalgatas:{icon:'🐴',label:'Cabalgatas Sta Mónica',c:'#E76F51'}};
+const BI={personal:{icon:'👤',label:'Personal',c:'#f39c12'},colfarming:{icon:'🌱',label:'Colfarming',c:'#34d399'},bufalera:{icon:'🐃',label:'Bufalera',c:'#60a5fa'},quesera:{icon:'🧀',label:'Quesera',c:'#fbbf24'},vaqueria:{icon:'🪢',label:'Lazo Millonario',c:'#F59E0B'},admin:{icon:'🏢',label:'Admin 111',c:'#e74c3c'},inmoglobal:{icon:'🏠',label:'Inmoglobal',c:'#0984e3'},cabalgatas:{icon:'🐴',label:'Cabalgatas Sta Mónica',c:'#E76F51'}};
 const DNAMES=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
 const DFULL=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
 const SN={'pendiente':'⏳','en progreso':'🔄','completado':'✅','cancelado':'❌'};
@@ -1907,8 +1985,139 @@ function countAllPending(){var n=0;(D.quickTasks||[]).forEach(function(q){if(!q.
 var today=todayStr();var plan=(D.dailyPlan&&D.dailyPlan[today])||[];plan.forEach(function(p){if(!p.done)n++});
 return n;
 }
-function getGoalPendingTasks(){var out=[];var bizNames={personal:{n:'Personal',i:'👤',c:'#10B981'},bufalera:{n:'Bufalera',i:'🐃',c:'#6366F1'},colfarming:{n:'Colfarming',i:'🌱',c:'#22C55E'},quesera:{n:'Quesería',i:'🧀',c:'#EAB308'},vaqueria:{n:'Vaquería',i:'🏇',c:'#8B5CF6'},admin:{n:'Ciento Once',i:'🏢',c:'#8B5CF6'},inmoglobal:{n:'Inmoglobal',i:'🏠',c:'#EF4444'},cabalgatas:{n:'Café La Tribuna',i:'☕',c:'#D97706'}};
+function getGoalPendingTasks(){var out=[];var bizNames={personal:{n:'Personal',i:'👤',c:'#10B981'},bufalera:{n:'Bufalera',i:'🐃',c:'#6366F1'},colfarming:{n:'Colfarming',i:'🌱',c:'#22C55E'},quesera:{n:'Quesería',i:'🧀',c:'#EAB308'},vaqueria:{n:'Lazo Millonario',i:'🪢',c:'#F59E0B'},admin:{n:'Ciento Once',i:'🏢',c:'#8B5CF6'},inmoglobal:{n:'Inmoglobal',i:'🏠',c:'#EF4444'},cabalgatas:{n:'Café La Tribuna',i:'☕',c:'#D97706'}};
 Object.keys(bizNames).forEach(function(b){var biz=D[b];if(!biz)return;(biz.goals||[]).forEach(function(g){if(g.status==='completado')return;(g.tasks||[]).forEach(function(t){if(t.status==='completado')return;var overdue=t.date&&t.date<todayStr();out.push({title:t.text||t.name||'Tarea',goal:g.name,biz:bizNames[b],date:t.date,overdue:overdue,status:t.status})})});});return out}
+// ============ LAZO MILLONARIO ============
+var _lmLazos=Array.from({length:10},function(){return{status:null,cats:[],notes:''}});
+var _lmActive=0;
+var LM_CATS=[
+{id:'timing',label:'⏱ Timing'},{id:'apertura',label:'⭕ Apertura'},{id:'velocidad',label:'💨 Velocidad'},
+{id:'posicion',label:'🐎 Posición'},{id:'mental',label:'🧠 Mental'},{id:'distancia',label:'📏 Distancia'},
+{id:'soltada',label:'🤚 Soltada'},{id:'otro',label:'+ Otro'}
+];
+var LM_FOCOS=['⏱ Timing','⭕ Apertura del lazo','🧠 Presencia mental','💨 Velocidad y ritmo','🐎 Posición en el caballo','📏 Distancia al animal','🔁 Consistencia'];
+function ensureLmData(){if(!D.lazoMillonario)D.lazoMillonario={sessions:[],reflexiones:[],compDate:'',startDate:todayStr(),ancla:'sombrero'}}
+function renderLazoMillonario(){
+ensureLmData();
+// foco tags
+var ftEl=document.getElementById('lm-foco-tags');
+if(ftEl){ftEl.innerHTML=LM_FOCOS.map(function(f){return'<button class="btn btn-out btn-sm" style="font-size:10px;padding:3px 8px" onclick="document.getElementById(\'lm-foco\').value=\''+f+'\';this.style.background=\'var(--pri)\';this.style.color=\'#fff\'">'+f+'</button>'}).join('')}
+// countdown
+var lm=D.lazoMillonario;
+var sInp=document.getElementById('lm-start');var cInp=document.getElementById('lm-comp');
+if(sInp&&lm.startDate)sInp.value=lm.startDate;
+if(cInp&&lm.compDate)cInp.value=lm.compDate;
+var clbl=document.getElementById('lm-countdown-label');var cnum=document.getElementById('lm-countdown-num');
+if(lm.compDate){var now=new Date();var comp=new Date(lm.compDate+'T12:00:00');var diff=Math.ceil((comp-now)/86400000);
+if(diff>0){clbl.textContent='DÍAS PARA EL LAZO MILLONARIO';cnum.textContent=diff}
+else if(diff===0){clbl.textContent='¡HOY ES EL DÍA!';cnum.textContent='🏆'}
+else{clbl.textContent='COMPETENCIA FINALIZADA';cnum.textContent='★'}}
+// render lazos grid + detail
+renderLmGrid();renderLmSessions();renderLmErrorAnalysis();
+}
+function saveLmDates(){ensureLmData();
+D.lazoMillonario.startDate=document.getElementById('lm-start').value;
+D.lazoMillonario.compDate=document.getElementById('lm-comp').value;
+save();renderLazoMillonario();toast('📅 Fechas guardadas')}
+function renderLmGrid(){
+var grid=document.getElementById('lm-lazos-grid');if(!grid)return;
+grid.innerHTML='';
+_lmLazos.forEach(function(l,i){
+var bg=l.status==='efectivo'?'rgba(34,197,94,.15)':l.status==='fallido'?'rgba(239,68,68,.12)':'var(--g100)';
+var border=l.status==='efectivo'?'#22C55E':l.status==='fallido'?'#EF4444':i===_lmActive?'var(--pri)':'var(--g300)';
+var color=l.status==='efectivo'?'#22C55E':l.status==='fallido'?'#EF4444':i===_lmActive?'var(--pri)':'var(--g400)';
+var html='<div onclick="selectLmLazo('+i+')" style="text-align:center;padding:8px 4px;border-radius:8px;cursor:pointer;border:2px solid '+border+';background:'+bg+';transition:all .15s'+(i===_lmActive?';box-shadow:0 0 0 3px rgba(107,143,113,.2)':'')+'"><div style="font-size:16px;font-weight:900;color:'+color+'">'+(i+1)+'</div><div style="font-size:9px;color:'+color+'">'+(l.status==='efectivo'?'✓ OK':l.status==='fallido'?'✗ FALLO':'·····')+'</div></div>';
+grid.innerHTML+=html});
+// summary
+var ef=_lmLazos.filter(function(l){return l.status==='efectivo'}).length;
+var fa=_lmLazos.filter(function(l){return l.status==='fallido'}).length;
+var nd=_lmLazos.filter(function(l){return!l.status}).length;
+document.getElementById('lm-ss-ef').textContent=ef;
+document.getElementById('lm-ss-fa').textContent=fa;
+document.getElementById('lm-ss-nd').textContent=nd;
+// detail panel
+var l=_lmLazos[_lmActive];
+document.getElementById('lm-ld-title').textContent='LAZO '+(_lmActive+1);
+document.getElementById('lm-lazo-notes').value=l.notes;
+// error cats
+var catsWrap=document.getElementById('lm-cats-wrap');
+var ecDiv=document.getElementById('lm-error-cats');
+ecDiv.style.display=l.status==='fallido'?'block':'none';
+catsWrap.innerHTML=LM_CATS.map(function(c){var sel=l.cats.indexOf(c.id)>-1;
+return'<button class="btn btn-out btn-sm" style="font-size:10px;padding:3px 8px;'+(sel?'background:#EF4444;color:#fff;border-color:#EF4444':'')+'" onclick="toggleLmCat(\''+c.id+'\')">'+c.label+'</button>'}).join('');
+}
+function selectLmLazo(i){_lmActive=i;renderLmGrid()}
+function setLmStatus(s){_lmLazos[_lmActive].status=_lmLazos[_lmActive].status===s?null:s;if(_lmLazos[_lmActive].status!=='fallido')_lmLazos[_lmActive].cats=[];renderLmGrid()}
+function toggleLmCat(catId){var cats=_lmLazos[_lmActive].cats;var idx=cats.indexOf(catId);if(idx>-1)cats.splice(idx,1);else cats.push(catId);renderLmGrid()}
+function saveLmLazo(){_lmLazos[_lmActive].notes=document.getElementById('lm-lazo-notes').value;if(_lmActive<9)_lmActive++;renderLmGrid();toast('✓ Lazo '+_lmActive+' guardado')}
+function clearLmLazo(){_lmLazos[_lmActive]={status:null,cats:[],notes:''};renderLmGrid()}
+function resetLmSession(){if(!confirm('¿Nueva sesión? Los lazos actuales sin guardar se perderán.'))return;_lmLazos=Array.from({length:10},function(){return{status:null,cats:[],notes:''}});_lmActive=0;renderLmGrid()}
+function saveLmSession(){ensureLmData();
+var foco=document.getElementById('lm-foco').value.trim();
+var ef=_lmLazos.filter(function(l){return l.status==='efectivo'}).length;
+var fa=_lmLazos.filter(function(l){return l.status==='fallido'}).length;
+D.lazoMillonario.sessions.unshift({date:todayStr(),lazos:JSON.parse(JSON.stringify(_lmLazos)),efectivos:ef,fallidos:fa,foco:foco});
+if(D.lazoMillonario.sessions.length>60)D.lazoMillonario.sessions.pop();
+save();renderLmSessions();renderLmErrorAnalysis();
+toast('💾 Sesión: '+ef+' efectivos, '+fa+' fallidos');
+_lmLazos=Array.from({length:10},function(){return{status:null,cats:[],notes:''}});_lmActive=0;
+document.getElementById('lm-foco').value='';renderLmGrid()}
+function saveLmReflexion(){ensureLmData();
+var r1=document.getElementById('lm-ref1').value.trim();
+var r2=document.getElementById('lm-ref2').value.trim();
+var r3=document.getElementById('lm-ref3').value.trim();
+if(!r1&&!r2&&!r3)return toast('Escribe al menos una reflexión');
+D.lazoMillonario.reflexiones.unshift({date:todayStr(),r1:r1,r2:r2,r3:r3});
+if(D.lazoMillonario.reflexiones.length>60)D.lazoMillonario.reflexiones.pop();
+save();['lm-ref1','lm-ref2','lm-ref3'].forEach(function(id){document.getElementById(id).value=''});
+renderLmSessions();toast('📝 Reflexión guardada')}
+function renderLmSessions(){ensureLmData();
+var el=document.getElementById('lm-sessions-hist');if(!el)return;
+var sess=D.lazoMillonario.sessions||[];
+var refs=D.lazoMillonario.reflexiones||[];
+if(!sess.length&&!refs.length){el.innerHTML='<em style="font-size:12px;color:var(--g400)">Sin sesiones guardadas aún.</em>';return}
+var catLabels={timing:'⏱ Timing',apertura:'⭕ Apertura',velocidad:'💨 Velocidad',posicion:'🐎 Posición',mental:'🧠 Mental',distancia:'📏 Distancia',soltada:'🤚 Soltada',otro:'+ Otro'};
+var h='';sess.slice(0,15).forEach(function(s,si){
+var dots=(s.lazos||[]).map(function(l){var c=l.status==='efectivo'?'#22C55E':l.status==='fallido'?'#EF4444':'var(--g300)';return'<span style="color:'+c+';font-size:10px">●</span>'}).join(' ');
+var allCats=[];(s.lazos||[]).forEach(function(l){(l.cats||[]).forEach(function(c){if(allCats.indexOf(c)<0)allCats.push(c)})});
+var catsHtml=allCats.map(function(c){return'<span style="font-size:9px;padding:2px 6px;border-radius:4px;background:rgba(239,68,68,.1);color:#EF4444;border:1px solid rgba(239,68,68,.2)">'+(catLabels[c]||c)+'</span>'}).join(' ');
+// buscar reflexión del mismo día
+var dayRef=refs.find(function(r){return r.date===s.date});
+h+='<details style="margin-bottom:6px;border:1px solid var(--g200);border-radius:8px;overflow:hidden"><summary style="padding:10px;cursor:pointer;display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px">';
+h+='<span style="font-weight:700;color:var(--g500);min-width:80px">'+s.date+'</span>';
+h+='<span>'+dots+'</span>';
+h+='<span style="color:#22C55E;font-weight:700">'+s.efectivos+'✓</span>';
+h+='<span style="color:#EF4444;font-weight:700">'+s.fallidos+'✗</span>';
+if(s.foco)h+='<span style="font-size:10px;color:#F59E0B">🎯 '+esc(s.foco)+'</span>';
+h+='</summary><div style="padding:10px;border-top:1px solid var(--g200)">';
+if(catsHtml)h+='<div style="margin-bottom:8px">'+catsHtml+'</div>';
+// detalle de cada lazo
+(s.lazos||[]).forEach(function(l,i){if(l.status||l.notes){
+var lc=l.status==='efectivo'?'#22C55E':l.status==='fallido'?'#EF4444':'var(--g400)';
+h+='<div style="display:flex;gap:8px;padding:4px 0;border-bottom:1px solid var(--g200);font-size:12px"><span style="font-weight:900;color:'+lc+';min-width:28px">'+(i+1)+(l.status==='efectivo'?' ✓':l.status==='fallido'?' ✗':'')+'</span>';
+if(l.cats&&l.cats.length)h+='<span style="font-size:10px;color:var(--g400)">'+l.cats.map(function(c){return catLabels[c]||c}).join(', ')+'</span>';
+if(l.notes)h+='<span style="font-style:italic;color:var(--g500);font-size:11px;margin-left:auto">'+esc(l.notes)+'</span>';
+h+='</div>'}});
+if(dayRef){h+='<div style="margin-top:8px;padding:8px;background:var(--g100);border-radius:6px;font-size:11px">';
+h+='<div style="font-weight:700;color:#F59E0B;margin-bottom:4px">📝 Reflexión</div>';
+if(dayRef.r1)h+='<div style="margin-bottom:4px"><b style="color:var(--g400)">Presencia:</b> '+esc(dayRef.r1)+'</div>';
+if(dayRef.r2)h+='<div style="margin-bottom:4px"><b style="color:var(--g400)">Overthinking:</b> '+esc(dayRef.r2)+'</div>';
+if(dayRef.r3)h+='<div><b style="color:var(--g400)">Sensación:</b> '+esc(dayRef.r3)+'</div>';
+h+='</div>'}
+h+='</div></details>'});
+el.innerHTML=h}
+function renderLmErrorAnalysis(){ensureLmData();
+var sess=D.lazoMillonario.sessions||[];
+var card=document.getElementById('lm-error-analysis-card');
+var el=document.getElementById('lm-error-analysis');if(!card||!el)return;
+var counts={};sess.forEach(function(s){(s.lazos||[]).forEach(function(l){(l.cats||[]).forEach(function(c){counts[c]=(counts[c]||0)+1})})});
+if(!Object.keys(counts).length){card.style.display='none';return}
+card.style.display='block';
+var sorted=Object.entries(counts).sort(function(a,b){return b[1]-a[1]});
+var maxVal=sorted[0][1];
+var catLabels={timing:'⏱ Timing',apertura:'⭕ Apertura del lazo',velocidad:'💨 Velocidad',posicion:'🐎 Posición',mental:'🧠 Mental / nervios',distancia:'📏 Distancia',soltada:'🤚 Soltada',otro:'+ Otro'};
+el.innerHTML=sorted.map(function(x){var k=x[0],v=x[1];var pct=Math.round(v/maxVal*100);
+return'<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-size:11px;color:var(--g500);min-width:120px">'+(catLabels[k]||k)+'</span><div style="flex:1;height:6px;background:var(--g200);border-radius:3px;overflow:hidden"><div style="width:'+pct+'%;height:100%;background:#EF4444;border-radius:3px"></div></div><span style="font-size:11px;font-weight:700;color:#EF4444;min-width:20px;text-align:right">'+v+'</span></div>'}).join('')}
 // ============ PLAN DIARIO ============
 function ensurePlanFields(){if(!D.dailyPlan)D.dailyPlan={}}
 function renderDailyPlan(){
@@ -2007,7 +2216,7 @@ function loadTheme(){var t=localStorage.getItem('theme')||'light';document.docum
 
 // Hook renderAll
 var _origRenderAll=renderAll;
-renderAll=function(){_origRenderAll();try{ensureAreaFields();ensurePlanFields();renderAreasGrid();renderStackTable();renderFriction();renderWeeklyAudit();renderDailyPlan();renderHomeExec()}catch(e){console.warn(e)}};
+renderAll=function(){_origRenderAll();try{ensureAreaFields();ensurePlanFields();renderAreasGrid();renderStackTable();renderFriction();renderWeeklyAudit();renderDailyPlan();renderHomeExec();renderLazoMillonario()}catch(e){console.warn(e)}};
 
 // INIT
 document.addEventListener('DOMContentLoaded',function(){loadTheme();load();renderAll();
