@@ -293,7 +293,7 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <div id="quick-task-list"></div></div>
 <div class="kpi-grid" id="home-kpis"></div>
 <div class="card"><div class="card-title">📋 Plan de Hoy <span id="home-plan-pct" style="margin-left:auto;font-size:12px;color:var(--g400)"></span></div><div id="home-plan-today"></div></div>
-<div class="card"><div class="card-title">🌅 Plan de Mañana <span id="home-plan-tomorrow-count" style="margin-left:auto;font-size:12px;color:var(--g400)"></span> <button class="btn btn-out btn-sm" onclick="showTab('plan');setTimeout(function(){var d=new Date();d.setDate(d.getDate()+1);document.getElementById('plan-date').value=d.toISOString().slice(0,10);renderDailyPlan()},100)">✏️ Editar</button></div><div id="home-plan-tomorrow"></div></div>
+<div class="card"><div class="card-title">🌅 Plan de Mañana <span id="home-plan-tomorrow-count" style="margin-left:auto;font-size:12px;color:var(--g400)"></span> <button class="btn btn-out btn-sm" onclick="showTab('plan');setTimeout(function(){var d=new Date();d.setDate(d.getDate()+1);document.getElementById('plan-date').value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');renderDailyPlan()},100)">✏️ Editar</button></div><div id="home-plan-tomorrow"></div></div>
 <div class="card"><div class="card-title">🏢 Resumen por área (últimos 7 días)</div><div id="home-area-summary"></div></div>
 <details style="margin-bottom:14px"><summary style="padding:8px;cursor:pointer;color:var(--g500);font-size:12px;font-weight:600">▼ Ver vistas secundarias (semana, calendario, rutinas, metas)</summary>
 <div class="ov-grid" id="ov-grid"></div>
@@ -788,7 +788,7 @@ renderBizRut('personal');renderNote('personal');renderNote('news');renderSchedul
 renderRutinas();renderEisenhower();render333();renderFrog();renderTimeBlocks();checkRevReminder();checkWeeklyReset()}
 
 function renderDate(){const el=document.getElementById('currentDate');if(el)el.textContent=new Date().toLocaleDateString('es-CO',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}
-function todayStr(){return new Date().toISOString().slice(0,10)}
+function todayStr(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function dateToIso(ds){try{return new Date(ds).toISOString().slice(0,10)}catch(e){return null}}
 function getWeekKey(){const d=new Date(),s=new Date(d);s.setDate(d.getDate()-d.getDay());return s.toISOString().slice(0,10)}
 function getWeekDays(off){const n=new Date(),dw=n.getDay(),s=new Date(n);s.setDate(n.getDate()-dw+(off*7));const d=[];for(let i=0;i<7;i++){const x=new Date(s);x.setDate(s.getDate()+i);d.push(x.toISOString().slice(0,10))}return d}
@@ -1860,11 +1860,11 @@ if(ar)ph+='<div style="font-size:11px;color:'+ar.color+';font-weight:600;margin-
 ph+='</div></div></div>'});pel.innerHTML=ph}
 document.getElementById('home-plan-pct').textContent=plan.length?planDone+'/'+plan.length+' ('+Math.round(planDone/plan.length*100)+'%)':'';
 // plan de mañana
-var tmr=new Date();tmr.setDate(tmr.getDate()+1);var tmrIso=tmr.toISOString().slice(0,10);
+var tmr=new Date();tmr.setDate(tmr.getDate()+1);var tmrIso=tmr.getFullYear()+'-'+String(tmr.getMonth()+1).padStart(2,'0')+'-'+String(tmr.getDate()).padStart(2,'0');
 var planT=((D.dailyPlan||{})[tmrIso]||[]).slice().sort(function(x,y){return(x.time||'99:99').localeCompare(y.time||'99:99')});
 var tel=document.getElementById('home-plan-tomorrow');
 if(tel){
-if(!planT.length){tel.innerHTML='<div class="empty" style="font-size:12px">Sin plan para mañana. <a onclick="showTab(\'plan\');setTimeout(function(){document.getElementById(\'plan-date\').value=\''+tmrIso+'\';renderDailyPlan()},100)" style="color:var(--pri);cursor:pointer;font-weight:600">Planear mañana →</a></div>'}
+if(!planT.length){tel.innerHTML='<div class="empty" style="font-size:12px">Sin plan para mañana ('+tmrIso+'). <a onclick="showTab(\'plan\');setTimeout(function(){document.getElementById(\'plan-date\').value=\''+tmrIso+'\';renderDailyPlan()},100)" style="color:var(--pri);cursor:pointer;font-weight:600">Planear mañana →</a></div>'}
 else{var th='';planT.forEach(function(p){var ar=getArea(p.area);
 var endTime='';if(p.time&&p.dur){var parts=p.time.split(':');var t=new Date();t.setHours(+parts[0],+parts[1]+(+p.dur),0,0);endTime=String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0')}
 th+='<div style="display:flex;gap:10px;padding:10px;border-radius:8px;margin-bottom:4px;border-left:4px solid '+(ar?ar.color:'#CFC6B5')+';background:var(--g100)">';
@@ -1972,7 +1972,7 @@ save();closeModal('plan-edit-modal');renderDailyPlan();try{renderHomeExec()}catc
 function delPlanFromModal(){var date=document.getElementById('pem-date').value;var id=document.getElementById('pem-id').value;if(!confirm('¿Eliminar esta actividad?'))return;delPlanItem(date,id);closeModal('plan-edit-modal')}
 function copyYesterdayPlan(){
 var date=document.getElementById('plan-date').value;if(!date)return;
-var d=new Date(date);d.setDate(d.getDate()-1);var y=d.toISOString().slice(0,10);
+var d=new Date(date+'T12:00:00');d.setDate(d.getDate()-1);var y=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 var src=D.dailyPlan[y]||[];if(!src.length)return toast('No hay plan en '+y);
 if(!D.dailyPlan[date])D.dailyPlan[date]=[];
 src.forEach(function(p){D.dailyPlan[date].push({id:'p'+Date.now()+Math.random(),title:p.title,time:p.time,dur:p.dur,area:p.area,mit:p.mit,done:false})});
