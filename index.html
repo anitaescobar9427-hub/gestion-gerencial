@@ -52,10 +52,10 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 .add-row{display:flex;gap:6px;margin-top:10px}.add-row .inp{flex:1}
 .fg{margin-bottom:10px}.fg label{display:block;font-size:12px;font-weight:600;margin-bottom:4px;color:#6B6358;letter-spacing:.3px;text-transform:uppercase}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.t-item{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius-sm);border:1px solid #DDD7CA;margin-bottom:4px;transition:all .15s;background:#FAF8F3}
+.t-item{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius-sm);border:1px solid #DDD7CA;margin-bottom:4px;transition:all .15s;background:var(--g100)}
 .t-item:hover{border-color:var(--pri);background:rgba(107,143,113,.06)}
 .t-status{cursor:pointer;font-size:16px;flex-shrink:0}
-.t-text{flex:1;font-size:13px;font-weight:500;color:#3D3929}.t-del{background:none;border:none;cursor:pointer;font-size:14px;opacity:.4;transition:opacity .15s;color:#6B6358}.t-del:hover{opacity:1}
+.t-text{flex:1;font-size:13px;font-weight:500;color:var(--text)}.t-del{background:none;border:none;cursor:pointer;font-size:14px;opacity:.6;transition:opacity .15s;color:var(--g500)}.t-del:hover{opacity:1}
 .t-pri{font-size:10px;padding:3px 8px;border-radius:12px;font-weight:700;white-space:nowrap;letter-spacing:.3px}
 .t-pri-alta{background:rgba(239,68,68,.10);color:var(--red)}.t-pri-media{background:rgba(255,134,0,.12);color:var(--amber)}.t-pri-baja{background:rgba(52,211,153,.10);color:var(--green)}
 .t-date{font-size:10px;color:var(--g400);white-space:nowrap}
@@ -1386,7 +1386,7 @@ var bi=t.assignedBiz&&BI[t.assignedBiz]?BI[t.assignedBiz]:null;
 var isDue=t.remind&&t.remind<=nowIso.slice(0,16);
 var isUpcoming=t.remind&&!isDue;
 h+='<div class="t-item" style="'+(isDue?'background:rgba(239,68,68,.08);border-left:3px solid var(--red)':'')+'"><span class="t-status" onclick="toggleQuickTask('+t.id+')" style="cursor:pointer">⬜</span>';
-h+='<div style="flex:1"><span class="t-text">'+esc(t.text)+'</span>';
+h+='<div style="flex:1"><span class="t-text" style="color:var(--text);font-weight:600">'+esc(t.text)+'</span>';
 if(bi)h+='<div style="font-size:10px;color:var(--g400);margin-top:2px">'+bi.icon+' '+esc(t.assignedGoal||'')+'</div>';
 if(t.remind){var rd=new Date(t.remind);var remStr=rd.toLocaleDateString('es',{day:'numeric',month:'short'})+' '+rd.toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'});h+='<div style="font-size:10px;margin-top:2px;color:'+(isDue?'var(--red)':'var(--amber)')+';font-weight:600">'+(isDue?'🔔 ¡Ahora! · ':'🕐 ')+remStr+'</div>'}
 else if(t.date){h+='<div style="font-size:10px;color:var(--g400)">'+fmtDate(t.date)+'</div>'}
