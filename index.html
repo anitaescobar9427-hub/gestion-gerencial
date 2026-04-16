@@ -284,13 +284,17 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <div id="home-greeting" style="font-size:18px;font-weight:700"></div>
 <div id="home-affirmation-line" style="font-size:13px;color:var(--g500);margin-top:4px;font-style:italic"></div>
 </div>
+<div class="card"><div class="card-title">🔥 No Olvidar <span id="qt-reminder-badge" style="margin-left:auto;font-size:11px;color:var(--red);font-weight:700"></span> <button class="btn btn-pri btn-sm" onclick="openHomeTaskModal()">+ Tarea</button></div>
+<div class="add-row" style="margin-bottom:8px;flex-wrap:wrap;gap:6px">
+<input class="inp" id="qt-text" placeholder="Agregar recordatorio…" style="flex:2;min-width:150px" onkeydown="if(event.key==='Enter')addQuickTask()">
+<input type="datetime-local" class="inp" id="qt-remind" style="flex:1;min-width:140px;font-size:11px" title="Fecha y hora del recordatorio (opcional)">
+<button class="btn btn-pri btn-sm" onclick="addQuickTask()">+</button>
+</div>
+<div id="quick-task-list"></div></div>
 <div class="kpi-grid" id="home-kpis"></div>
 <div class="card"><div class="card-title">📋 Plan de Hoy <span id="home-plan-pct" style="margin-left:auto;font-size:12px;color:var(--g400)"></span></div><div id="home-plan-today"></div></div>
 <div class="card"><div class="card-title">🌅 Plan de Mañana <span id="home-plan-tomorrow-count" style="margin-left:auto;font-size:12px;color:var(--g400)"></span> <button class="btn btn-out btn-sm" onclick="showTab('plan');setTimeout(function(){var d=new Date();d.setDate(d.getDate()+1);document.getElementById('plan-date').value=d.toISOString().slice(0,10);renderDailyPlan()},100)">✏️ Editar</button></div><div id="home-plan-tomorrow"></div></div>
 <div class="card"><div class="card-title">🏢 Resumen por área (últimos 7 días)</div><div id="home-area-summary"></div></div>
-<div class="card"><div class="card-title">🔥 No Olvidar <button class="btn btn-pri btn-sm ml" onclick="openHomeTaskModal()">+ Tarea</button></div>
-<div class="add-row" style="margin-bottom:8px"><input class="inp" id="qt-text" placeholder="Agregar recordatorio…" onkeydown="if(event.key==='Enter')addQuickTask()"><button class="btn btn-pri btn-sm" onclick="addQuickTask()">+</button></div>
-<div id="quick-task-list"></div></div>
 <details style="margin-bottom:14px"><summary style="padding:8px;cursor:pointer;color:var(--g500);font-size:12px;font-weight:600">▼ Ver vistas secundarias (semana, calendario, rutinas, metas)</summary>
 <div class="ov-grid" id="ov-grid"></div>
 <div class="card"><div class="card-title">📅 Semana</div><div id="hw-strip"></div></div>
@@ -1343,8 +1347,9 @@ openModal('gt-modal')}
 
 // QUICK TASKS
 function addQuickTask(){var inp=document.getElementById('qt-text');var text=inp?inp.value.trim():'';if(!text)return;
-if(!D.quickTasks)D.quickTasks=[];D.quickTasks.push({id:Date.now(),text:text,done:false,biz:'',goal:'',date:todayStr()});
-if(inp)inp.value='';save();renderQuickTasks();toast('⚡ Agregada')}
+var remInp=document.getElementById('qt-remind');var remind=remInp?remInp.value:'';
+if(!D.quickTasks)D.quickTasks=[];D.quickTasks.push({id:Date.now(),text:text,done:false,biz:'',goal:'',date:todayStr(),remind:remind||null});
+if(inp)inp.value='';if(remInp)remInp.value='';save();renderQuickTasks();toast('⚡ Agregada')}
 function toggleQuickTask(id){if(!D.quickTasks)return;var t=D.quickTasks.find(function(x){return x.id===id});if(t){t.done=!t.done;save();renderQuickTasks()}}
 function delQuickTask(id){D.quickTasks=(D.quickTasks||[]).filter(function(x){return x.id!==id});save();renderQuickTasks()}
 var _assigningQT=null;
@@ -1356,18 +1361,39 @@ document.getElementById('gtm-biz-sel').value='personal';populateGoalSelect('pers
 document.getElementById('gtm-title').textContent='Asignar a Meta';document.getElementById('gtm-del-btn').style.display='none';
 openModal('gt-modal')}
 function sendQuickReminder(id){var t=(D.quickTasks||[]).find(function(x){return x.id===id});if(!t)return;sendToReminder(t.text,t.date||todayStr(),'','')}
+function editQuickReminder(id){var t=(D.quickTasks||[]).find(function(x){return x.id===id});if(!t)return;
+var cur=t.remind||'';var val=prompt('Fecha y hora del recordatorio (YYYY-MM-DDTHH:MM):\nEjemplo: 2026-04-16T09:00\nDejar vacío para quitar recordatorio.',cur);
+if(val===null)return;t.remind=val||null;save();renderQuickTasks();toast(val?'🔔 Recordatorio programado':'🔕 Recordatorio quitado')}
+// Chequeo periódico de recordatorios vencidos
+var _reminderInterval=setInterval(function(){
+var now=new Date().toISOString().slice(0,16);var tasks=(D.quickTasks||[]).filter(function(t){return !t.done&&t.remind&&t.remind<=now&&!t._notified});
+tasks.forEach(function(t){t._notified=true;toast('🔔 Recordatorio: '+t.text);
+if('Notification' in window&&Notification.permission==='granted'){new Notification('🔔 No Olvidar',{body:t.text,icon:'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🔔</text></svg>'})}});
+if(tasks.length){save();renderQuickTasks()}
+},30000);
+// Solicitar permiso de notificaciones al cargar
+if('Notification' in window&&Notification.permission==='default'){try{Notification.requestPermission()}catch(e){}}
 function renderQuickTasks(){var el=document.getElementById('quick-task-list');if(!el)return;
 var tasks=(D.quickTasks||[]).filter(function(t){return !t.done});var done=(D.quickTasks||[]).filter(function(t){return t.done});
+var now=new Date();var nowIso=now.toISOString();
+// ordenar: recordatorios vencidos primero, luego por fecha recordatorio, luego sin recordatorio
+tasks.sort(function(a,b){var ra=a.remind||'9999';var rb=b.remind||'9999';var aDue=a.remind&&a.remind<=nowIso.slice(0,16);var bDue=b.remind&&b.remind<=nowIso.slice(0,16);if(aDue&&!bDue)return -1;if(!aDue&&bDue)return 1;return ra.localeCompare(rb)});
+// badge de recordatorios activos
+var dueCount=tasks.filter(function(t){return t.remind&&t.remind<=nowIso.slice(0,16)}).length;
+var badgeEl=document.getElementById('qt-reminder-badge');if(badgeEl)badgeEl.textContent=dueCount?'🔔 '+dueCount+' pendiente'+(dueCount>1?'s':''):'';
 var h='';tasks.forEach(function(t){
 var bi=t.assignedBiz&&BI[t.assignedBiz]?BI[t.assignedBiz]:null;
-h+='<div class="t-item"><span class="t-status" onclick="toggleQuickTask('+t.id+')" style="cursor:pointer">⬜</span>';
+var isDue=t.remind&&t.remind<=nowIso.slice(0,16);
+var isUpcoming=t.remind&&!isDue;
+h+='<div class="t-item" style="'+(isDue?'background:rgba(239,68,68,.08);border-left:3px solid var(--red)':'')+'"><span class="t-status" onclick="toggleQuickTask('+t.id+')" style="cursor:pointer">⬜</span>';
 h+='<div style="flex:1"><span class="t-text">'+esc(t.text)+'</span>';
 if(bi)h+='<div style="font-size:10px;color:var(--g400);margin-top:2px">'+bi.icon+' '+esc(t.assignedGoal||'')+'</div>';
-if(t.date)h+='<div style="font-size:10px;color:var(--g400)">'+fmtDate(t.date)+'</div>';
+if(t.remind){var rd=new Date(t.remind);var remStr=rd.toLocaleDateString('es',{day:'numeric',month:'short'})+' '+rd.toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'});h+='<div style="font-size:10px;margin-top:2px;color:'+(isDue?'var(--red)':'var(--amber)')+';font-weight:600">'+(isDue?'🔔 ¡Ahora! · ':'🕐 ')+remStr+'</div>'}
+else if(t.date){h+='<div style="font-size:10px;color:var(--g400)">'+fmtDate(t.date)+'</div>'}
 h+='</div>';
 if(t.priority&&t.priority!=='media')h+=priLabel(t.priority);
+h+='<button class="t-del" onclick="editQuickReminder('+t.id+')" title="Programar recordatorio">🔔</button>';
 h+='<button class="t-del" onclick="assignQuickTask('+t.id+')" title="Asignar a meta/línea">📎</button>';
-h+='<button class="t-del" onclick="sendQuickReminder('+t.id+')" title="Recordatorio iOS">🔔</button>';
 h+='<button class="t-del" onclick="delQuickTask('+t.id+')">✕</button></div>'});
 if(done.length){h+='<details style="margin-top:6px"><summary>✅ '+done.length+' completada'+(done.length>1?'s':'')+'</summary>';
 done.forEach(function(t){h+='<div class="t-item" style="opacity:.5"><span class="t-status" onclick="toggleQuickTask('+t.id+')" style="cursor:pointer">✅</span><span class="t-text" style="text-decoration:line-through;flex:1">'+esc(t.text)+'</span><button class="t-del" onclick="delQuickTask('+t.id+')">✕</button></div>'});h+='</details>'}
@@ -1668,7 +1694,7 @@ var AREAS=[
 {id:'cientoonce',name:'Ciento Once',icon:'🏢',color:'#8B5CF6'},
 {id:'inmoglobal',name:'Inmoglobal',icon:'🏠',color:'#EF4444'},
 {id:'cafelatribuna',name:'Café La Tribuna',icon:'☕',color:'#D97706'},
-{id:'cabalgas',name:'Cabalgas',icon:'🐴',color:'#0EA5E9'}
+{id:'cabalgas',name:'Cabalgatas',icon:'🐴',color:'#0EA5E9'}
 ];
 function getArea(id){return AREAS.find(function(a){return a.id===id})||null}
 function ensureAreaFields(){
