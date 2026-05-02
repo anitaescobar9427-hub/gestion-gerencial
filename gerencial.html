@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Control Gerencial Diario</title>
+<meta name="theme-color" content="#1f2937">
+<style>
+:root{
+  --bg:#f5f6f8; --panel:#ffffff; --ink:#111827; --ink-2:#374151; --muted:#6b7280;
+  --line:#e5e7eb; --line-2:#d1d5db;
+  --accent:#1f2937; --accent-2:#374151;
+  --green:#16a34a; --green-bg:#dcfce7;
+  --amber:#d97706; --amber-bg:#fef3c7;
+  --red:#dc2626;   --red-bg:#fee2e2;
+  --blue:#2563eb;  --blue-bg:#dbeafe;
+  --shadow:0 1px 2px rgba(17,24,39,.05), 0 1px 3px rgba(17,24,39,.06);
+  --shadow-md:0 4px 12px rgba(17,24,39,.08);
+  --r:10px; --r-sm:6px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;min-height:100vh}
+button{font:inherit;cursor:pointer}
+input,select,textarea{font:inherit;color:inherit}
+
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--line);padding:10px 18px}
+.topbar-row{display:flex;align-items:center;gap:12px;max-width:1280px;margin:0 auto}
+.brand{font-weight:800;letter-spacing:-.2px;font-size:15px;color:var(--ink)}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted);letter-spacing:0}
+.tabs{display:flex;gap:4px;margin-left:8px}
+.tab{padding:7px 14px;border-radius:999px;background:transparent;border:1px solid transparent;color:var(--ink-2);font-weight:600;font-size:13px}
+.tab:hover{background:#f3f4f6}
+.tab.active{background:var(--accent);color:#fff}
+.tab .count{display:inline-block;margin-left:6px;background:rgba(255,255,255,.18);padding:1px 6px;border-radius:999px;font-size:11px;font-weight:700}
+.tab:not(.active) .count{background:#e5e7eb;color:var(--ink-2)}
+.tools{margin-left:auto;display:flex;gap:8px;align-items:center}
+.btn{padding:8px 14px;border-radius:var(--r-sm);border:1px solid var(--line-2);background:#fff;font-weight:600;font-size:13px;color:var(--ink-2);transition:all .12s}
+.btn:hover{background:#f9fafb;border-color:#9ca3af}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:hover{background:#0f172a}
+.btn-ghost{background:transparent;border-color:transparent;color:var(--muted)}
+.btn-ghost:hover{background:#f3f4f6;color:var(--ink-2)}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn-danger{color:var(--red);border-color:#fecaca;background:#fff5f5}
+.btn-danger:hover{background:#fee2e2}
+
+/* LAYOUT */
+main{max-width:1280px;margin:0 auto;padding:18px}
+.section{display:none}
+.section.active{display:block}
+.grid{display:grid;gap:14px}
+.grid-2{grid-template-columns:2fr 1fr}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-4{grid-template-columns:repeat(4,1fr)}
+@media (max-width:900px){
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+  .topbar{padding:8px 12px}
+  .tabs{overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{flex-shrink:0}
+  .tools .label{display:none}
+}
+
+/* CARDS */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:16px;margin-bottom:14px}
+.card-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.card-h h2{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
+.card-h .meta{font-size:12px;color:var(--muted)}
+
+/* DAY HERO */
+.hero{background:linear-gradient(135deg,#1f2937 0%,#111827 100%);color:#fff;border-radius:12px;padding:18px 20px;margin-bottom:14px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.hero h1{font-size:20px;font-weight:800;letter-spacing:-.3px}
+.hero .sub{font-size:12px;color:#cbd5e1;margin-top:2px}
+.hero-stats{display:flex;gap:18px;margin-left:auto;flex-wrap:wrap}
+.hero-stat{text-align:right}
+.hero-stat .v{font-size:20px;font-weight:800;line-height:1}
+.hero-stat .l{font-size:11px;color:#9ca3af;text-transform:uppercase;letter-spacing:.5px;margin-top:3px;font-weight:600}
+.hero-stat.warn .v{color:#fbbf24}
+.hero-stat.bad .v{color:#fca5a5}
+.hero-stat.good .v{color:#86efac}
+
+/* BUDGET BAR */
+.budget{margin-top:8px;background:#f3f4f6;border-radius:8px;height:10px;overflow:hidden;position:relative}
+.budget-fill{height:100%;background:var(--green);transition:width .3s}
+.budget-fill.amber{background:var(--amber)}
+.budget-fill.red{background:var(--red)}
+.budget-label{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px;font-weight:500}
+
+/* TASKS */
+.task{display:flex;align-items:center;gap:10px;padding:11px 12px;border:1px solid var(--line);border-radius:var(--r-sm);background:#fff;margin-bottom:6px;transition:all .12s}
+.task:hover{border-color:#cbd5e1;box-shadow:var(--shadow)}
+.task.done{opacity:.55;background:#f9fafb}
+.task.done .task-text{text-decoration:line-through;color:var(--muted)}
+.task.doing{border-left:3px solid var(--blue)}
+.t-check{appearance:none;width:18px;height:18px;border:2px solid var(--line-2);border-radius:5px;cursor:pointer;flex-shrink:0;position:relative;background:#fff;transition:all .12s}
+.t-check:hover{border-color:var(--accent)}
+.t-check[data-state="doing"]{background:var(--blue);border-color:var(--blue)}
+.t-check[data-state="doing"]::after{content:"\2022";color:#fff;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+.t-check[data-state="done"]{background:var(--green);border-color:var(--green)}
+.t-check[data-state="done"]::after{content:"\2713";color:#fff;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.task-text{flex:1;font-weight:500;font-size:14px}
+.task-meta{display:flex;gap:8px;align-items:center;flex-shrink:0}
+.chip{font-size:11px;padding:2px 8px;border-radius:999px;background:#f3f4f6;color:var(--ink-2);font-weight:600;white-space:nowrap}
+.chip.proj{background:#eef2ff;color:#3730a3}
+.chip.time{background:#f0fdf4;color:#166534}
+.chip.time.over{background:#fef2f2;color:#991b1b}
+.icon-btn{background:none;border:none;color:var(--muted);padding:4px;border-radius:4px;font-size:13px;line-height:1}
+.icon-btn:hover{background:#f3f4f6;color:var(--red)}
+
+/* INPUTS */
+.field{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
+.field label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+.inp,.sel,.txt{padding:9px 11px;border:1px solid var(--line-2);border-radius:var(--r-sm);background:#fff;color:var(--ink);font-size:13px;width:100%}
+.inp:focus,.sel:focus,.txt:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(31,41,55,.08)}
+.txt{resize:vertical;min-height:60px;font-family:inherit}
+.row{display:flex;gap:8px;align-items:flex-end}
+.row .field{flex:1;margin-bottom:0}
+.row .field.short{flex:0 0 130px}
+.row .field.mini{flex:0 0 80px}
+
+/* HABITS */
+.habits{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.habit{padding:14px;border:1px solid var(--line);border-radius:var(--r-sm);background:#fff;cursor:pointer;transition:all .15s;position:relative;text-align:left}
+.habit:hover{border-color:var(--accent)}
+.habit.checked{background:var(--green-bg);border-color:var(--green)}
+.habit.checked::after{content:"\2713";position:absolute;top:10px;right:12px;color:var(--green);font-weight:800;font-size:16px}
+.habit-q{font-weight:600;font-size:13px;color:var(--ink);padding-right:20px}
+.habit-hint{font-size:11px;color:var(--muted);margin-top:4px;font-weight:500}
+@media (max-width:700px){.habits{grid-template-columns:1fr}}
+
+/* ALERTS */
+.alert{display:flex;gap:10px;padding:11px 13px;border-radius:var(--r-sm);margin-bottom:8px;border-left:3px solid;font-size:13px}
+.alert.red{background:var(--red-bg);border-color:var(--red);color:#7f1d1d}
+.alert.amber{background:var(--amber-bg);border-color:var(--amber);color:#78350f}
+.alert.blue{background:var(--blue-bg);border-color:var(--blue);color:#1e3a8a}
+.alert .a-icon{font-weight:800;flex-shrink:0}
+.alert .a-body{flex:1}
+.alert .a-body strong{font-weight:700}
+.alert-empty{color:var(--muted);font-size:13px;font-style:italic;padding:8px 4px}
+
+/* PROJECTS */
+.proj-row{display:grid;grid-template-columns:14px 1fr 130px 130px 100px 110px;gap:12px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:var(--r-sm);background:#fff;margin-bottom:6px;transition:all .12s}
+.proj-row:hover{border-color:#cbd5e1;box-shadow:var(--shadow)}
+.proj-dot{width:10px;height:10px;border-radius:50%;background:var(--green)}
+.proj-dot.amber{background:var(--amber)}
+.proj-dot.red{background:var(--red)}
+.proj-name{font-weight:600;font-size:14px}
+.proj-meta-line{font-size:11px;color:var(--muted);margin-top:2px}
+.proj-stale{color:var(--red);font-weight:600}
+@media (max-width:900px){
+  .proj-row{grid-template-columns:14px 1fr auto}
+  .proj-row > select, .proj-row > .tiny{display:none}
+}
+
+.proj-detail{margin-top:6px;margin-bottom:14px;padding:14px;background:#f9fafb;border:1px solid var(--line);border-radius:var(--r-sm)}
+.proj-detail.hidden{display:none}
+
+/* WEEKLY */
+.goal{padding:12px;border:1px solid var(--line);border-radius:var(--r-sm);background:#fff;margin-bottom:8px}
+.goal-h{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.goal-text{flex:1;font-weight:600;min-width:180px}
+.goal-pct{font-weight:800;font-size:18px;color:var(--accent)}
+.progress{height:6px;background:#f3f4f6;border-radius:999px;overflow:hidden;margin-bottom:8px}
+.progress > div{height:100%;background:var(--accent);transition:width .3s}
+.progress.green > div{background:var(--green)}
+.progress.amber > div{background:var(--amber)}
+.progress.red > div{background:var(--red)}
+.goal-block{margin-top:6px;font-size:12px;color:var(--red);font-weight:500}
+
+/* FINANCE */
+.fin-card{padding:14px;border:1px solid var(--line);border-radius:var(--r-sm);background:#fff;margin-bottom:10px}
+.fin-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:8px;flex-wrap:wrap}
+.fin-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.fin-cell{padding:10px;background:#f9fafb;border-radius:var(--r-sm);text-align:center}
+.fin-cell .l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+.fin-cell .v{font-size:16px;font-weight:800;margin-top:3px;color:var(--ink)}
+.fin-cell.delta.pos .v{color:var(--green)}
+.fin-cell.delta.neg .v{color:var(--red)}
+@media (max-width:700px){.fin-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(17,24,39,.55);z-index:100;align-items:center;justify-content:center;padding:20px}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:12px;width:100%;max-width:680px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden}
+.modal-h{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.modal-h h3{font-size:15px;font-weight:700}
+.modal-body{padding:18px;overflow:auto}
+.claude-out{background:#0f172a;color:#e2e8f0;padding:14px;border-radius:var(--r-sm);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;white-space:pre-wrap;line-height:1.6;max-height:50vh;overflow:auto}
+.modal-foot{padding:12px 18px;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:flex-end;background:#f9fafb}
+
+/* EMPTY */
+.empty{padding:24px;text-align:center;color:var(--muted);font-size:13px;border:1px dashed var(--line-2);border-radius:var(--r-sm);background:#fafafa}
+
+/* MISC */
+.muted{color:var(--muted)}
+.tiny{font-size:11px}
+.right{text-align:right}
+.flex{display:flex;gap:8px;align-items:center}
+.spacer{height:6px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:10px 18px;border-radius:999px;font-size:13px;font-weight:600;box-shadow:var(--shadow-md);opacity:0;transition:opacity .2s;z-index:200;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-row">
+    <div class="brand">Control Gerencial<small id="topDate">&mdash;</small></div>
+    <nav class="tabs">
+      <button class="tab active" data-tab="hoy">Hoy</button>
+      <button class="tab" data-tab="semana">Semana</button>
+      <button class="tab" data-tab="proyectos">Proyectos <span class="count" id="cProj">0</span></button>
+      <button class="tab" data-tab="finanzas">Finanzas</button>
+    </nav>
+    <div class="tools">
+      <a class="btn btn-ghost btn-sm" href="index.html" title="Volver al menú" style="text-decoration:none">&larr; <span class="label">Inicio</span></a>
+      <button class="btn btn-ghost btn-sm" id="btnExport" title="Exportar datos JSON">&#8595; <span class="label">Backup</span></button>
+      <button class="btn btn-ghost btn-sm" id="btnImport" title="Importar datos JSON">&#8593; <span class="label">Restaurar</span></button>
+      <input type="file" id="fileImport" accept="application/json" style="display:none">
+      <button class="btn btn-primary btn-sm" id="btnClaude">Resumen para Claude</button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ====== HOY ====== -->
+<section class="section active" id="sec-hoy">
+  <div class="hero">
+    <div>
+      <h1>Hoy</h1>
+      <div class="sub" id="heroDate">&mdash;</div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat" id="hsBudget"><div class="v">0 / 120</div><div class="l">Min. agendados</div></div>
+      <div class="hero-stat" id="hsDone"><div class="v">0 / 0</div><div class="l">Prioridades</div></div>
+      <div class="hero-stat" id="hsHabits"><div class="v">0 / 3</div><div class="l">Disciplina</div></div>
+    </div>
+  </div>
+
+  <div class="grid grid-2">
+    <div>
+      <div class="card">
+        <div class="card-h">
+          <h2>3 Prioridades del d&iacute;a</h2>
+          <span class="meta" id="budgetMini">2 horas m&aacute;x.</span>
+        </div>
+
+        <div class="budget"><div class="budget-fill" id="budgetFill" style="width:0%"></div></div>
+        <div class="budget-label"><span id="budgetText">0 min de 120 (0%)</span><span id="budgetWarn"></span></div>
+
+        <div id="prioList" style="margin-top:12px"></div>
+
+        <form id="formPri" style="margin-top:8px">
+          <div class="row">
+            <div class="field"><label>Tarea</label><input class="inp" id="pTxt" placeholder="&iquest;Qu&eacute; cierro hoy? (concreto, accionable)" required></div>
+            <div class="field short"><label>Proyecto</label><select class="sel" id="pProj"></select></div>
+            <div class="field mini"><label>Min</label><input class="inp" id="pMin" type="number" min="5" max="240" value="40" required></div>
+            <button class="btn btn-primary" type="submit">A&ntilde;adir</button>
+          </div>
+          <div class="tiny muted" style="margin-top:6px">Recomendaci&oacute;n: m&aacute;x 3 prioridades, total &le; 120 min. Lo dem&aacute;s va al backlog del proyecto.</div>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><h2>Disciplina de ejecuci&oacute;n</h2><span class="meta tiny">Check diario</span></div>
+        <div class="habits" id="habitGrid"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <div class="card-h"><h2>Alertas</h2><span class="meta tiny" id="alertCount">&mdash;</span></div>
+        <div id="alertList"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><h2>Proyectos en zona cr&iacute;tica</h2></div>
+        <div id="redProjects"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><h2>Notas r&aacute;pidas</h2><span class="meta tiny">No carga la mente</span></div>
+        <textarea class="txt" id="dayNotes" placeholder="Lo que llega y no es del d&iacute;a. Lo proceso luego."></textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SEMANA ====== -->
+<section class="section" id="sec-semana">
+  <div class="card">
+    <div class="card-h">
+      <h2>Semana del <span id="weekRange">&mdash;</span></h2>
+      <span class="meta" id="weekProgress">&mdash;</span>
+    </div>
+    <div id="goalList"></div>
+    <form id="formGoal" style="margin-top:10px">
+      <div class="row">
+        <div class="field"><label>Objetivo de la semana</label><input class="inp" id="gTxt" placeholder="Ej: Cerrar contrato con cooperativa de queso" required></div>
+        <div class="field short"><label>Proyecto</label><select class="sel" id="gProj"></select></div>
+        <button class="btn btn-primary" type="submit">A&ntilde;adir</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="card-h"><h2>Resumen semanal</h2></div>
+      <div class="grid grid-3" style="gap:8px">
+        <div class="fin-cell"><div class="l">Tareas hechas</div><div class="v" id="wkDone">0</div></div>
+        <div class="fin-cell"><div class="l">Pendientes</div><div class="v" id="wkPend">0</div></div>
+        <div class="fin-cell"><div class="l">D&iacute;as con disciplina</div><div class="v" id="wkDisc">0/7</div></div>
+      </div>
+      <div class="spacer"></div>
+      <div class="tiny muted">Una semana es un &eacute;xito si cierras tus 3 objetivos, no si haces 30 tareas.</div>
+    </div>
+    <div class="card">
+      <div class="card-h"><h2>Bloqueos activos</h2></div>
+      <div id="blockerList"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== PROYECTOS ====== -->
+<section class="section" id="sec-proyectos">
+  <div class="card">
+    <div class="card-h">
+      <h2>Portafolio de proyectos</h2>
+      <span class="meta tiny" id="projSummary">&mdash;</span>
+    </div>
+    <div id="projList"></div>
+    <form id="formProj" style="margin-top:10px">
+      <div class="row">
+        <div class="field"><label>Nombre del proyecto</label><input class="inp" id="npName" placeholder="Ej: Bufalera La Esmeralda" required></div>
+        <div class="field short">
+          <label>Categor&iacute;a</label>
+          <select class="sel" id="npCat">
+            <option>Bufalera</option><option>L&aacute;cteos</option><option>Turismo</option>
+            <option>Inmobiliario</option><option>Admin</option><option>Personal</option><option>Otro</option>
+          </select>
+        </div>
+        <div class="field mini">
+          <label>Cr&iacute;tico</label>
+          <select class="sel" id="npCrit"><option value="false">No</option><option value="true">S&iacute;</option></select>
+        </div>
+        <button class="btn btn-primary" type="submit">A&ntilde;adir</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- ====== FINANZAS ====== -->
+<section class="section" id="sec-finanzas">
+  <div class="card">
+    <div class="card-h">
+      <h2>Caja consolidada &mdash; proyectos cr&iacute;ticos</h2>
+      <span class="meta tiny" id="finSummary">&mdash;</span>
+    </div>
+    <div class="grid grid-4">
+      <div class="fin-cell"><div class="l">Caja total</div><div class="v" id="totCash">$0</div></div>
+      <div class="fin-cell"><div class="l">Ingresos est.</div><div class="v" id="totInc">$0</div></div>
+      <div class="fin-cell"><div class="l">Costos est.</div><div class="v" id="totCost">$0</div></div>
+      <div class="fin-cell delta" id="totDeltaCell"><div class="l">Resultado</div><div class="v" id="totDelta">$0</div></div>
+    </div>
+  </div>
+  <div id="finList"></div>
+  <div class="card tiny muted">
+    Solo se muestran proyectos marcados como <strong>cr&iacute;ticos</strong> en la pesta&ntilde;a Proyectos. Para mantener esta vista &uacute;til, marca cr&iacute;ticos solo 3 a 5 proyectos a la vez &mdash; los que mueven la caja del mes.
+  </div>
+</section>
+
+</main>
+
+<!-- MODAL Claude -->
+<div class="modal-bg" id="claudeModal">
+  <div class="modal">
+    <div class="modal-h">
+      <h3>Resumen para Claude</h3>
+      <button class="btn btn-ghost btn-sm" data-close>Cerrar</button>
+    </div>
+    <div class="modal-body">
+      <div class="tiny muted" style="margin-bottom:8px">Copia este bloque y p&eacute;galo en una conversaci&oacute;n nueva con Claude. Est&aacute; estructurado para que &eacute;l pueda priorizar, detectar riesgos y sugerir decisiones.</div>
+      <pre class="claude-out" id="claudeOut">&mdash;</pre>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" id="copyClaude">Copiar al portapapeles</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">&mdash;</div>
+
+<script>
+/* =============================================================
+   CONTROL GERENCIAL  -  sistema central de decisiones
+   Datos en localStorage. Sin dependencias externas.
+   ============================================================= */
+
+const KEY = "gerencial_v1";
+
+const SEED = {
+  meta: { createdAt: new Date().toISOString(), version: 1 },
+  projects: [
+    { id:"p_colf",  name:"Colfarming",         cat:"Bufalera",     status:"green", risk:"medio", critical:true,  lastUpdate:null, nextStep:"", notes:"" },
+    { id:"p_buff",  name:"Bufalera",           cat:"Bufalera",     status:"amber", risk:"alto",  critical:true,  lastUpdate:null, nextStep:"", notes:"" },
+    { id:"p_ques",  name:"Quesera",            cat:"Lácteos",      status:"green", risk:"medio", critical:true,  lastUpdate:null, nextStep:"", notes:"" },
+    { id:"p_lazo",  name:"Lazo Millonario",    cat:"Lácteos",      status:"amber", risk:"medio", critical:false, lastUpdate:null, nextStep:"", notes:"" },
+    { id:"p_111",   name:"Admin 111",          cat:"Admin",        status:"green", risk:"bajo",  critical:false, lastUpdate:null, nextStep:"", notes:"" },
+    { id:"p_inmo",  name:"Inmoglobal",         cat:"Inmobiliario", status:"green", risk:"medio", critical:true,  lastUpdate:null, nextStep:"", notes:"" },
+    { id:"p_caba",  name:"Cabalgatas",         cat:"Turismo",      status:"amber", risk:"alto",  critical:false, lastUpdate:null, nextStep:"", notes:"" }
+  ],
+  priorities: {},
+  habits:     {},
+  goals:      {},
+  finance:    {},
+  notes:      {}
+};
+
+let db = load();
+
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    if(!raw) return JSON.parse(JSON.stringify(SEED));
+    const parsed = JSON.parse(raw);
+    return Object.assign(JSON.parse(JSON.stringify(SEED)), parsed);
+  }catch(e){ return JSON.parse(JSON.stringify(SEED)); }
+}
+function save(){ localStorage.setItem(KEY, JSON.stringify(db)); }
+
+/* DATE HELPERS */
+function today(){ const d=new Date(); d.setMinutes(d.getMinutes()-d.getTimezoneOffset()); return d.toISOString().slice(0,10); }
+function fmtDateLong(d){
+  d = d || new Date();
+  return d.toLocaleDateString("es-CO",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+}
+function fmtDateShort(s){
+  if(!s) return "sin actualizar";
+  const d = new Date(s); const t = new Date();
+  const diffDays = Math.floor((t - d) / 86400000);
+  if(diffDays <= 0) return "hoy";
+  if(diffDays === 1) return "ayer";
+  if(diffDays < 7) return "hace "+diffDays+"d";
+  return d.toLocaleDateString("es-CO",{day:"numeric",month:"short"});
+}
+function daysSince(s){ if(!s) return 999; return Math.floor((new Date() - new Date(s)) / 86400000); }
+function weekKey(d){
+  const t = new Date((d||new Date()).valueOf());
+  t.setHours(0,0,0,0);
+  t.setDate(t.getDate() - ((t.getDay()+6)%7));
+  return t.toISOString().slice(0,10);
+}
+function weekRange(){
+  const start = new Date(weekKey());
+  const end   = new Date(start); end.setDate(end.getDate()+6);
+  const f = (d)=>d.toLocaleDateString("es-CO",{day:"numeric",month:"short"});
+  return f(start)+" - "+f(end);
+}
+function uid(){ return "x"+Math.random().toString(36).slice(2,9); }
+function money(n){
+  if(!n) return "$0";
+  return "$"+Number(n).toLocaleString("es-CO");
+}
+
+/* TABS */
+document.querySelectorAll(".tab").forEach(b => b.addEventListener("click", ()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+  document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));
+  b.classList.add("active");
+  document.getElementById("sec-"+b.dataset.tab).classList.add("active");
+  renderAll();
+}));
+
+/* HOY: data accessors */
+function todayPriorities(){ return db.priorities[today()] || []; }
+function todayHabits(){
+  if(!db.habits[today()]) db.habits[today()] = {plan:false,deepWork:false,closeOne:false};
+  return db.habits[today()];
+}
+
+function renderHero(){
+  const ps = todayPriorities();
+  const totalMin = ps.reduce((a,b)=>a+(+b.minutes||0),0);
+  const done = ps.filter(p=>p.status==="done").length;
+  const habits = todayHabits();
+  const habitDone = ["plan","deepWork","closeOne"].filter(k=>habits[k]).length;
+
+  document.getElementById("topDate").textContent = fmtDateLong();
+  document.getElementById("heroDate").textContent = fmtDateLong();
+
+  const hsB = document.getElementById("hsBudget");
+  hsB.querySelector(".v").textContent = totalMin + " / 120";
+  hsB.classList.remove("warn","bad","good");
+  if(totalMin > 120) hsB.classList.add("bad");
+  else if(totalMin > 90) hsB.classList.add("warn");
+
+  const hsD = document.getElementById("hsDone");
+  hsD.querySelector(".v").textContent = done + " / " + (ps.length||0);
+  hsD.classList.remove("good","bad");
+  if(ps.length && done===ps.length) hsD.classList.add("good");
+
+  const hsH = document.getElementById("hsHabits");
+  hsH.querySelector(".v").textContent = habitDone + " / 3";
+  hsH.classList.remove("good","bad");
+  if(habitDone===3) hsH.classList.add("good");
+  else if(habitDone===0) hsH.classList.add("bad");
+
+  const pct = Math.min(100, Math.round(totalMin/120*100));
+  const fill = document.getElementById("budgetFill");
+  fill.style.width = pct + "%";
+  fill.classList.remove("amber","red");
+  if(totalMin > 120) fill.classList.add("red");
+  else if(totalMin > 90) fill.classList.add("amber");
+  document.getElementById("budgetText").textContent = totalMin+" min de 120 ("+pct+"%)";
+  document.getElementById("budgetWarn").textContent =
+    totalMin > 120 ? "Te excediste - recorta o pasa al backlog" :
+    ps.length > 3   ? "Mas de 3 prioridades - escoge solo 3" : "";
+}
+
+function renderPriorities(){
+  const list = document.getElementById("prioList");
+  const ps = todayPriorities();
+  if(!ps.length){
+    list.innerHTML = '<div class="empty">A&uacute;n no defines tus 3 prioridades del d&iacute;a. Esto es <strong>el</strong> h&aacute;bito gerencial.</div>';
+    return;
+  }
+  list.innerHTML = ps.map(t=>{
+    const proj = db.projects.find(p=>p.id===t.projectId);
+    const projName = proj ? proj.name : "—";
+    const overTime = t.minutes > 60;
+    const stateNext = t.status==="todo" ? "doing" : t.status==="doing" ? "done" : "todo";
+    const stateAttr = t.status==="done" ? "done" : t.status==="doing" ? "doing" : "";
+    return ''
+      + '<div class="task '+(t.status==='done'?'done':'')+' '+(t.status==='doing'?'doing':'')+'">'
+      +   '<button class="t-check" data-state="'+stateAttr+'" data-cycle="'+t.id+'" data-next="'+stateNext+'" title="Click para avanzar"></button>'
+      +   '<span class="task-text">'+escapeHtml(t.text)+'</span>'
+      +   '<div class="task-meta">'
+      +     '<span class="chip proj">'+escapeHtml(projName)+'</span>'
+      +     '<span class="chip time '+(overTime?'over':'')+'">'+t.minutes+'m</span>'
+      +     '<button class="icon-btn" data-del-pri="'+t.id+'" title="Eliminar">x</button>'
+      +   '</div>'
+      + '</div>';
+  }).join("");
+
+  list.querySelectorAll("[data-cycle]").forEach(el=>el.addEventListener("click",e=>{
+    const id = e.currentTarget.dataset.cycle;
+    const next = e.currentTarget.dataset.next;
+    const arr = db.priorities[today()];
+    const t = arr.find(x=>x.id===id);
+    if(t){ t.status = next; save(); renderAll(); }
+  }));
+  list.querySelectorAll("[data-del-pri]").forEach(el=>el.addEventListener("click",e=>{
+    const id = e.currentTarget.dataset.delPri;
+    db.priorities[today()] = (db.priorities[today()]||[]).filter(x=>x.id!==id);
+    save(); renderAll();
+  }));
+}
+
+document.getElementById("formPri").addEventListener("submit", e=>{
+  e.preventDefault();
+  const text = document.getElementById("pTxt").value.trim();
+  const projectId = document.getElementById("pProj").value;
+  const minutes = +document.getElementById("pMin").value || 30;
+  if(!text) return;
+  const k = today();
+  if(!db.priorities[k]) db.priorities[k] = [];
+  db.priorities[k].push({id:uid(), text, projectId, minutes, status:"todo"});
+  const proj = db.projects.find(p=>p.id===projectId);
+  if(proj) proj.lastUpdate = new Date().toISOString();
+  save();
+  e.target.reset();
+  document.getElementById("pMin").value = 40;
+  renderAll();
+});
+
+/* HABITS */
+const HABITS = [
+  { k:"plan",     q:"Defin&iacute; mis 3 prioridades hoy",         hint:"Antes de abrir WhatsApp / correo." },
+  { k:"deepWork", q:"Trabaj&eacute; en bloque sin distracci&oacute;n",  hint:"M&iacute;nimo 1 sesi&oacute;n sin interrupci&oacute;n." },
+  { k:"closeOne", q:"Cerr&eacute; al menos 1 tarea clave",          hint:"Cerrada = entregable, no &quot;casi&quot;." }
+];
+function renderHabits(){
+  const h = todayHabits();
+  document.getElementById("habitGrid").innerHTML = HABITS.map(item=>
+    '<button class="habit '+(h[item.k]?'checked':'')+'" data-habit="'+item.k+'">'
+    + '<div class="habit-q">'+item.q+'</div>'
+    + '<div class="habit-hint">'+item.hint+'</div>'
+    + '</button>'
+  ).join("");
+  document.querySelectorAll("[data-habit]").forEach(b=>b.addEventListener("click",()=>{
+    const k = b.dataset.habit;
+    const h = todayHabits();
+    h[k] = !h[k];
+    save(); renderAll();
+  }));
+}
+
+/* ALERTS */
+function lastNDates(n){
+  const out=[]; const d=new Date();
+  for(let i=0;i<n;i++){ const t=new Date(d); t.setDate(d.getDate()-i); out.push(t.toISOString().slice(0,10)); }
+  return out;
+}
+function computeAlerts(){
+  const out = [];
+  const ps = todayPriorities();
+  const totalMin = ps.reduce((a,b)=>a+(+b.minutes||0),0);
+  const hour = new Date().getHours();
+
+  if(ps.length === 0 && hour >= 9){
+    out.push({lvl:"red", icon:"!", body:"<strong>Sin prioridades definidas hoy.</strong> Def&iacute;nelas antes de abrir cualquier mensaje."});
+  }
+  if(ps.length > 3){
+    out.push({lvl:"amber", icon:"!", body:"<strong>"+ps.length+" prioridades</strong> &mdash; el sistema est&aacute; pensado para 3. Mueve el resto al backlog del proyecto."});
+  }
+  if(totalMin > 120){
+    out.push({lvl:"amber", icon:"!", body:"Tienes <strong>"+totalMin+" min</strong> agendados &mdash; el d&iacute;a efectivo es de 120 min. Recorta."});
+  }
+  if(ps.length>0 && hour>=18 && ps.some(p=>p.status!=="done")){
+    out.push({lvl:"red", icon:"!", body:"<strong>Cerr&oacute; el d&iacute;a con prioridades pendientes.</strong> Reflexiona qu&eacute; bloque&oacute; la ejecuci&oacute;n antes de cerrar el d&iacute;a."});
+  }
+
+  const stale = db.projects.filter(p=>p.lastUpdate && daysSince(p.lastUpdate) >= 3);
+  if(stale.length){
+    out.push({lvl:"amber", icon:"!", body:"<strong>"+stale.length+" proyecto(s) sin actualizar hace &ge;3 d&iacute;as:</strong> "+stale.map(p=>escapeHtml(p.name)).join(", ")+"."});
+  }
+  const ghostCrit = db.projects.filter(p=>p.critical && !p.lastUpdate);
+  if(ghostCrit.length){
+    out.push({lvl:"blue", icon:"i", body:"Cr&iacute;ticos sin estado registrado: "+ghostCrit.map(p=>escapeHtml(p.name)).join(", ")+". Toca <em>Profundizar</em> en Proyectos."});
+  }
+  const reds = db.projects.filter(p=>p.status==="red");
+  if(reds.length){
+    out.push({lvl:"red", icon:"!", body:"<strong>"+reds.length+" proyecto(s) en rojo:</strong> "+reds.map(p=>escapeHtml(p.name)).join(", ")+". Decide hoy: intervenir, parar o delegar."});
+  }
+  const last3 = lastNDates(3);
+  const lowDisc = last3.filter(d=>{
+    const h = db.habits[d]; if(!h) return true;
+    return ["plan","deepWork","closeOne"].filter(k=>h[k]).length < 2;
+  });
+  if(lowDisc.length === 3){
+    out.push({lvl:"red", icon:"!", body:"<strong>3 d&iacute;as seguidos con disciplina baja.</strong> No es falta de tiempo, es falta de bloque protegido. Bloquea 90 min en agenda ma&ntilde;ana antes de seguir."});
+  }
+  return out;
+}
+function renderAlerts(){
+  const list = computeAlerts();
+  const el = document.getElementById("alertList");
+  document.getElementById("alertCount").textContent = list.length ? (list.length+" activa(s)") : "Sin alertas";
+  if(!list.length){ el.innerHTML = '<div class="alert-empty">Sin alertas. Sigue ejecutando.</div>'; return; }
+  el.innerHTML = list.map(a=>'<div class="alert '+a.lvl+'"><span class="a-icon">'+a.icon+'</span><div class="a-body">'+a.body+'</div></div>').join("");
+}
+
+function renderRedProjects(){
+  const reds = db.projects.filter(p=>p.status==="red" || p.risk==="alto");
+  const el = document.getElementById("redProjects");
+  if(!reds.length){ el.innerHTML = '<div class="alert-empty">Ning&uacute;n proyecto en zona cr&iacute;tica.</div>'; return; }
+  el.innerHTML = reds.map(p=>{
+    const color = p.status==='red'?'var(--red)':'var(--amber)';
+    return '<div class="task" style="border-left:3px solid '+color+'">'
+      + '<div style="flex:1">'
+      +   '<div style="font-weight:600">'+escapeHtml(p.name)+'</div>'
+      +   '<div class="tiny muted">'+escapeHtml(p.cat)+' &middot; riesgo '+p.risk+' &middot; '+fmtDateShort(p.lastUpdate)+'</div>'
+      + '</div>'
+      + '<button class="btn btn-sm" data-go-proj="'+p.id+'">Ir</button>'
+      + '</div>';
+  }).join("");
+  el.querySelectorAll("[data-go-proj]").forEach(b=>b.addEventListener("click",()=>{
+    document.querySelector('[data-tab="proyectos"]').click();
+    setTimeout(()=>{
+      const card = document.querySelector('[data-proj-id="'+b.dataset.goProj+'"]');
+      if(card){ card.scrollIntoView({behavior:"smooth",block:"center"}); openProjDetail(b.dataset.goProj); }
+    },50);
+  }));
+}
+
+/* NOTES */
+const notesEl = document.getElementById("dayNotes");
+notesEl.addEventListener("input", ()=>{ db.notes[today()] = notesEl.value; save(); });
+function loadNotes(){ notesEl.value = db.notes[today()] || ""; }
+
+/* SEMANA */
+function thisWeekGoals(){
+  const k = weekKey();
+  if(!db.goals[k]) db.goals[k] = [];
+  return db.goals[k];
+}
+function renderWeek(){
+  document.getElementById("weekRange").textContent = weekRange();
+  const goals = thisWeekGoals();
+  const avg = goals.length ? Math.round(goals.reduce((a,b)=>a+(+b.progress||0),0)/goals.length) : 0;
+  document.getElementById("weekProgress").textContent = goals.length ? (avg+"% promedio") : "Sin objetivos";
+
+  const el = document.getElementById("goalList");
+  if(!goals.length){
+    el.innerHTML = '<div class="empty">Define <strong>3 objetivos</strong> para la semana &mdash; esto fija qu&eacute; importa cuando todo se vuelva ruido.</div>';
+  } else {
+    el.innerHTML = goals.map(g=>{
+      const proj = db.projects.find(p=>p.id===g.projectId);
+      const cls = g.progress >= 80 ? "green" : g.progress >= 40 ? "amber" : "red";
+      return '<div class="goal" data-goal="'+g.id+'">'
+        + '<div class="goal-h">'
+        +   '<span class="chip proj">'+escapeHtml(proj?proj.name:'—')+'</span>'
+        +   '<span class="goal-text">'+escapeHtml(g.text)+'</span>'
+        +   '<span class="goal-pct">'+(g.progress||0)+'%</span>'
+        +   '<button class="icon-btn" data-del-goal="'+g.id+'">x</button>'
+        + '</div>'
+        + '<div class="progress '+cls+'"><div style="width:'+(g.progress||0)+'%"></div></div>'
+        + '<input type="range" min="0" max="100" step="10" value="'+(g.progress||0)+'" data-prog="'+g.id+'" style="width:100%;margin-top:4px">'
+        + '<input class="inp" data-block="'+g.id+'" placeholder="Bloqueo (vac&iacute;o si fluye)" value="'+escapeAttr(g.blockers||'')+'" style="margin-top:6px">'
+        + (g.blockers ? '<div class="goal-block">! '+escapeHtml(g.blockers)+'</div>' : '')
+        + '</div>';
+    }).join("");
+    el.querySelectorAll("[data-prog]").forEach(r=>r.addEventListener("input",e=>{
+      const id = e.target.dataset.prog;
+      const g = thisWeekGoals().find(x=>x.id===id);
+      if(g){ g.progress = +e.target.value; save(); renderWeek(); }
+    }));
+    el.querySelectorAll("[data-block]").forEach(r=>r.addEventListener("change",e=>{
+      const id = e.target.dataset.block;
+      const g = thisWeekGoals().find(x=>x.id===id);
+      if(g){ g.blockers = e.target.value; save(); renderWeek(); }
+    }));
+    el.querySelectorAll("[data-del-goal]").forEach(b=>b.addEventListener("click",e=>{
+      const id = e.currentTarget.dataset.delGoal;
+      db.goals[weekKey()] = thisWeekGoals().filter(g=>g.id!==id);
+      save(); renderWeek();
+    }));
+  }
+
+  const last7 = lastNDates(7);
+  let done=0, pend=0, disc=0;
+  last7.forEach(d=>{
+    (db.priorities[d]||[]).forEach(p=> p.status==="done" ? done++ : pend++);
+    const h = db.habits[d];
+    if(h && ["plan","deepWork","closeOne"].filter(k=>h[k]).length === 3) disc++;
+  });
+  document.getElementById("wkDone").textContent = done;
+  document.getElementById("wkPend").textContent = pend;
+  document.getElementById("wkDisc").textContent = disc+"/7";
+
+  const blocks = thisWeekGoals().filter(g=>g.blockers);
+  document.getElementById("blockerList").innerHTML = blocks.length
+    ? blocks.map(g=>{
+        const proj = db.projects.find(p=>p.id===g.projectId);
+        return '<div class="alert amber"><span class="a-icon">!</span><div class="a-body"><strong>'+escapeHtml(proj?proj.name:'—')+':</strong> '+escapeHtml(g.blockers)+'</div></div>';
+      }).join("")
+    : '<div class="alert-empty">Sin bloqueos reportados esta semana.</div>';
+}
+document.getElementById("formGoal").addEventListener("submit",e=>{
+  e.preventDefault();
+  const text = document.getElementById("gTxt").value.trim();
+  const projectId = document.getElementById("gProj").value;
+  if(!text) return;
+  thisWeekGoals().push({id:uid(),text,projectId,progress:0,blockers:""});
+  save(); e.target.reset(); renderWeek();
+});
+
+/* PROYECTOS */
+function renderProjects(){
+  const el = document.getElementById("projList");
+  const list = [...db.projects].sort((a,b)=>{
+    const order = {red:0, amber:1, green:2};
+    return (order[a.status]??3) - (order[b.status]??3) || a.name.localeCompare(b.name);
+  });
+  document.getElementById("cProj").textContent = db.projects.length;
+  const verde = db.projects.filter(p=>p.status==="green").length;
+  const amar  = db.projects.filter(p=>p.status==="amber").length;
+  const rojo  = db.projects.filter(p=>p.status==="red").length;
+  document.getElementById("projSummary").textContent = verde+" verde &middot; "+amar+" amarillo &middot; "+rojo+" rojo";
+
+  if(!list.length){ el.innerHTML = '<div class="empty">A&uacute;n no tienes proyectos. A&ntilde;ade abajo.</div>'; return; }
+
+  el.innerHTML = list.map(p=>{
+    const stale = p.lastUpdate && daysSince(p.lastUpdate) >= 3;
+    return '<div data-proj-id="'+p.id+'">'
+      + '<div class="proj-row">'
+      +   '<div class="proj-dot '+p.status+'"></div>'
+      +   '<div>'
+      +     '<div class="proj-name">'+escapeHtml(p.name)+(p.critical?' <span class="chip" style="background:#fef3c7;color:#78350f">cr&iacute;tico</span>':'')+'</div>'
+      +     '<div class="proj-meta-line">'+escapeHtml(p.cat)+' &middot; riesgo '+p.risk+'</div>'
+      +   '</div>'
+      +   '<select class="sel" data-proj-status="'+p.id+'">'
+      +     '<option value="green" '+(p.status==='green'?'selected':'')+'>Verde</option>'
+      +     '<option value="amber" '+(p.status==='amber'?'selected':'')+'>Amarillo</option>'
+      +     '<option value="red"   '+(p.status==='red'  ?'selected':'')+'>Rojo</option>'
+      +   '</select>'
+      +   '<select class="sel" data-proj-risk="'+p.id+'">'
+      +     '<option value="bajo"  '+(p.risk==='bajo' ?'selected':'')+'>Riesgo bajo</option>'
+      +     '<option value="medio" '+(p.risk==='medio'?'selected':'')+'>Riesgo medio</option>'
+      +     '<option value="alto"  '+(p.risk==='alto' ?'selected':'')+'>Riesgo alto</option>'
+      +   '</select>'
+      +   '<div class="tiny '+(stale?'proj-stale':'muted')+'">'+fmtDateShort(p.lastUpdate)+'</div>'
+      +   '<div class="flex" style="justify-content:flex-end">'
+      +     '<button class="btn btn-sm" data-proj-open="'+p.id+'">Profundizar</button>'
+      +   '</div>'
+      + '</div>'
+      + '<div class="proj-detail hidden" data-proj-detail="'+p.id+'">'
+      +   '<div class="row">'
+      +     '<div class="field"><label>Pr&oacute;ximo paso (UNO solo)</label><input class="inp" data-proj-next="'+p.id+'" value="'+escapeAttr(p.nextStep||'')+'"></div>'
+      +     '<div class="field short">'
+      +       '<label>Cr&iacute;tico</label>'
+      +       '<select class="sel" data-proj-crit="'+p.id+'">'
+      +         '<option value="false" '+(!p.critical?'selected':'')+'>No</option>'
+      +         '<option value="true"  '+(p.critical?'selected':'')+'>S&iacute;</option>'
+      +       '</select>'
+      +     '</div>'
+      +   '</div>'
+      +   '<div class="field"><label>Notas / contexto</label><textarea class="txt" data-proj-notes="'+p.id+'">'+escapeHtml(p.notes||'')+'</textarea></div>'
+      +   '<div class="flex">'
+      +     '<button class="btn btn-sm" data-proj-touch="'+p.id+'">Marcar como actualizado hoy</button>'
+      +     '<button class="btn btn-sm btn-danger" data-proj-del="'+p.id+'">Eliminar proyecto</button>'
+      +   '</div>'
+      + '</div>'
+      + '</div>';
+  }).join("");
+
+  el.querySelectorAll("[data-proj-status]").forEach(s=>s.addEventListener("change",e=>{
+    const p = db.projects.find(x=>x.id===e.target.dataset.projStatus);
+    if(p){ p.status = e.target.value; p.lastUpdate = new Date().toISOString(); save(); renderAll(); }
+  }));
+  el.querySelectorAll("[data-proj-risk]").forEach(s=>s.addEventListener("change",e=>{
+    const p = db.projects.find(x=>x.id===e.target.dataset.projRisk);
+    if(p){ p.risk = e.target.value; p.lastUpdate = new Date().toISOString(); save(); renderAll(); }
+  }));
+  el.querySelectorAll("[data-proj-open]").forEach(b=>b.addEventListener("click",e=>{
+    openProjDetail(e.currentTarget.dataset.projOpen);
+  }));
+  el.querySelectorAll("[data-proj-next]").forEach(i=>i.addEventListener("change",e=>{
+    const p = db.projects.find(x=>x.id===e.target.dataset.projNext);
+    if(p){ p.nextStep = e.target.value; p.lastUpdate = new Date().toISOString(); save(); renderAll(); }
+  }));
+  el.querySelectorAll("[data-proj-crit]").forEach(s=>s.addEventListener("change",e=>{
+    const p = db.projects.find(x=>x.id===e.target.dataset.projCrit);
+    if(p){ p.critical = e.target.value === "true"; save(); renderAll(); }
+  }));
+  el.querySelectorAll("[data-proj-notes]").forEach(t=>t.addEventListener("change",e=>{
+    const p = db.projects.find(x=>x.id===e.target.dataset.projNotes);
+    if(p){ p.notes = e.target.value; p.lastUpdate = new Date().toISOString(); save(); renderAll(); }
+  }));
+  el.querySelectorAll("[data-proj-touch]").forEach(b=>b.addEventListener("click",e=>{
+    const p = db.projects.find(x=>x.id===e.currentTarget.dataset.projTouch);
+    if(p){ p.lastUpdate = new Date().toISOString(); save(); renderAll(); toast("Proyecto actualizado"); }
+  }));
+  el.querySelectorAll("[data-proj-del]").forEach(b=>b.addEventListener("click",e=>{
+    const id = e.currentTarget.dataset.projDel;
+    if(!confirm("Eliminar este proyecto? No borra sus tareas hist&oacute;ricas.")) return;
+    db.projects = db.projects.filter(p=>p.id!==id);
+    delete db.finance[id];
+    save(); renderAll();
+  }));
+}
+function openProjDetail(id){
+  const det = document.querySelector('[data-proj-detail="'+id+'"]');
+  if(!det) return;
+  document.querySelectorAll(".proj-detail").forEach(d=>{ if(d!==det) d.classList.add("hidden"); });
+  det.classList.toggle("hidden");
+}
+
+document.getElementById("formProj").addEventListener("submit", e=>{
+  e.preventDefault();
+  const name = document.getElementById("npName").value.trim();
+  const cat  = document.getElementById("npCat").value;
+  const critical = document.getElementById("npCrit").value === "true";
+  if(!name) return;
+  db.projects.push({id:uid(), name, cat, status:"green", risk:"medio", critical, lastUpdate:null, nextStep:"", notes:""});
+  save(); e.target.reset(); renderAll();
+});
+
+/* FINANZAS */
+function renderFinance(){
+  const crits = db.projects.filter(p=>p.critical);
+  const el = document.getElementById("finList");
+  if(!crits.length){
+    el.innerHTML = '<div class="card empty">Marca proyectos como <strong>cr&iacute;ticos</strong> en la pesta&ntilde;a Proyectos para verlos aqu&iacute;.</div>';
+    document.getElementById("totCash").textContent = "$0";
+    document.getElementById("totInc").textContent = "$0";
+    document.getElementById("totCost").textContent = "$0";
+    document.getElementById("totDelta").textContent = "$0";
+    document.getElementById("finSummary").textContent = "0 proyectos cr&iacute;ticos";
+    return;
+  }
+
+  let totCash=0, totInc=0, totCost=0;
+  el.innerHTML = crits.map(p=>{
+    const f = db.finance[p.id] || {cash:0, income:0, costs:0, updatedAt:null};
+    db.finance[p.id] = f;
+    const delta = (+f.cash||0) + (+f.income||0) - (+f.costs||0);
+    totCash += +f.cash||0; totInc += +f.income||0; totCost += +f.costs||0;
+    const dCls = delta >= 0 ? "pos" : "neg";
+    return '<div class="fin-card">'
+      + '<div class="fin-h">'
+      +   '<div><strong>'+escapeHtml(p.name)+'</strong><span class="tiny muted"> &middot; '+escapeHtml(p.cat)+' &middot; actualizado '+fmtDateShort(f.updatedAt)+'</span></div>'
+      +   '<div class="proj-dot '+p.status+'"></div>'
+      + '</div>'
+      + '<div class="fin-grid">'
+      +   '<div class="fin-cell"><div class="l">Caja actual</div><input class="inp" type="number" data-fin="cash" data-pid="'+p.id+'" value="'+(f.cash||0)+'" style="text-align:center;font-weight:800"></div>'
+      +   '<div class="fin-cell"><div class="l">Ingresos est.</div><input class="inp" type="number" data-fin="income" data-pid="'+p.id+'" value="'+(f.income||0)+'" style="text-align:center;font-weight:800"></div>'
+      +   '<div class="fin-cell"><div class="l">Costos est.</div><input class="inp" type="number" data-fin="costs" data-pid="'+p.id+'" value="'+(f.costs||0)+'" style="text-align:center;font-weight:800"></div>'
+      +   '<div class="fin-cell delta '+dCls+'"><div class="l">Resultado</div><div class="v">'+money(delta)+'</div></div>'
+      + '</div>'
+      + '</div>';
+  }).join("");
+
+  el.querySelectorAll("[data-fin]").forEach(i=>i.addEventListener("change",e=>{
+    const pid = e.target.dataset.pid;
+    const k   = e.target.dataset.fin;
+    const f   = db.finance[pid];
+    f[k] = +e.target.value || 0;
+    f.updatedAt = new Date().toISOString();
+    save(); renderFinance();
+  }));
+
+  const totDelta = totCash + totInc - totCost;
+  document.getElementById("totCash").textContent = money(totCash);
+  document.getElementById("totInc").textContent  = money(totInc);
+  document.getElementById("totCost").textContent = money(totCost);
+  document.getElementById("totDelta").textContent= money(totDelta);
+  document.getElementById("totDeltaCell").classList.toggle("pos", totDelta>=0);
+  document.getElementById("totDeltaCell").classList.toggle("neg", totDelta<0);
+  document.getElementById("finSummary").textContent = crits.length+" proyecto(s) cr&iacute;tico(s)";
+}
+
+/* PROJECT SELECTS */
+function fillProjSelects(){
+  const opts = db.projects.map(p=>'<option value="'+p.id+'">'+escapeHtml(p.name)+'</option>').join("");
+  document.getElementById("pProj").innerHTML = opts;
+  document.getElementById("gProj").innerHTML = opts;
+}
+
+/* CLAUDE EXPORT */
+function buildClaudeSummary(){
+  const ps = todayPriorities();
+  const totalMin = ps.reduce((a,b)=>a+(+b.minutes||0),0);
+  const goals = thisWeekGoals();
+  const habits = todayHabits();
+  const habitDone = ["plan","deepWork","closeOne"].filter(k=>habits[k]).length;
+  const reds  = db.projects.filter(p=>p.status==="red");
+  const stale = db.projects.filter(p=>p.lastUpdate && daysSince(p.lastUpdate) >= 3);
+  const crits = db.projects.filter(p=>p.critical);
+
+  const lines = [];
+  lines.push("# Estado gerencial - "+fmtDateLong());
+  lines.push("");
+  lines.push("## Hoy");
+  if(ps.length){
+    ps.forEach((p,i)=>{
+      const proj = db.projects.find(x=>x.id===p.projectId);
+      const status = p.status==="done"?"[hecho]":p.status==="doing"?"[en proceso]":"[pendiente]";
+      lines.push((i+1)+". "+status+" "+p.text+" - proyecto: "+(proj?proj.name:'-')+" - "+p.minutes+"min");
+    });
+    lines.push("Total agendado: "+totalMin+" min de 120 ("+Math.round(totalMin/120*100)+"%).");
+  } else {
+    lines.push("- Sin prioridades definidas todavia.");
+  }
+  lines.push("Disciplina hoy: "+habitDone+"/3 (planificacion: "+(habits.plan?"si":"no")+", deep work: "+(habits.deepWork?"si":"no")+", cerre algo: "+(habits.closeOne?"si":"no")+")");
+  lines.push("");
+
+  lines.push("## Semana ("+weekRange()+")");
+  if(goals.length){
+    goals.forEach((g,i)=>{
+      const proj = db.projects.find(x=>x.id===g.projectId);
+      lines.push((i+1)+". "+g.text+" - "+(proj?proj.name:'-')+" - avance "+(g.progress||0)+"%"+(g.blockers?(" - BLOQUEO: "+g.blockers):""));
+    });
+  } else {
+    lines.push("- Sin objetivos definidos para la semana.");
+  }
+  lines.push("");
+
+  lines.push("## Portafolio");
+  const verde = db.projects.filter(p=>p.status==="green").length;
+  const amar  = db.projects.filter(p=>p.status==="amber").length;
+  const rojo  = db.projects.filter(p=>p.status==="red").length;
+  lines.push("Total "+db.projects.length+" proyectos: "+verde+" verde, "+amar+" amarillo, "+rojo+" rojo.");
+  if(reds.length){
+    lines.push("EN ROJO:");
+    reds.forEach(p=>lines.push("- "+p.name+" ("+p.cat+") - riesgo "+p.risk+" - proximo paso: "+(p.nextStep||'-')));
+  }
+  if(stale.length){
+    lines.push("Sin actualizar >=3 dias: "+stale.map(p=>p.name).join(", ")+".");
+  }
+  lines.push("");
+
+  if(crits.length){
+    lines.push("## Finanzas criticas");
+    let TC=0,TI=0,TX=0;
+    crits.forEach(p=>{
+      const f = db.finance[p.id] || {cash:0,income:0,costs:0};
+      const d = (+f.cash||0)+(+f.income||0)-(+f.costs||0);
+      TC+=+f.cash||0; TI+=+f.income||0; TX+=+f.costs||0;
+      lines.push("- "+p.name+": caja "+money(f.cash)+" - ingresos "+money(f.income)+" - costos "+money(f.costs)+" - resultado "+money(d));
+    });
+    lines.push("Consolidado: caja "+money(TC)+" - ingresos "+money(TI)+" - costos "+money(TX)+" - resultado "+money(TC+TI-TX)+".");
+    lines.push("");
+  }
+
+  lines.push("## Lo que necesito de ti");
+  lines.push("1. De mis 3 prioridades de hoy, cual parece menos relevante o mal priorizada?");
+  lines.push("2. Que proyecto en rojo o sin actualizar deberia intervenir esta semana?");
+  lines.push("3. Si solo pudiera ejecutar 1 cosa hoy, cual seria y por que?");
+  return lines.join("\n");
+}
+
+document.getElementById("btnClaude").addEventListener("click",()=>{
+  document.getElementById("claudeOut").textContent = buildClaudeSummary();
+  document.getElementById("claudeModal").classList.add("open");
+});
+document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>{
+  document.getElementById("claudeModal").classList.remove("open");
+}));
+document.getElementById("claudeModal").addEventListener("click",e=>{
+  if(e.target.id==="claudeModal") e.currentTarget.classList.remove("open");
+});
+document.getElementById("copyClaude").addEventListener("click",async ()=>{
+  const txt = document.getElementById("claudeOut").textContent;
+  try{ await navigator.clipboard.writeText(txt); toast("Copiado. Pega en Claude."); }
+  catch(e){ toast("No pude copiar - selecciona y copia manual"); }
+});
+
+/* EXPORT / IMPORT */
+document.getElementById("btnExport").addEventListener("click",()=>{
+  const blob = new Blob([JSON.stringify(db,null,2)], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "gerencial_"+today()+".json";
+  a.click();
+});
+document.getElementById("btnImport").addEventListener("click",()=>document.getElementById("fileImport").click());
+document.getElementById("fileImport").addEventListener("change",e=>{
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = ()=>{
+    try{
+      const parsed = JSON.parse(r.result);
+      if(!parsed.projects) throw new Error("formato invalido");
+      if(!confirm("Reemplazar todos los datos actuales con este backup?")) return;
+      db = Object.assign(JSON.parse(JSON.stringify(SEED)), parsed);
+      save(); renderAll(); toast("Datos restaurados");
+    }catch(err){ alert("Archivo no valido: "+err.message); }
+  };
+  r.readAsText(f);
+});
+
+/* UTILS */
+function escapeHtml(s){ return String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function escapeAttr(s){ return escapeHtml(s); }
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  clearTimeout(toast._t);
+  toast._t = setTimeout(()=>t.classList.remove("show"), 1800);
+}
+
+/* INIT */
+function renderAll(){
+  fillProjSelects();
+  renderHero();
+  renderPriorities();
+  renderHabits();
+  renderAlerts();
+  renderRedProjects();
+  renderWeek();
+  renderProjects();
+  renderFinance();
+  loadNotes();
+}
+renderAll();
+</script>
+</body>
+</html>
