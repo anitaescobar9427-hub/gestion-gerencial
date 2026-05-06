@@ -303,8 +303,8 @@ input[type="checkbox"]{accent-color:var(--pri)}
 </details>
 <div class="card"><div class="card-title">☁️ Sincronización <span id="sync-indicator" style="font-size:11px;font-weight:500;color:var(--g400);margin-left:auto"></span></div>
 <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
-<button class="btn btn-pri btn-sm" onclick="cloudPush()">⬆️ Subir</button>
-<button class="btn btn-pri btn-sm" onclick="cloudPull()">⬇️ Descargar</button>
+<button class="btn btn-pri btn-sm" onclick="cloudPush(true)">⬆️ Subir</button>
+<button class="btn btn-pri btn-sm" onclick="cloudForceSync()">⬇️ Descargar</button>
 <button class="btn btn-out btn-sm" onclick="cloudForceSync()">🔄 Forzar sync</button>
 </div><div id="sync-status" style="font-size:11px;margin-top:6px;color:var(--g400)"></div></div>
 <div style="display:flex;gap:8px;margin-top:14px;justify-content:center;flex-wrap:wrap">
@@ -574,7 +574,7 @@ const STORE='gm-v5';
 const SUPA_URL='https://lxjtmgsjxcuruhpdsdxx.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx4anRtZ3NqeGN1cnVocGRzZHh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwNTM2OTYsImV4cCI6MjA5MTYyOTY5Nn0.NnX6uXPIgnO0j6ueTmB-ATD3x7VuNA0vV75DR-eJ0YY';
 var supaClient=null;
-var _syncTimer=null,_syncing=false,_lastCloudTs=null;
+var _syncTimer=null,_syncing=false,_lastCloudTs=null,_dirty=false,_pushFailures=0;
 try{supaClient=window.supabase.createClient(SUPA_URL,SUPA_KEY)}catch(e){console.warn('Supabase no disponible, modo offline')}
 const BIZ=['personal'];
 const BI={personal:{icon:'👤',label:'Personal',c:'#f39c12'}};
@@ -596,8 +596,9 @@ personal:{weekly:[],longterm:[],notes:''},colfarming:{tasks:[],kpis:[],notes:''}
 eisenhower:{do:[],schedule:[],delegate:[],eliminate:[]},m333:{project:[],urgent:[],maint:[]},frog:{task:'',history:[]},timeBlocks:[],pomCount:0,newsNotes:''}}
 
 function save(){
-localStorage.setItem(STORE,JSON.stringify(D));
 D._updatedAt=new Date().toISOString();
+_dirty=true;
+localStorage.setItem(STORE,JSON.stringify(D));
 scheduleCloudSync()}
 function saveLocal(){localStorage.setItem(STORE,JSON.stringify(D))}
 function ensureFields(){
@@ -629,51 +630,78 @@ try{D=JSON.parse(localStorage.getItem(STORE))}catch(e){D=null}
 if(!D){D=DEF();['gm-v4','gm-v3','gm-v2'].forEach(k=>{try{const old=JSON.parse(localStorage.getItem(k));if(old)Object.keys(old).forEach(key=>{if(old[key]!==undefined&&old[key]!==null)D[key]=old[key]})}catch(e){}});}
 ensureFields();doDayReset();migrateIdentityStatements();saveLocal()}
 function migrateIdentityStatements(){if(!D.identities)return;var changed=false;D.identities.forEach(function(id){if(id.statement){var orig=id.statement;var s=orig.trim();s=s.replace(/^(soy\s+)?(una\s+persona\s+que|un\s+persona\s+que|alguien\s+que|la\s+persona\s+que|el\s+que|quien)\s+/i,'');if(s!==orig){id.statement=s.trim();changed=true}}});if(changed)saveLocal()}
-// ═══ SUPABASE CLOUD SYNC ═══
+// ═══ SUPABASE CLOUD SYNC (last-write-wins por timestamp) ═══
 function scheduleCloudSync(){if(_syncTimer)clearTimeout(_syncTimer);_syncTimer=setTimeout(cloudPush,1500)}
 function setSyncIndicator(txt,color){var el=document.getElementById('sync-indicator');if(el){el.textContent=txt;el.style.color=color||'var(--g400)'}}
-function cloudPush(){
-if(!supaClient||_syncing)return;_syncing=true;setSyncIndicator('Subiendo...','var(--amber)');
-var payload={id:'main',data:D,updated_at:new Date().toISOString(),version:(D._cloudVersion||0)+1};
+function cloudPush(forced){
+if(!supaClient)return;
+if(_syncing){if(_syncTimer)clearTimeout(_syncTimer);_syncTimer=setTimeout(cloudPush,1500);return}
+if(!_dirty&&!forced)return;
+_syncing=true;setSyncIndicator('Subiendo...','var(--amber)');
+var pushedTs=D._updatedAt||new Date().toISOString();
+var payload={id:'main',data:D,updated_at:pushedTs,version:(D._cloudVersion||0)+1};
 supaClient.from('dashboard_data').upsert(payload,{onConflict:'id'}).then(function(res){
 _syncing=false;
-if(res.error){setSyncIndicator('Error: '+res.error.message,'var(--red)');syncStatus('Error subiendo: '+res.error.message);return}
-D._cloudVersion=(D._cloudVersion||0)+1;_lastCloudTs=payload.updated_at;
+if(res.error){_pushFailures++;setSyncIndicator('Error: '+res.error.message,'var(--red)');syncStatus('Error subiendo: '+res.error.message);
+if(_pushFailures<5){if(_syncTimer)clearTimeout(_syncTimer);_syncTimer=setTimeout(cloudPush,5000)}return}
+_pushFailures=0;
+if(D._updatedAt===pushedTs)_dirty=false; // si llegaron cambios nuevos durante el push, mantener dirty
+D._cloudVersion=(D._cloudVersion||0)+1;_lastCloudTs=pushedTs;
 setSyncIndicator('Sincronizado '+new Date().toLocaleTimeString(),'var(--green)');
-syncStatus('Subido '+new Date().toLocaleTimeString(),true)
-}).catch(function(e){_syncing=false;setSyncIndicator('Sin conexion','var(--g400)')})}
-function cloudPull(){
-if(!supaClient)return;setSyncIndicator('Descargando...','var(--amber)');
-supaClient.from('dashboard_data').select('data,updated_at,version').eq('id','main').single().then(function(res){
-if(res.error){syncStatus('Error: '+res.error.message);setSyncIndicator('Error','var(--red)');return}
-if(!res.data||!res.data.data||Object.keys(res.data.data).length===0){syncStatus('Nube vacia, sube primero');return}
-D=res.data.data;D._cloudVersion=res.data.version||1;_lastCloudTs=res.data.updated_at;
-ensureFields();doDayReset();migrateIdentityStatements();saveLocal();renderAll();
-setSyncIndicator('Descargado '+new Date().toLocaleTimeString(),'var(--green)');
-syncStatus('Descargado '+new Date().toLocaleTimeString(),true);toast('☁️ Datos descargados')
-}).catch(function(e){syncStatus('Error: '+e.message);setSyncIndicator('Sin conexion','var(--g400)')})}
-function cloudForceSync(){cloudPull()}
-function cloudInit(){
+syncStatus('Subido '+new Date().toLocaleTimeString(),true);
+saveLocal();
+}).catch(function(e){_syncing=false;_pushFailures++;setSyncIndicator('Sin conexion','var(--g400)');
+if(_pushFailures<5){if(_syncTimer)clearTimeout(_syncTimer);_syncTimer=setTimeout(cloudPush,5000)}})}
+function cloudPull(opts){
 if(!supaClient)return;
+opts=opts||{};
+// Si hay cambios locales no subidos, sube primero y reintenta
+if(_dirty&&!opts.force){if(_syncTimer)clearTimeout(_syncTimer);cloudPush();
+setTimeout(function(){if(!_dirty)cloudPull(opts)},2000);return}
+if(_syncing){setTimeout(function(){cloudPull(opts)},1000);return}
+_syncing=true;setSyncIndicator('Descargando...','var(--amber)');
 supaClient.from('dashboard_data').select('data,updated_at,version').eq('id','main').single().then(function(res){
-if(res.error){setSyncIndicator('Primer uso — sube datos','var(--amber)');return}
-if(!res.data||!res.data.data||Object.keys(res.data.data).length===0){
-cloudPush();return}
+_syncing=false;
+if(res.error){syncStatus('Error: '+res.error.message);setSyncIndicator('Error','var(--red)');return}
+if(!res.data||!res.data.data||Object.keys(res.data.data).length===0){syncStatus('Nube vacia, sube primero');setSyncIndicator('Nube vacia','var(--amber)');return}
 var cloudTs=res.data.updated_at?new Date(res.data.updated_at).getTime():0;
 var localTs=D._updatedAt?new Date(D._updatedAt).getTime():0;
-if(cloudTs>localTs){
+if(!opts.force&&cloudTs<=localTs){
+setSyncIndicator('Local actualizado '+new Date().toLocaleTimeString(),'var(--green)');
+if(opts.userInitiated)toast('✓ Local ya está al día');
+return}
+D=res.data.data;D._cloudVersion=res.data.version||1;_lastCloudTs=res.data.updated_at;_dirty=false;
+ensureFields();doDayReset();migrateIdentityStatements();saveLocal();renderAll();
+setSyncIndicator('Descargado '+new Date().toLocaleTimeString(),'var(--green)');
+syncStatus('Descargado '+new Date().toLocaleTimeString(),true);
+if(opts.userInitiated)toast('☁️ Datos descargados')
+}).catch(function(e){_syncing=false;syncStatus('Error: '+e.message);setSyncIndicator('Sin conexion','var(--g400)')})}
+function cloudForceSync(){cloudPull({force:true,userInitiated:true})}
+function cloudInit(){
+if(!supaClient)return;
+if(_syncing){setTimeout(cloudInit,800);return}
+_syncing=true;
+supaClient.from('dashboard_data').select('data,updated_at,version').eq('id','main').single().then(function(res){
+_syncing=false;
+if(res.error){setSyncIndicator('Primer uso — sube datos','var(--amber)');if(_dirty)cloudPush();return}
+if(!res.data||!res.data.data||Object.keys(res.data.data).length===0){
+_dirty=true;cloudPush();return}
+var cloudTs=res.data.updated_at?new Date(res.data.updated_at).getTime():0;
+var localTs=D._updatedAt?new Date(D._updatedAt).getTime():0;
+if(cloudTs>localTs&&!_dirty){
 D=res.data.data;D._cloudVersion=res.data.version||1;_lastCloudTs=res.data.updated_at;
 ensureFields();doDayReset();migrateIdentityStatements();saveLocal();renderAll();
 setSyncIndicator('Sincronizado','var(--green)');toast('☁️ Datos actualizados desde la nube')
-}else{setSyncIndicator('Local actualizado','var(--green)');cloudPush()}
-}).catch(function(e){setSyncIndicator('Modo offline','var(--g400)')})}
-// Auto-sync when app becomes visible
-function onVisibilitySync(){if(!document.hidden&&supaClient){cloudPull()}}
+}else if(localTs>cloudTs||_dirty){setSyncIndicator('Subiendo cambios locales...','var(--amber)');_dirty=true;cloudPush()
+}else{setSyncIndicator('Sincronizado','var(--green)')}
+}).catch(function(e){_syncing=false;setSyncIndicator('Modo offline','var(--g400)')})}
+// Auto-sync cuando la pestaña vuelve a estar visible — solo pull si NO hay cambios pendientes
+function onVisibilitySync(){if(document.hidden||!supaClient)return;
+if(_dirty){cloudPush()}else{cloudPull()}}
 
 function checkDayChange(){const today=new Date().toDateString();if(D.lastDate&&D.lastDate!==today){
 const pi=dateToIso(D.lastDate);if(pi&&!D.habitLog[pi]){D.habitLog[pi]={};D.habits.forEach(h=>{D.habitLog[pi][h.id]=!!h.done})}
-D.habits.forEach(h=>h.done=false);D.pomCount=0;D.pomDate=new Date().toISOString().slice(0,10);D.lastDate=today;save();renderAll();toast('🌅 Nuevo día')}
-else if(supaClient&&!document.hidden){cloudPull()}}
+D.habits.forEach(h=>h.done=false);D.pomCount=0;D.pomDate=new Date().toISOString().slice(0,10);D.lastDate=today;save();renderAll();toast('🌅 Nuevo día')}}
 
 function checkWeeklyReset(){const now=new Date();if(now.getDay()===0){const wk=getWeekKey();if(D.lastWeekReset!==wk)performWeeklyReset(wk)}}
 function performWeeklyReset(wk){const snap={weekKey:wk,closedAt:todayStr(),biz:{},habitPct:0};
@@ -2054,6 +2082,8 @@ document.addEventListener('DOMContentLoaded',function(){loadTheme();load();rende
 var ct=document.getElementById('pom-count');if(ct)ct.textContent=D.pomCount||0;
 setTimeout(cloudInit,500);
 setInterval(function(){checkDayChange();checkWeeklyReset()},60000);
+// Pull periódico cada 2 min para sincronizar entre dispositivos (solo si no hay cambios pendientes y la pestaña está visible)
+setInterval(function(){if(supaClient&&!document.hidden&&!_dirty&&!_syncing)cloudPull()},120000);
 document.addEventListener('visibilitychange',function(){if(!document.hidden){checkDayChange();checkWeeklyReset();onVisibilitySync()}});
 document.querySelectorAll('.overlay').forEach(function(ov){ov.addEventListener('click',function(e){if(e.target===ov)ov.classList.remove('open')})})});
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){})}
