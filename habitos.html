@@ -253,6 +253,41 @@ input[type="checkbox"]{accent-color:var(--pri)}
 .chain-cell.done{background:var(--pri);color:#fff}
 .chain-cell.today{outline:2px solid var(--pri3);outline-offset:-2px}
 .chain-cell.empty{background:transparent}
+
+/* ====== PROYECTOS / METAS ====== */
+.proj-card{background:var(--card);border-radius:var(--radius);border:1.5px solid var(--g200);margin-bottom:14px;overflow:hidden;box-shadow:var(--shadow);transition:box-shadow .2s}
+.proj-card:hover{box-shadow:var(--shadow-md)}
+.proj-header{padding:14px 16px;cursor:pointer;display:flex;align-items:flex-start;gap:12px}
+.proj-color-bar{width:5px;border-radius:3px;flex-shrink:0;align-self:stretch;min-height:40px}
+.proj-meta{flex:1;min-width:0}
+.proj-title{font-weight:800;font-size:15px;margin-bottom:3px;color:var(--text)}
+.proj-desc{font-size:12px;color:var(--g400);margin-bottom:6px;line-height:1.4}
+.proj-badges{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.proj-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;white-space:nowrap}
+.proj-badge-area{background:var(--priGlow);color:var(--pri)}
+.proj-badge-status-activo{background:rgba(46,204,113,.12);color:var(--green)}
+.proj-badge-status-pausado{background:rgba(212,168,83,.12);color:var(--amber)}
+.proj-badge-status-completado{background:rgba(107,143,113,.12);color:var(--pri)}
+.proj-badge-status-cancelado{background:rgba(217,91,91,.12);color:var(--red)}
+.proj-progress-wrap{padding:0 16px 4px}
+.proj-progress-bar{height:6px;background:var(--g200);border-radius:3px;overflow:hidden;margin-bottom:4px}
+.proj-progress-fill{height:100%;border-radius:3px;transition:width .4s}
+.proj-body{border-top:1px solid var(--g200);padding:12px 16px}
+.paso-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);border:1px solid var(--g200);margin-bottom:6px;background:var(--g100);transition:all .15s;cursor:pointer}
+.paso-item:hover{border-color:var(--pri);background:rgba(107,143,113,.04)}
+.paso-item.done{opacity:.5}
+.paso-item.bloqueado{border-left:3px solid var(--red)}
+.paso-item.en-progreso{border-left:3px solid var(--amber);background:rgba(212,168,83,.06)}
+.paso-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--g300);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .2s;margin-top:1px}
+.paso-check:hover{border-color:var(--green)}
+.paso-check.done{background:var(--green);border-color:transparent;color:#fff}
+.paso-check.bloqueado{background:var(--red);border-color:transparent;color:#fff}
+.paso-check.en-progreso{background:var(--amber);border-color:transparent;color:#fff}
+.paso-info{flex:1;min-width:0}
+.paso-text{font-size:13px;font-weight:600;color:var(--text)}
+.paso-sub{font-size:11px;color:var(--g400);margin-top:2px}
+.proj-empty{text-align:center;padding:20px;color:var(--g400);font-size:13px}
+
 </style>
 </head>
 <body>
@@ -268,9 +303,8 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <button class="tab-btn" onclick="showTab('habitos')" data-tab="habitos">🧬 Hábitos</button>
 <button class="tab-btn" onclick="showTab('stacking')" data-tab="stacking">🔗 Stacking</button>
 <button class="tab-btn" onclick="showTab('rastreador')" data-tab="rastreador">📊 Rastreador</button>
-<button class="tab-btn" onclick="showTab('audit')" data-tab="audit">📈 Audit 1%</button>
-<button class="tab-btn" onclick="showTab('personal')" data-tab="personal">👤 Personal</button>
 <button class="tab-btn" onclick="showTab('productividad')" data-tab="productividad">🚀 Productividad</button>
+<button class="tab-btn" onclick="showTab('proyectos')" data-tab="proyectos">🎯 Proyectos</button>
 <button class="tab-btn" onclick="showTab('revision')" data-tab="revision">📋 Revisión</button>
 </div></div>
 <div id="tab-inicio" class="section active">
@@ -278,13 +312,31 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <div id="home-greeting" style="font-size:18px;font-weight:700"></div>
 <div id="home-affirmation-line" style="font-size:13px;color:var(--g500);margin-top:4px;font-style:italic"></div>
 </div>
-<div class="card"><div class="card-title">🔥 No Olvidar <span id="qt-reminder-badge" style="margin-left:auto;font-size:11px;color:var(--red);font-weight:700"></span> <button class="btn btn-pri btn-sm" onclick="openHomeTaskModal()">+ Tarea</button></div>
-<div class="add-row" style="margin-bottom:8px;flex-wrap:wrap;gap:6px">
-<input class="inp" id="qt-text" placeholder="Agregar recordatorio…" style="flex:2;min-width:150px" onkeydown="if(event.key==='Enter')addQuickTask()">
-<input type="datetime-local" class="inp" id="qt-remind" style="flex:1;min-width:140px;font-size:11px" title="Fecha y hora del recordatorio (opcional)">
-<button class="btn btn-pri btn-sm" onclick="addQuickTask()">+</button>
+<div class="card"><div class="card-title">🔥 No Olvidar <span id="qt-reminder-badge" style="margin-left:auto;font-size:11px;color:var(--red);font-weight:700"></span> <button class="btn btn-pri btn-sm" onclick="addQuickTask()">+ Agregar</button></div>
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+<input class="inp" id="qt-text" placeholder="¿Qué no debes olvidar?" style="flex:3;min-width:150px" onkeydown="if(event.key==='Enter')addQuickTask()">
+<select class="inp" id="qt-area" style="flex:1;min-width:110px;font-size:12px">
+<option value="">— Área —</option>
+</select>
+<select class="inp" id="qt-pri" style="flex:1;min-width:90px;font-size:12px">
+<option value="media">🟡 Media</option>
+<option value="alta">🔴 Alta</option>
+<option value="baja">🟢 Baja</option>
+</select>
 </div>
-<div id="quick-task-list"></div></div>
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+<input type="datetime-local" class="inp" id="qt-remind" style="flex:1;min-width:140px;font-size:11px" title="Recordatorio (opcional)">
+<input type="date" class="inp" id="qt-due" style="flex:1;min-width:120px;font-size:11px" title="Fecha límite (opcional)">
+</div>
+<!-- filtro por área -->
+<div id="qt-filter-bar" class="chip-bar" style="margin-bottom:10px"></div>
+<div id="quick-task-list"></div>
+<!-- resumen por área -->
+<details id="qt-area-summary-wrap" style="margin-top:10px">
+<summary style="font-size:12px;font-weight:600;color:var(--g500);cursor:pointer;padding:4px 0">📊 Resumen por área</summary>
+<div id="qt-area-summary" style="margin-top:8px"></div>
+</details>
+</div>
 <div class="kpi-grid" id="home-kpis"></div>
 <div class="card"><div class="card-title">📋 Plan de Hoy <span id="home-plan-pct" style="margin-left:auto;font-size:12px;color:var(--g400)"></span></div><div id="home-plan-today"></div></div>
 <div class="card"><div class="card-title">🌅 Plan de Mañana <span id="home-plan-tomorrow-count" style="margin-left:auto;font-size:12px;color:var(--g400)"></span> <button class="btn btn-out btn-sm" onclick="showTab('plan');setTimeout(function(){var d=new Date();d.setDate(d.getDate()+1);document.getElementById('plan-date').value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');renderDailyPlan()},100)">✏️ Editar</button></div><div id="home-plan-tomorrow"></div></div>
@@ -307,10 +359,15 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <button class="btn btn-pri btn-sm" onclick="cloudForceSync()">⬇️ Descargar</button>
 <button class="btn btn-out btn-sm" onclick="cloudForceSync()">🔄 Forzar sync</button>
 </div><div id="sync-status" style="font-size:11px;margin-top:6px;color:var(--g400)"></div></div>
-<div style="display:flex;gap:8px;margin-top:14px;justify-content:center;flex-wrap:wrap">
-<button class="btn btn-out btn-sm" onclick="exportData()">📤 Exportar</button>
-<button class="btn btn-out btn-sm" onclick="importData()">📥 Importar</button>
+<div class="card" style="border-left:4px solid var(--amber)">
+<div class="card-title">💾 Backup local <span id="backup-indicator" style="font-size:11px;font-weight:500;color:var(--g400);margin-left:auto"></span></div>
+<div style="font-size:12px;color:var(--g500);margin-bottom:10px">Descarga una copia de seguridad de todos tus datos. Se hace automáticamente cada semana.</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<button class="btn btn-pri btn-sm" onclick="exportData();markBackupDone()" style="background:var(--amber);border-color:var(--amber)">📥 Descargar backup ahora</button>
+<button class="btn btn-out btn-sm" onclick="importData()">📤 Restaurar backup</button>
 <button class="btn btn-out btn-sm" onclick="manualWeekClose()">🔄 Cerrar semana</button>
+</div>
+<div id="backup-status" style="font-size:11px;margin-top:6px;color:var(--g400)"></div>
 </div></div>
 <div id="tab-areas" class="section">
 <div class="card"><div class="card-title">🏢 Mis 8 Áreas — Sistema de Hábitos Atómicos</div>
@@ -348,23 +405,7 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <div style="font-size:12px;color:var(--g400);margin-bottom:12px">Versión de 2 minutos: reduce cada hábito grande a algo que puedas hacer en ≤2 min.</div>
 <div id="friction-table"></div></div>
 </div>
-<div id="tab-audit" class="section">
-<div class="card"><div class="card-title">📈 Audit Semanal 1% — Evaluación por Área</div>
-<div style="font-size:12px;color:var(--g400);margin-bottom:12px">Cada semana califica (1-10) cuánto mejoraste en cada área. Si promedias 8/10 sostenido = +37x al año.</div>
-<div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
-<label style="font-size:12px;font-weight:600">Semana:</label>
-<input type="week" id="audit-week" class="inp" style="max-width:200px" onchange="renderWeeklyAudit()">
-<button class="btn btn-pri btn-sm" onclick="saveWeeklyAudit()">💾 Guardar</button>
-</div>
-<div id="audit-rows"></div>
-<div style="margin-top:14px;padding:12px;background:var(--priGlow);border-radius:var(--radius-sm)">
-<div style="font-size:12px;color:var(--g500);font-weight:600;margin-bottom:6px">Promedio semanal</div>
-<div id="audit-average" style="font-size:32px;font-weight:900;color:var(--pri)">—</div>
-</div>
-</div>
-<div class="card"><div class="card-title">📊 Tendencia 12 semanas</div>
-<canvas id="audit-trend-chart" style="max-height:220px"></canvas></div>
-</div>
+
 <div id="tab-identidad" class="section">
 <div class="card"><div class="card-title">🪞 Mis Identidades <button class="btn btn-pri btn-sm ml" onclick="openIdentityModal()">+ Identidad</button></div>
 <div style="font-size:12px;color:var(--g400);margin-bottom:12px">Define quién quieres ser. Cada hábito completado es un voto por tu nueva identidad.</div>
@@ -372,6 +413,11 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <div class="card"><div class="card-title">📊 Votos por identidad</div><div id="identity-votes"></div></div>
 </div>
 <div id="tab-habitos" class="section">
+<div id="second-miss-banner" style="display:none;background:rgba(217,91,91,.1);border:1.5px solid var(--red);border-radius:var(--radius);padding:14px;margin-bottom:12px">
+<div style="font-weight:700;font-size:13px;color:var(--red);margin-bottom:4px">⚠️ Alerta: Segundo día consecutivo sin estos hábitos</div>
+<div id="second-miss-list" style="font-size:12px;color:var(--g600)"></div>
+<div style="font-size:11px;color:var(--g400);margin-top:6px;font-style:italic">"Perder una vez es un accidente. Perder dos veces es el inicio de un hábito nuevo." — James Clear</div>
+</div>
 <div class="card"><div class="card-title">🧬 Mis Hábitos Atómicos <button class="btn btn-out btn-sm ml" onclick="toggleHabitGrouping()" id="grp-btn">🏢 Agrupar por área</button> <button class="btn btn-out btn-sm" onclick="openRetroModal()">📅 Día pasado</button> <button class="btn btn-pri btn-sm" onclick="openAtomicHabitModal()">+ Hábito</button></div>
 <div id="atomic-habit-list"></div></div>
 <div class="card"><div class="card-title">🔗 Apilamiento de Hábitos</div>
@@ -392,21 +438,14 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <div id="compound-viz" style="display:flex;align-items:flex-end;gap:2px;height:120px;justify-content:center"></div>
 <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--g400);margin-top:4px"><span>Hace 30 días</span><span>Hoy</span></div>
 </div></div>
+<div class="card"><div class="card-title">📈 Plateau of Latent Potential</div>
+<div style="font-size:12px;color:var(--g400);margin-bottom:10px">Clear: el progreso es <b>invisible</b> hasta que cruzas el umbral. Esta curva muestra tu consistencia acumulada — el trabajo que estás haciendo aunque no lo sientas.</div>
+<div id="plateau-viz" style="padding:8px 0"></div>
+<div style="font-size:11px;color:var(--g400);margin-top:8px;padding:8px;background:var(--g100);border-radius:6px">💡 <em>"Mastery requires patience."</em> — James Clear. El hielo no se derrite de 25°C a 26°C, pero sí a 27°C. Sigue acumulando.</div>
+</div>
 <div class="card"><div class="card-title">📅 Resumen semanal/mensual</div><div id="tracker-summary"></div></div>
 </div>
-<div id="tab-personal" class="section">
-<div class="card"><div class="card-title">✅ Hábitos del día</div><div id="habit-list"></div>
-<div class="add-row"><input class="inp" id="habit-inp" placeholder="Nuevo hábito…" onkeydown="if(event.key==='Enter')addHabit()"><button class="btn btn-pri btn-sm" onclick="addHabit()">+</button></div></div>
-<div class="card"><div class="card-title">🔥 Racha y progreso</div><div id="streak-row" class="streak-row"></div></div>
-<div class="card"><div class="card-title">📊 Seguimiento semanal</div><div id="habit-week-tracker"></div>
-<div style="margin-top:14px"><div style="font-size:12px;font-weight:600;margin-bottom:8px">📅 Últimas 12 semanas</div><div id="habit-weeks-history"></div></div></div>
-<div class="card"><div class="card-title">🎯 Metas / Proyectos <button class="btn btn-out btn-sm ml" onclick="openGoalModal('personal')">+ Meta</button></div><div id="goals-personal"></div></div>
-<div class="card"><div class="card-title">🔁 Rutinas Personales <button class="btn btn-out btn-sm ml" onclick="openRutModal('personal')">+ Rutina</button></div><div id="rut-biz-personal"></div></div>
-<div class="card"><div class="card-title">🎯 Metas semanales</div><div id="tasks-personal-weekly"></div></div>
-<div class="card"><div class="card-title">⭐ Metas largo plazo <button class="btn btn-out btn-sm ml" onclick="openLTGoalModal()">+ Meta LP</button></div><div id="longterm-goals"></div></div>
-<div class="card"><div class="card-title">📚 Libros</div><div id="books-section"></div></div>
-<div class="card"><div class="card-title">📝 Notas</div><textarea class="inp" id="notes-personal" rows="4" placeholder="Reflexiones…" oninput="saveNote('personal',this.value)"></textarea></div>
-</div>
+
 <div id="tab-productividad" class="section">
 <div class="card"><div class="card-title">🍅 Pomodoro</div>
 <div style="text-align:center;padding:10px">
@@ -471,15 +510,106 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <button class="btn btn-pri btn-sm" onclick="addTimeBlock()">+</button></div></div>
 <div class="card"><div class="card-title">🔗 Seinfeld Strategy</div>
 <div style="font-size:12px;color:var(--g400)">No rompas la cadena. Tu racha está en Hábitos.</div>
-<div style="text-align:center;padding:10px"><button class="btn btn-pri btn-sm" onclick="showTab('personal')">Ir a Hábitos →</button></div></div>
+<div style="text-align:center;padding:10px"><button class="btn btn-pri btn-sm" onclick="showTab('habitos')">Ir a Hábitos →</button></div></div>
 </div>
+
+<div id="tab-proyectos" class="section">
+
+<!-- RESUMEN DE PROYECTOS -->
+<div id="proj-summary-bar" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px"></div>
+
+<!-- FILTRO Y ACCIONES -->
+<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+<div id="proj-filter-bar" class="chip-bar" style="flex:1"></div>
+<button class="btn btn-pri btn-sm" onclick="openProyectoModal()">+ Proyecto</button>
+</div>
+
+<!-- LISTA DE PROYECTOS -->
+<div id="proyectos-list"></div>
+
+</div>
+
+<!-- MODAL PROYECTO -->
+<div class="overlay" id="proyecto-modal"><div class="modal">
+<div class="modal-title" id="pjm-title">Nuevo Proyecto / Meta</div>
+<input type="hidden" id="pjm-idx" value="-1">
+<div class="fg"><label>🎯 Nombre del proyecto o meta</label><input class="inp" id="pjm-name" placeholder="ej: Certificación ISO 9001, Lanzar nueva línea de quesos…"></div>
+<div class="fg"><label>📝 Descripción / Por qué importa</label><textarea class="inp" id="pjm-desc" rows="2" placeholder="¿Cuál es el impacto esperado?…"></textarea></div>
+<div class="row2">
+<div class="fg"><label>🏢 Área</label><select class="inp" id="pjm-area"><option value="">— Sin área —</option></select></div>
+<div class="fg"><label>🚦 Estado</label><select class="inp" id="pjm-status">
+<option value="activo">🟢 Activo</option>
+<option value="pausado">🟡 Pausado</option>
+<option value="completado">✅ Completado</option>
+<option value="cancelado">❌ Cancelado</option>
+</select></div>
+</div>
+<div class="row2">
+<div class="fg"><label>📅 Fecha límite</label><input class="inp" id="pjm-date" type="date"></div>
+<div class="fg"><label>⭐ Prioridad</label><select class="inp" id="pjm-pri">
+<option value="alta">🔴 Alta</option>
+<option value="media" selected>🟡 Media</option>
+<option value="baja">🟢 Baja</option>
+</select></div>
+</div>
+<div class="modal-btns">
+<button class="btn btn-pri" onclick="saveProyecto()">Guardar</button>
+<button class="btn btn-out" onclick="closeModal('proyecto-modal')">Cancelar</button>
+<button class="btn btn-danger btn-sm" id="pjm-del-btn" style="display:none" onclick="delProyecto()">🗑️ Eliminar</button>
+</div>
+</div></div>
+
+<!-- MODAL PASO/TAREA DE PROYECTO -->
+<div class="overlay" id="paso-modal"><div class="modal">
+<div class="modal-title" id="psm-title">Nuevo Paso</div>
+<input type="hidden" id="psm-pid" value="-1">
+<input type="hidden" id="psm-idx" value="-1">
+<div class="fg"><label>📋 Descripción del paso</label><input class="inp" id="psm-text" placeholder="ej: Llamar proveedor, Redactar documento, Conseguir cotización…" onkeydown="if(event.key==='Enter')savePaso()"></div>
+<div class="row2">
+<div class="fg"><label>📅 Fecha límite</label><input class="inp" id="psm-date" type="date"></div>
+<div class="fg"><label>⭐ Prioridad</label><select class="inp" id="psm-pri">
+<option value="alta">🔴 Alta</option>
+<option value="media" selected>🟡 Media</option>
+<option value="baja">🟢 Baja</option>
+</select></div>
+</div>
+<div class="fg"><label>🚦 Estado</label><select class="inp" id="psm-status">
+<option value="pendiente">⏳ Pendiente</option>
+<option value="en progreso">🔄 En progreso</option>
+<option value="completado">✅ Completado</option>
+<option value="bloqueado">🚫 Bloqueado</option>
+</select></div>
+<div class="fg"><label>📝 Notas (opcional)</label><textarea class="inp" id="psm-notes" rows="2" placeholder="Contexto, recursos necesarios…"></textarea></div>
+<div class="modal-btns">
+<button class="btn btn-pri" onclick="savePaso()">Guardar</button>
+<button class="btn btn-out" onclick="closeModal('paso-modal')">Cancelar</button>
+<button class="btn btn-danger btn-sm" id="psm-del-btn" style="display:none" onclick="delPaso()">🗑️ Eliminar</button>
+</div>
+</div></div>
+
 <div id="tab-revision" class="section">
-<div class="card"><div class="card-title">📋 Revisión Semanal</div>
-<div class="fg"><label>✅ ¿Qué logré?</label><textarea class="inp" id="rev-q0" rows="3" placeholder="Logros…" oninput="saveReview()"></textarea></div>
-<div class="fg"><label>⚠️ ¿Qué quedó pendiente?</label><textarea class="inp" id="rev-q1" rows="3" placeholder="Pendientes…" oninput="saveReview()"></textarea></div>
-<div class="fg"><label>💡 ¿Qué aprendí?</label><textarea class="inp" id="rev-q2" rows="3" placeholder="Aprendizajes…" oninput="saveReview()"></textarea></div>
-<div class="fg"><label>🎯 Prioridades próxima semana</label><textarea class="inp" id="rev-q3" rows="3" placeholder="Prioridades…" oninput="saveReview()"></textarea></div>
-<div class="fg"><label>📊 Calificación (1-10)</label><input class="inp" id="rev-q4" type="number" min="1" max="10" placeholder="8" oninput="saveReview()"></div>
+<div class="card" style="border-left:4px solid var(--pri)">
+<div class="card-title">📋 Revisión Semanal — Metodología James Clear</div>
+<div style="font-size:12px;color:var(--g400);margin-bottom:14px;padding:10px;background:var(--priGlow);border-radius:8px">&#128336; <b>Cada semana revisa tu sistema, no tus resultados.</b> Clear: "El objetivo no es alcanzar la meta, es enamorarse del proceso." Esta revisión está diseñada para mejorar el sistema, no para juzgar el desempeño.</div>
+
+<div style="font-weight:700;font-size:12px;color:var(--pri);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">🔍 Inventario del sistema</div>
+<div class="fg"><label>🪞 ¿Estoy convirtiéndome en la persona que quiero ser? ¿Qué votos de identidad gané esta semana?</label><textarea class="inp" id="rev-q0" rows="3" placeholder="Reflexiona sobre tu identidad, no sobre resultados…" oninput="saveReview()"></textarea></div>
+<div class="fg"><label>✅ ¿Qué hábitos sirvieron bien esta semana? ¿Por qué funcionaron?</label><textarea class="inp" id="rev-q1" rows="3" placeholder="¿Qué señal (cue) fue clara? ¿Qué hizo que la respuesta fuera fácil?…" oninput="saveReview()"></textarea></div>
+<div class="fg"><label>❌ ¿Qué hábitos fallaron o rompí la cadena? ¿Fue primer o segundo día consecutivo?</label><textarea class="inp" id="rev-q2" rows="3" placeholder="Clear: nunca falles dos veces. ¿Qué fricción causó el fallo?…" oninput="saveReview()"></textarea></div>
+
+<div style="font-weight:700;font-size:12px;color:var(--pri);text-transform:uppercase;letter-spacing:.5px;margin:14px 0 10px">⚙️ Mejora del sistema (las 4 Leyes)</div>
+<div class="fg"><label>🔔 1ª Ley — ¿Qué puedo hacer más obvio? (entorno, señales, recordatorios)</label><textarea class="inp" id="rev-q3" rows="2" placeholder="ej: Pondré los tenis junto a la cama, activaré notificación a las 6am…" oninput="saveReview()"></textarea></div>
+<div class="fg"><label>💫 2ª Ley — ¿Qué puedo hacer más atractivo? (bundling, grupo, ritual)</label><textarea class="inp" id="rev-q4" rows="2" placeholder="ej: Solo escucho podcast mientras camino, me uno al grupo de lectura…" oninput="saveReview()"></textarea></div>
+<div class="fg"><label>🎯 3ª Ley — ¿Qué puedo hacer más fácil? (versión 2-min, menos fricción)</label><textarea class="inp" id="rev-q5" rows="2" placeholder="ej: Dejar el libro en el escritorio, reducir a 5 min la meditación…" oninput="saveReview()"></textarea></div>
+<div class="fg"><label>🏆 4ª Ley — ¿Cómo puedo hacerlo más satisfactorio? (recompensa inmediata)</label><textarea class="inp" id="rev-q6" rows="2" placeholder="ej: Marcar el check en el rastreador, contarle a alguien, pequeño premio…" oninput="saveReview()"></textarea></div>
+
+<div style="font-weight:700;font-size:12px;color:var(--pri);text-transform:uppercase;letter-spacing:.5px;margin:14px 0 10px">🎯 Intención de implementación para la próxima semana</div>
+<div class="fg"><label>📋 El hábito que más quiero reforzar esta semana</label><textarea class="inp" id="rev-q7" rows="2" placeholder="Yo haré [HÁBITO] a las [HORA] en [LUGAR] después de [ANCLA]…" oninput="saveReview()"></textarea></div>
+<div class="row2">
+<div class="fg"><label>📊 Calificación del sistema (1-10)</label><input class="inp" id="rev-q8" type="number" min="1" max="10" placeholder="8" oninput="saveReview()"></div>
+<div class="fg"><label>🔥 Racha más larga esta semana</label><input class="inp" id="rev-q9" type="number" min="0" max="7" placeholder="días" oninput="saveReview()"></div>
+</div>
+<button class="btn btn-pri btn-sm" style="margin-top:8px" onclick="saveReview();toast('📋 Revisión guardada ✓')">💾 Guardar revisión</button>
 </div></div>
 <div class="overlay" id="task-modal"><div class="modal"><div class="modal-title" id="tm-title">Nueva Tarea</div>
 <input type="hidden" id="tm-biz"><input type="hidden" id="tm-sub"><input type="hidden" id="tm-idx" value="-1">
@@ -554,6 +684,8 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <div class="fg"><label>🎯 3a Ley — Respuesta (Hacerlo Fácil)</label><textarea class="inp" id="ahm-response" rows="2" placeholder="La versión completa del hábito"></textarea></div>
 <div class="fg"><label>2️⃣ Versión de 2 minutos</label><input class="inp" id="ahm-twomin" placeholder="ej: Ponerme la ropa deportiva"></div>
 <div class="fg"><label>🏆 4a Ley — Recompensa (Hacerlo Satisfactorio)</label><textarea class="inp" id="ahm-reward" rows="2" placeholder="Después de completar me premio con..."></textarea></div>
+<div class="fg"><label>🏠 4a Ley Plus — Diseño de Entorno</label><input class="inp" id="ahm-envdesign" placeholder="¿Qué cambié en mi entorno para hacer este hábito obvio? ej: Puse los tenis junto a la cama"></div>
+<div class="fg"><label>🎁 Bundling de Tentación (2a Ley)</label><input class="inp" id="ahm-bundle" placeholder="Mientras hago [hábito difícil] también haré [algo que disfruto]. ej: Solo escucho mi podcast favorito mientras camino"></div>
 <div class="fg"><label>🔗 Apilar después de</label><select class="inp" id="ahm-stack"><option value="">No apilar</option></select></div>
 <div class="modal-btns"><button class="btn btn-pri" onclick="saveAtomicHabit()">Guardar</button><button class="btn btn-out" onclick="closeModal('atomic-habit-modal')">Cancelar</button><button class="btn btn-danger btn-sm" id="ahm-del-btn" style="display:none" onclick="delAtomicHabit()">Eliminar</button></div></div></div>
 <div class="overlay" id="plan-edit-modal"><div class="modal"><div class="modal-title">✏️ Editar actividad</div>
@@ -578,7 +710,7 @@ var _syncTimer=null,_syncing=false,_lastCloudTs=null,_dirty=false,_pushFailures=
 try{supaClient=window.supabase.createClient(SUPA_URL,SUPA_KEY)}catch(e){console.warn('Supabase no disponible, modo offline')}
 const BIZ=['personal'];
 const BI={personal:{icon:'👤',label:'Personal',c:'#f39c12'}};
-const DNAMES=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+const DNAMES=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
 const DFULL=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
 const SN={'pendiente':'⏳','en progreso':'🔄','completado':'✅','cancelado':'❌'};
 const PN={'alta':'🔴','media':'🟡','baja':'🟢'};
@@ -611,11 +743,11 @@ if(!D.cabalgatas)D.cabalgatas={tasks:[],kpis:[],notes:''};
 if(!D.eisenhower)D.eisenhower={do:[],schedule:[],delegate:[],eliminate:[]};
 if(!D.m333)D.m333={project:[],urgent:[],maint:[]};
 if(!D.frog)D.frog={task:'',history:[]};
-if(!D.timeBlocks)D.timeBlocks=[];if(!D.pomCount)D.pomCount=0;if(!D.quickTasks)D.quickTasks=[];
+if(!D.timeBlocks)D.timeBlocks=[];if(!D.pomCount)D.pomCount=0;if(!D.quickTasks)D.quickTasks=[];if(!D.proyectos)D.proyectos=[];
 if(!D.longtermGoals){D.longtermGoals=[];if(D.personal&&D.personal.longterm&&D.personal.longterm.length){D.personal.longterm.forEach(function(t){D.longtermGoals.push({name:t.text,desc:'',date:t.date||'',status:t.status||'pendiente',tasks:[]});})}}
 if(D.pomDate!==new Date().toISOString().slice(0,10)){D.pomCount=0;D.pomDate=new Date().toISOString().slice(0,10)}
 if(!D.identities)D.identities=[];
-D.habits.forEach(h=>{if(!h.target)h.target=7;if(h.cue===undefined)h.cue='';if(h.craving===undefined)h.craving='';if(h.response===undefined)h.response='';if(h.reward===undefined)h.reward='';if(h.twoMin===undefined)h.twoMin='';if(h.stackAfter===undefined)h.stackAfter=null;if(h.identityId===undefined)h.identityId=null;if(h.score===undefined)h.score='+'});
+D.habits.forEach(h=>{if(!h.target)h.target=7;if(h.cue===undefined)h.cue='';if(h.craving===undefined)h.craving='';if(h.response===undefined)h.response='';if(h.reward===undefined)h.reward='';if(h.twoMin===undefined)h.twoMin='';if(h.stackAfter===undefined)h.stackAfter=null;if(h.identityId===undefined)h.identityId=null;if(h.score===undefined)h.score='+';if(h.envDesign===undefined)h.envDesign='';if(h.bundle===undefined)h.bundle=''});
 BIZ.forEach(b=>{const obj=D[b]||{};['tasks','weekly','longterm'].forEach(f=>{if(obj[f])obj[f].forEach(t=>{if(!t.priority)t.priority='media';if(!t.status)t.status=t.done?'completado':'pendiente'})})});
 (D.schedule||[]).forEach(s=>{if(!s.id)s.id=Date.now().toString(36)+Math.random().toString(36).slice(2,6)})}
 function doDayReset(){
@@ -718,7 +850,7 @@ const btn=document.querySelector('[data-tab="'+id+'"]');if(btn)btn.classList.add
 
 function renderAll(){renderDate();renderHomeAffirmation();renderHomeChain();renderHomeHabitsQuick();renderOverview();renderHabits();renderHWStrip();renderHomeMonthCal();renderOverdue();renderHomeGoals();renderHomeRutHoy();renderHomeUpcoming();renderQuickTasks();
 renderIdentities();renderIdentityVotes();renderAtomicHabits();renderHabitStacking();renderScorecard();
-renderTrackerGrid();renderStreakPerHabit();renderCompoundViz();renderTrackerSummary();
+renderTrackerGrid();renderStreakPerHabit();renderCompoundViz();renderPlateauViz();renderTrackerSummary();renderSecondMissBanner();renderProyectos();
 renderTaskList('personal','weekly');renderLTGoals();
 BIZ.filter(b=>b!=='personal').forEach(b=>{renderGoals(b);renderTaskList(b);renderKPIs(b);renderBizSched(b);renderNote(b);renderBizRut(b)});renderGoals('personal');
 renderBizRut('personal');renderNote('personal');renderNote('news');renderSchedule();renderHistorico();renderNews();renderReview();renderBooks();renderHabitTracker();
@@ -727,8 +859,8 @@ renderRutinas();renderEisenhower();render333();renderFrog();renderTimeBlocks();c
 function renderDate(){const el=document.getElementById('currentDate');if(el)el.textContent=new Date().toLocaleDateString('es-CO',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}
 function todayStr(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function dateToIso(ds){try{return new Date(ds).toISOString().slice(0,10)}catch(e){return null}}
-function getWeekKey(){const d=new Date(),s=new Date(d);s.setDate(d.getDate()-d.getDay());return s.toISOString().slice(0,10)}
-function getWeekDays(off){const n=new Date(),dw=n.getDay(),s=new Date(n);s.setDate(n.getDate()-dw+(off*7));const d=[];for(let i=0;i<7;i++){const x=new Date(s);x.setDate(s.getDate()+i);d.push(x.toISOString().slice(0,10))}return d}
+function getWeekKey(){const d=new Date(),dow=d.getDay(),diff=dow===0?-6:1-dow,s=new Date(d);s.setDate(d.getDate()+diff);return s.toISOString().slice(0,10)}
+function getWeekDays(off){const n=new Date(),dw=n.getDay(),diff=dw===0?-6:1-dw,s=new Date(n);s.setDate(n.getDate()+diff+(off*7));const d=[];for(let i=0;i<7;i++){const x=new Date(s);x.setDate(s.getDate()+i);d.push(x.toISOString().slice(0,10))}return d}
 function esc(s){if(!s)return'';const d=document.createElement('div');d.textContent=s;return d.innerHTML}
 function fmtDate(iso){if(!iso)return'';const[y,m,d]=iso.split('-');const mn=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];return+d+' '+mn[+m-1]}
 function fmt12(t){if(!t)return'';const[h,m]=t.split(':');const hr=+h;return(hr%12||12)+':'+m+(hr<12?' AM':' PM')}
@@ -786,8 +918,9 @@ const now=new Date(),y=now.getFullYear(),m=now.getMonth();
 const first=new Date(y,m,1),last=new Date(y,m+1,0),startDow=first.getDay(),totalDays=last.getDate(),today=todayStr();
 const mNames=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 let h='<div style="text-align:center;font-weight:800;margin-bottom:10px;font-size:15px;color:var(--g800)">'+mNames[m]+' '+y+'</div><div class="month-grid">';
-['D','L','M','Mi','J','V','S'].forEach(d=>h+='<div class="mg-head">'+d+'</div>');
-for(let i=0;i<startDow;i++)h+='<div></div>';
+['L','M','X','J','V','S','D'].forEach(d=>h+='<div class="mg-head">'+d+'</div>');
+const startMon=first.getDay()===0?6:first.getDay()-1;
+for(let i=0;i<startMon;i++)h+='<div></div>';
 for(let d=1;d<=totalDays;d++){const iso=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
 const items=(D.schedule||[]).filter(s=>s.date===iso&&s.status!=='cancelado'&&s.status!=='completado');
 const d2=new Date(iso+'T12:00:00');const ruts=getRutinasForDate(d2);
@@ -881,8 +1014,9 @@ function renderRutCalendar(){const el=document.getElementById('rut-calendar');if
 const now=new Date(),y=now.getFullYear(),m=now.getMonth(),first=new Date(y,m,1),last=new Date(y,m+1,0),startDow=first.getDay(),totalDays=last.getDate(),today=todayStr();
 const mN=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 let h='<div style="text-align:center;font-weight:800;margin-bottom:10px">'+mN[m]+' '+y+'</div><div class="month-grid">';
-['D','L','M','Mi','J','V','S'].forEach(d=>h+='<div class="mg-head">'+d+'</div>');
-for(let i=0;i<startDow;i++)h+='<div></div>';
+['L','M','X','J','V','S','D'].forEach(d=>h+='<div class="mg-head">'+d+'</div>');
+const rutCalStartMon=first.getDay()===0?6:first.getDay()-1;
+for(let i=0;i<rutCalStartMon;i++)h+='<div></div>';
 for(let d=1;d<=totalDays;d++){const iso=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
 const d2=new Date(iso+'T12:00:00');const ruts=getRutinasForDate(d2);const isT=iso===today;const doneAll=ruts.length&&ruts.every(r=>isRutDone(r.id,iso));
 h+='<div class="mg-cell'+(isT?' mg-today':'')+'" style="'+(doneAll?'background:rgba(52,211,153,.1)':'')+'" title="'+ruts.length+' rutinas"><div class="mg-num">'+d+'</div>';
@@ -927,7 +1061,11 @@ function moveHabit(id,dir){const i=D.habits.findIndex(x=>x.id===id);if(i<0)retur
 let _dragHabitId=null;
 function dragHabit(e,id){_dragHabitId=id;e.dataTransfer.effectAllowed='move';if(e.target&&e.target.classList)e.target.style.opacity='0.4'}
 function dropHabit(e,targetId){e.preventDefault();const src=_dragHabitId;_dragHabitId=null;document.querySelectorAll('[data-hid]').forEach(x=>x.style.opacity='');if(src==null||src===targetId)return;const i=D.habits.findIndex(x=>x.id===src);const j=D.habits.findIndex(x=>x.id===targetId);if(i<0||j<0)return;const item=D.habits.splice(i,1)[0];D.habits.splice(j,0,item);save();renderHabits();renderHomeHabitsQuick&&renderHomeHabitsQuick();renderAtomicHabits&&renderAtomicHabits()}
-function toggleHabit(id){const h=D.habits.find(x=>x.id===id);if(h){h.done=!h.done;const t=todayStr();if(!D.habitLog[t])D.habitLog[t]={};D.habitLog[t][id]=h.done;D.habitHistory[t]={total:D.habits.length,done:D.habits.filter(x=>x.done).length};save();renderHabits();renderOverview();renderHomeHabitsQuick();renderAtomicHabits();renderHomeChain&&renderHomeChain();renderIdentityVotes&&renderIdentityVotes();renderScorecard&&renderScorecard()}}
+function toggleHabit(id){const h=D.habits.find(x=>x.id===id);if(h){h.done=!h.done;const t=todayStr();if(!D.habitLog[t])D.habitLog[t]={};D.habitLog[t][id]=h.done;D.habitHistory[t]={total:D.habits.length,done:D.habits.filter(x=>x.done).length};save();renderHabits();renderOverview();renderHomeHabitsQuick();renderAtomicHabits();renderHomeChain&&renderHomeChain();renderIdentityVotes&&renderIdentityVotes();renderScorecard&&renderScorecard();
+// Toast de voto de identidad al marcar como hecho
+if(h.done&&h.identityId){var idObj=D.identities.find(function(x){return x.id===h.identityId});if(idObj)setTimeout(function(){toast('🗳️ Voto: "Soy '+idObj.statement+'"')},400)}
+// Alerta si lleva 2 días consecutivos sin hacer el hábito
+if(!h.done){checkSecondMissAlert(h.id)}}}
 function addHabit(){const inp=document.getElementById('habit-inp');const n=inp?inp.value.trim():prompt('Hábito:');if(!n)return;const t=parseInt(prompt('¿Cuántas veces por semana? (1-7):','7'))||7;D.habits.push({id:Date.now(),name:n,done:false,target:Math.min(7,Math.max(1,t))});if(inp)inp.value='';save();renderHabits()}
 function delHabit(id){D.habits=D.habits.filter(x=>x.id!==id);save();renderAll()}
 function editHabitTarget(id){const h=D.habits.find(x=>x.id===id);if(!h)return;const v=parseInt(prompt('Meta "'+h.name+'" (1-7):',h.target));if(v>=1&&v<=7){h.target=v;save();renderHabits()}}
@@ -1089,7 +1227,7 @@ function renderSchSemana(el,evs){const days=getWeekDays(0);const td=todayStr();l
 days.forEach(iso=>{const dObj=new Date(iso+'T12:00:00');const isToday=iso===td;h+='<div class="week-col'+(isToday?' week-today':'')+'"><div class="week-head">'+DNAMES[dObj.getDay()]+'<br>'+dObj.getDate()+'</div>';
 evs.filter(e=>!e._rut&&e.date===iso&&e.status!=='completado'&&e.status!=='cancelado').forEach(e=>{const bc=e.biz&&BI[e.biz]?BI[e.biz].c:'var(--g300)';h+='<div class="week-ev" style="border-left-color:'+bc+'" onclick="editSched(\''+e.id+'\')">'+(e.time?'<span style="font-size:10px;color:var(--g400)">'+fmt12(e.time)+'</span> ':'')+esc(e.title)+'</div>'});h+='</div>'});h+='</div>';el.innerHTML=h}
 function renderSchMes(el,evs){const now=new Date(),y=now.getFullYear(),m=now.getMonth(),first=new Date(y,m,1),last=new Date(y,m+1,0),startDay=first.getDay(),totalDays=last.getDate(),td=todayStr();
-let h='<div class="month-grid">';DNAMES.forEach(d=>h+='<div class="mg-head">'+d+'</div>');for(let i=0;i<startDay;i++)h+='<div class="mg-cell"></div>';
+let h='<div class="month-grid">';DNAMES.forEach(d=>h+='<div class="mg-head">'+d+'</div>');const startMonSch=first.getDay()===0?6:first.getDay()-1;for(let i=0;i<startMonSch;i++)h+='<div class="mg-cell"></div>';
 for(let d=1;d<=totalDays;d++){const iso=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');const dayEvs=evs.filter(e=>!e._rut&&e.date===iso&&e.status!=='completado');
 h+='<div class="mg-cell'+(iso===td?' mg-today':'')+'"><div class="mg-num">'+d+'</div>';if(dayEvs.length){h+='<div class="mg-dots">';dayEvs.slice(0,4).forEach(e=>{const c=e.biz&&BI[e.biz]?BI[e.biz].c:'var(--g300)';h+='<div class="hw-dot" style="background:'+c+'"></div>'});h+='</div>'}h+='</div>'}h+='</div>';el.innerHTML=h}
 function openSchedModal(biz){document.getElementById('sm-id').value='';document.getElementById('sm-title').value='';document.getElementById('sm-biz').value=biz||'personal';document.getElementById('sm-date').value=todayStr();document.getElementById('sm-time').value='';document.getElementById('sm-pri').value='media';document.getElementById('sm-status').value='pendiente';document.getElementById('sm-notes').value='';document.getElementById('schm-title').textContent='Nueva actividad';openModal('sch-modal')}
@@ -1126,8 +1264,8 @@ function renderNews(){const el=document.getElementById('news-list');if(!el)retur
 function addNews(){const inp=document.getElementById('news-inp');const title=inp?inp.value.trim():'';if(!title)return;if(!D.news)D.news=[];D.news.push({title,url:''});save();if(inp)inp.value='';renderNews()}
 function delNews(i){D.news.splice(i,1);save();renderNews()}
 // REVIEW
-function renderReview(){for(let i=0;i<5;i++){const el=document.getElementById('rev-q'+i);if(el&&D.review)el.value=D.review['q'+i]||''}}
-function saveReview(){if(!D.review)D.review={};for(let i=0;i<5;i++){const el=document.getElementById('rev-q'+i);if(el)D.review['q'+i]=el.value}D.review.lastSaved=todayStr();save()}
+function renderReview(){for(var i=0;i<10;i++){var el=document.getElementById('rev-q'+i);if(el&&D.review)el.value=D.review['q'+i]||''}}
+function saveReview(){if(!D.review)D.review={};for(var i=0;i<10;i++){var el=document.getElementById('rev-q'+i);if(el)D.review['q'+i]=el.value}D.review.lastSaved=todayStr();save()}
 function checkRevReminder(){const el=document.getElementById('rev-reminder');if(!el)return;const d=new Date();el.style.display=(d.getDay()===0||d.getDay()===6)?'flex':'none'}
 // HISTORICO
 function renderHistorico(){const hEl=document.getElementById('hist-habits'),tEl=document.getElementById('hist-tasks'),kEl=document.getElementById('hist-kpis'),aEl=document.getElementById('hist-archive');
@@ -1287,10 +1425,7 @@ document.getElementById('gtm-title').textContent=isEdit?'Editar Tarea LP':'Nueva
 openModal('gt-modal')}
 
 // QUICK TASKS
-function addQuickTask(){var inp=document.getElementById('qt-text');var text=inp?inp.value.trim():'';if(!text)return;
-var remInp=document.getElementById('qt-remind');var remind=remInp?remInp.value:'';
-if(!D.quickTasks)D.quickTasks=[];D.quickTasks.push({id:Date.now(),text:text,done:false,biz:'',goal:'',date:todayStr(),remind:remind||null});
-if(inp)inp.value='';if(remInp)remInp.value='';save();renderQuickTasks();toast('⚡ Agregada')}
+// addQuickTask redefinida abajo en PROYECTOS JS
 function toggleQuickTask(id){if(!D.quickTasks)return;var t=D.quickTasks.find(function(x){return x.id===id});if(t){t.done=!t.done;save();renderQuickTasks()}}
 function delQuickTask(id){D.quickTasks=(D.quickTasks||[]).filter(function(x){return x.id!==id});save();renderQuickTasks()}
 var _assigningQT=null;
@@ -1314,31 +1449,390 @@ if(tasks.length){save();renderQuickTasks()}
 },30000);
 // Solicitar permiso de notificaciones al cargar
 if('Notification' in window&&Notification.permission==='default'){try{Notification.requestPermission()}catch(e){}}
-function renderQuickTasks(){var el=document.getElementById('quick-task-list');if(!el)return;
-var tasks=(D.quickTasks||[]).filter(function(t){return !t.done});var done=(D.quickTasks||[]).filter(function(t){return t.done});
-var now=new Date();var nowIso=now.toISOString();
-// ordenar: recordatorios vencidos primero, luego por fecha recordatorio, luego sin recordatorio
-tasks.sort(function(a,b){var ra=a.remind||'9999';var rb=b.remind||'9999';var aDue=a.remind&&a.remind<=nowIso.slice(0,16);var bDue=b.remind&&b.remind<=nowIso.slice(0,16);if(aDue&&!bDue)return -1;if(!aDue&&bDue)return 1;return ra.localeCompare(rb)});
-// badge de recordatorios activos
-var dueCount=tasks.filter(function(t){return t.remind&&t.remind<=nowIso.slice(0,16)}).length;
-var badgeEl=document.getElementById('qt-reminder-badge');if(badgeEl)badgeEl.textContent=dueCount?'🔔 '+dueCount+' pendiente'+(dueCount>1?'s':''):'';
-var h='';tasks.forEach(function(t){
-var bi=t.assignedBiz&&BI[t.assignedBiz]?BI[t.assignedBiz]:null;
-var isDue=t.remind&&t.remind<=nowIso.slice(0,16);
-var isUpcoming=t.remind&&!isDue;
-h+='<div class="t-item" style="'+(isDue?'background:rgba(239,68,68,.08);border-left:3px solid var(--red)':'')+'"><span class="t-status" onclick="toggleQuickTask('+t.id+')" style="cursor:pointer">⬜</span>';
-h+='<div style="flex:1"><span class="t-text" style="color:var(--text);font-weight:600">'+esc(t.text)+'</span>';
-if(bi)h+='<div style="font-size:10px;color:var(--g400);margin-top:2px">'+bi.icon+' '+esc(t.assignedGoal||'')+'</div>';
-if(t.remind){var rd=new Date(t.remind);var remStr=rd.toLocaleDateString('es',{day:'numeric',month:'short'})+' '+rd.toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'});h+='<div style="font-size:10px;margin-top:2px;color:'+(isDue?'var(--red)':'var(--amber)')+';font-weight:600">'+(isDue?'🔔 ¡Ahora! · ':'🕐 ')+remStr+'</div>'}
-else if(t.date){h+='<div style="font-size:10px;color:var(--g400)">'+fmtDate(t.date)+'</div>'}
-h+='</div>';
-if(t.priority&&t.priority!=='media')h+=priLabel(t.priority);
-h+='<button class="t-del" onclick="editQuickReminder('+t.id+')" title="Programar recordatorio">🔔</button>';
-h+='<button class="t-del" onclick="assignQuickTask('+t.id+')" title="Asignar a meta/línea">📎</button>';
-h+='<button class="t-del" onclick="delQuickTask('+t.id+')">✕</button></div>'});
-if(done.length){h+='<details style="margin-top:6px"><summary>✅ '+done.length+' completada'+(done.length>1?'s':'')+'</summary>';
-done.forEach(function(t){h+='<div class="t-item" style="opacity:.5"><span class="t-status" onclick="toggleQuickTask('+t.id+')" style="cursor:pointer">✅</span><span class="t-text" style="text-decoration:line-through;flex:1">'+esc(t.text)+'</span><button class="t-del" onclick="delQuickTask('+t.id+')">✕</button></div>'});h+='</details>'}
-el.innerHTML=h}
+// renderQuickTasks redefinida abajo en PROYECTOS JS
+
+
+// ============================================================
+// PROYECTOS / METAS — Sistema de metas desglosadas en pasos
+// ============================================================
+var _qtAreaFilter = '';
+
+function ensureProyectos(){
+  if(!D.proyectos)D.proyectos=[];
+}
+
+// ── Abrir modal proyecto ──
+function openProyectoModal(idx){
+  ensureProyectos();
+  var isEdit=idx!==undefined&&idx>=0;
+  var p=isEdit?D.proyectos[idx]:null;
+  document.getElementById('pjm-idx').value=isEdit?idx:'-1';
+  document.getElementById('pjm-name').value=p?p.name:'';
+  document.getElementById('pjm-desc').value=p?p.desc||'':'';
+  document.getElementById('pjm-date').value=p?p.date||'':'';
+  document.getElementById('pjm-status').value=p?p.status||'activo':'activo';
+  document.getElementById('pjm-pri').value=p?p.pri||'media':'media';
+  // área select
+  var sel=document.getElementById('pjm-area');
+  sel.innerHTML='<option value="">— Sin área —</option>'+AREAS.map(function(a){return'<option value="'+a.id+'">'+a.icon+' '+a.name+'</option>'}).join('');
+  sel.value=p?p.area||'':'';
+  document.getElementById('pjm-title').textContent=isEdit?'Editar Proyecto':'Nuevo Proyecto / Meta';
+  document.getElementById('pjm-del-btn').style.display=isEdit?'inline-block':'none';
+  openModal('proyecto-modal');
+}
+
+function saveProyecto(){
+  ensureProyectos();
+  var idx=+document.getElementById('pjm-idx').value;
+  var name=document.getElementById('pjm-name').value.trim();
+  if(!name)return toast('Escribe un nombre para el proyecto');
+  var obj={
+    name:name,
+    desc:document.getElementById('pjm-desc').value.trim(),
+    area:document.getElementById('pjm-area').value,
+    status:document.getElementById('pjm-status').value,
+    date:document.getElementById('pjm-date').value,
+    pri:document.getElementById('pjm-pri').value,
+    pasos:idx>=0&&D.proyectos[idx]?D.proyectos[idx].pasos||[]:[]
+  };
+  if(idx>=0)D.proyectos[idx]=obj;
+  else{obj.createdAt=todayStr();D.proyectos.unshift(obj)}
+  save();closeModal('proyecto-modal');renderProyectos();toast('🎯 Proyecto guardado');
+}
+
+function delProyecto(){
+  var idx=+document.getElementById('pjm-idx').value;
+  if(idx>=0){D.proyectos.splice(idx,1);save();closeModal('proyecto-modal');renderProyectos();toast('Proyecto eliminado')}
+}
+
+// ── Pasos ──
+function openPasoModal(pid,pidx){
+  document.getElementById('psm-pid').value=pid;
+  document.getElementById('psm-idx').value=pidx!==undefined?pidx:'-1';
+  var p=D.proyectos[pid];
+  var paso=pidx>=0&&p?(p.pasos||[])[pidx]:null;
+  document.getElementById('psm-text').value=paso?paso.text:'';
+  document.getElementById('psm-date').value=paso?paso.date||'':'';
+  document.getElementById('psm-pri').value=paso?paso.pri||'media':'media';
+  document.getElementById('psm-status').value=paso?paso.status||'pendiente':'pendiente';
+  document.getElementById('psm-notes').value=paso?paso.notes||'':'';
+  document.getElementById('psm-title').textContent=paso?'Editar Paso':'Nuevo Paso';
+  document.getElementById('psm-del-btn').style.display=paso?'inline-block':'none';
+  openModal('paso-modal');
+  setTimeout(function(){document.getElementById('psm-text').focus()},100);
+}
+
+function savePaso(){
+  var pid=+document.getElementById('psm-pid').value;
+  var pidx=+document.getElementById('psm-idx').value;
+  var text=document.getElementById('psm-text').value.trim();
+  if(!text)return toast('Describe el paso');
+  var p=D.proyectos[pid];if(!p)return;
+  if(!p.pasos)p.pasos=[];
+  var obj={
+    text:text,
+    date:document.getElementById('psm-date').value,
+    pri:document.getElementById('psm-pri').value,
+    status:document.getElementById('psm-status').value,
+    notes:document.getElementById('psm-notes').value.trim()
+  };
+  if(pidx>=0)p.pasos[pidx]=obj;
+  else p.pasos.push(obj);
+  save();closeModal('paso-modal');renderProyectos();toast('✅ Paso guardado');
+}
+
+function delPaso(){
+  var pid=+document.getElementById('psm-pid').value;
+  var pidx=+document.getElementById('psm-idx').value;
+  var p=D.proyectos[pid];
+  if(p&&p.pasos){p.pasos.splice(pidx,1);save();closeModal('paso-modal');renderProyectos();toast('Paso eliminado')}
+}
+
+function cyclePasoStatus(pid,pidx){
+  var p=D.proyectos[pid];if(!p||!p.pasos||!p.pasos[pidx])return;
+  var cycle=['pendiente','en progreso','completado','bloqueado'];
+  var cur=cycle.indexOf(p.pasos[pidx].status||'pendiente');
+  p.pasos[pidx].status=cycle[(cur+1)%cycle.length];
+  save();renderProyectos();
+}
+
+function addPasoInline(pid){
+  var inp=document.getElementById('paso-inp-'+pid);
+  if(!inp||!inp.value.trim())return;
+  var p=D.proyectos[pid];if(!p)return;
+  if(!p.pasos)p.pasos=[];
+  p.pasos.push({text:inp.value.trim(),date:'',pri:'media',status:'pendiente',notes:''});
+  inp.value='';save();renderProyectos();
+}
+
+// ── Render proyectos ──
+function renderProyectos(){
+  ensureProyectos();
+  renderProjSummaryBar();
+  renderProjFilterBar();
+  var el=document.getElementById('proyectos-list');if(!el)return;
+  var filtArea=_qtAreaFilter; // reutilizo misma variable de filtro
+  var proyFilter=document.getElementById('proj-status-filter')?document.getElementById('proj-status-filter').value:'activo';
+  var items=D.proyectos.filter(function(p,i){
+    if(filtArea&&p.area!==filtArea)return false;
+    if(proyFilter==='todos')return true;
+    return (p.status||'activo')===proyFilter;
+  });
+  if(!items.length){
+    el.innerHTML='<div class="proj-empty">'+
+      (D.proyectos.length?'Sin proyectos en este filtro.':'Sin proyectos aún. Crea tu primera meta →')+
+      '</div>';return;
+  }
+  var html='';
+  items.forEach(function(p){
+    var realIdx=D.proyectos.indexOf(p);
+    var a=getArea(p.area);
+    var color=a?a.color:'var(--pri)';
+    var pasos=p.pasos||[];
+    var done=pasos.filter(function(s){return s.status==='completado'}).length;
+    var total=pasos.length;
+    var pct=total?Math.round(done/total*100):0;
+    var diasRestantes='';
+    if(p.date){
+      var diff=Math.ceil((new Date(p.date+'T12:00:00')-new Date())/(86400000));
+      diasRestantes=diff>0?diff+' días':diff===0?'¡Hoy!':'⏰ '+Math.abs(diff)+' días vencido';
+    }
+    var statusBadgeClass='proj-badge-status-'+(p.status||'activo');
+    var statusIcons={activo:'🟢',pausado:'🟡',completado:'✅',cancelado:'❌'};
+    var priColors={alta:'var(--red)',media:'var(--amber)',baja:'var(--green)'};
+
+    html+='<div class="proj-card" id="proj-card-'+realIdx+'">';
+    // header clickeable para expandir
+    html+='<div class="proj-header" onclick="toggleProjBody('+realIdx+')">';
+    html+='<div class="proj-color-bar" style="background:'+color+'"></div>';
+    html+='<div class="proj-meta">';
+    html+='<div class="proj-title">'+esc(p.name)+'</div>';
+    if(p.desc)html+='<div class="proj-desc">'+esc(p.desc)+'</div>';
+    html+='<div class="proj-badges">';
+    if(a)html+='<span class="proj-badge" style="background:'+color+'22;color:'+color+'">'+a.icon+' '+a.name+'</span>';
+    html+='<span class="proj-badge '+statusBadgeClass+'">'+(statusIcons[p.status||'activo'])+' '+(p.status||'activo')+'</span>';
+    if(p.pri)html+='<span class="proj-badge" style="color:'+priColors[p.pri||'media']+'">'+{alta:'🔴 Alta',media:'🟡 Media',baja:'🟢 Baja'}[p.pri||'media']+'</span>';
+    if(diasRestantes)html+='<span class="proj-badge" style="color:var(--g500)">📅 '+diasRestantes+'</span>';
+    html+='<span class="proj-badge" style="color:var(--g400)">'+done+'/'+total+' pasos</span>';
+    html+='</div></div>';
+    html+='<button class="btn btn-out btn-sm" style="flex-shrink:0;margin-left:4px" onclick="event.stopPropagation();openProyectoModal('+realIdx+')">✏️</button>';
+    html+='</div>';
+    // barra de progreso
+    html+='<div class="proj-progress-wrap">';
+    html+='<div class="proj-progress-bar"><div class="proj-progress-fill" style="width:'+pct+'%;background:'+color+'"></div></div>';
+    html+='<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--g400)"><span>'+pct+'% completado</span><span>'+done+'/'+total+' pasos</span></div>';
+    html+='</div>';
+    // cuerpo (pasos) — visible por defecto si hay pasos activos
+    var bodyOpen=pasos.some(function(s){return s.status==='en progreso'})||total===0;
+    html+='<div class="proj-body" id="proj-body-'+realIdx+'" style="'+(bodyOpen?'':'display:none')+'">';
+    // pasos agrupados por estado
+    var pending=pasos.filter(function(s){return s.status!=='completado'});
+    var completed=pasos.filter(function(s){return s.status==='completado'});
+    if(pending.length){
+      pending.forEach(function(paso,pi){
+        var ri=pasos.indexOf(paso);
+        var stIcon={pendiente:'⏳',bloqueado:'🚫','en progreso':'🔄',completado:'✅'}[paso.status||'pendiente']||'⏳';
+        var stClass=paso.status==='completado'?'done':paso.status==='bloqueado'?'bloqueado':paso.status==='en progreso'?'en-progreso':'';
+        var checkIcon=paso.status==='completado'?'✓':paso.status==='bloqueado'?'✕':paso.status==='en progreso'?'▶':'';
+        html+='<div class="paso-item '+stClass+'" onclick="openPasoModal('+realIdx+','+ri+')">';
+        html+='<div class="paso-check '+(paso.status==='completado'?'done':paso.status==='bloqueado'?'bloqueado':paso.status==='en progreso'?'en-progreso':'')+'" onclick="event.stopPropagation();cyclePasoStatus('+realIdx+','+ri+')">'+checkIcon+'</div>';
+        html+='<div class="paso-info"><div class="paso-text">'+esc(paso.text)+'</div>';
+        var sub=[];
+        if(paso.date)sub.push('📅 '+fmtDate(paso.date));
+        if(paso.pri&&paso.pri!=='media')sub.push(paso.pri==='alta'?'🔴 Alta':'🟢 Baja');
+        if(paso.notes)sub.push('📝 '+esc(paso.notes).slice(0,40)+'...');
+        if(sub.length)html+='<div class="paso-sub">'+sub.join(' · ')+'</div>';
+        html+='</div></div>';
+      });
+    }
+    if(completed.length){
+      html+='<details style="margin-top:6px"><summary style="font-size:11px;color:var(--g400);cursor:pointer">✅ '+completed.length+' completado'+(completed.length!==1?'s':'')+'</summary><div style="margin-top:4px;opacity:.6">';
+      completed.forEach(function(paso){
+        var ri=pasos.indexOf(paso);
+        html+='<div class="paso-item done" onclick="openPasoModal('+realIdx+','+ri+')">';
+        html+='<div class="paso-check done" onclick="event.stopPropagation();cyclePasoStatus('+realIdx+','+ri+')">✓</div>';
+        html+='<div class="paso-info"><div class="paso-text" style="text-decoration:line-through">'+esc(paso.text)+'</div></div></div>';
+      });
+      html+='</div></details>';
+    }
+    if(!total)html+='<div class="proj-empty" style="padding:10px">Sin pasos aún. Agrega el primero ↓</div>';
+    // input rápido inline
+    html+='<div style="display:flex;gap:6px;margin-top:10px">';
+    html+='<input class="inp" id="paso-inp-'+realIdx+'" placeholder="+ Agregar paso rápido…" style="flex:1;font-size:12px" onkeydown="if(event.key==='Enter')addPasoInline('+realIdx+')">';
+    html+='<button class="btn btn-pri btn-sm" onclick="addPasoInline('+realIdx+')">+</button>';
+    html+='<button class="btn btn-out btn-sm" onclick="openPasoModal('+realIdx+')" title="Paso con detalle">📋</button>';
+    html+='</div>';
+    html+='</div></div>';
+  });
+  el.innerHTML=html;
+}
+
+function toggleProjBody(idx){
+  var el=document.getElementById('proj-body-'+idx);
+  if(el)el.style.display=el.style.display==='none'?'block':'none';
+}
+
+function renderProjSummaryBar(){
+  ensureProyectos();
+  var el=document.getElementById('proj-summary-bar');if(!el)return;
+  var total=D.proyectos.length;
+  var activos=D.proyectos.filter(function(p){return(p.status||'activo')==='activo'}).length;
+  var completados=D.proyectos.filter(function(p){return p.status==='completado'}).length;
+  var vencidos=D.proyectos.filter(function(p){return p.date&&p.date<todayStr()&&p.status==='activo'}).length;
+  var totalPasos=0,pasosDone=0;
+  D.proyectos.forEach(function(p){(p.pasos||[]).forEach(function(s){totalPasos++;if(s.status==='completado')pasosDone++})});
+  el.innerHTML=[
+    {i:'🎯',v:activos,l:'Activos',c:'var(--pri)'},
+    {i:'✅',v:completados,l:'Completados',c:'var(--green)'},
+    {i:'⏰',v:vencidos,l:'Vencidos',c:vencidos?'var(--red)':'var(--g400)'},
+    {i:'📋',v:totalPasos?(pasosDone+'/'+totalPasos):0,l:'Pasos totales',c:'var(--cyan)'}
+  ].map(function(k){
+    return'<div class="kpi-card" style="border-top:3px solid '+k.c+'"><div style="font-size:16px">'+k.i+'</div><div class="kpi-val" style="color:'+k.c+';font-size:20px">'+k.v+'</div><div class="kpi-name">'+k.l+'</div></div>';
+  }).join('');
+}
+
+function renderProjFilterBar(){
+  var bar=document.getElementById('proj-filter-bar');if(!bar)return;
+  var cur=bar.dataset.filter||'activo';
+  var h='';
+  h+='<button class="chip'+(_qtAreaFilter===''?' active':'')+'" onclick="setProjAreaFilter(\'\')">Todas</button>';
+  AREAS.forEach(function(a){h+='<button class="chip"+(_qtAreaFilter===a.id?" active":"")+" onclick="setProjAreaFilter(\''+a.id+'\')">'+a.icon+' '+a.name+'</button>'});
+  h+=' ';
+  var statuses=[{v:'activo',l:'Activos'},{v:'pausado',l:'Pausados'},{v:'completado',l:'Completados'},{v:'todos',l:'Todos'}];
+  statuses.forEach(function(s){h+='<button class="chip'+(cur===s.v?' active':'')+'" onclick="setProjStatusFilter(\''+s.v+'\',this)">'+s.l+'</button>'});
+  bar.innerHTML=h;
+}
+
+function setProjAreaFilter(areaId){
+  _qtAreaFilter=areaId;renderProyectos();
+}
+function setProjStatusFilter(val,btn){
+  var bar=document.getElementById('proj-filter-bar');if(bar)bar.dataset.filter=val;
+  renderProyectos();
+}
+
+// ============================================================
+// NO OLVIDAR MEJORADO — con área, prioridad y filtro
+// ============================================================
+var _qtFilter='';
+
+function initQtAreaSelect(){
+  var sel=document.getElementById('qt-area');if(!sel)return;
+  sel.innerHTML='<option value="">— Área —</option>'+AREAS.map(function(a){return'<option value="'+a.id+'">'+a.icon+' '+a.name+'</option>'}).join('');
+}
+
+function addQuickTask(){
+  var inp=document.getElementById('qt-text');var text=inp?inp.value.trim():'';if(!text)return;
+  var remInp=document.getElementById('qt-remind');var remind=remInp?remInp.value:'';
+  var dueInp=document.getElementById('qt-due');var due=dueInp?dueInp.value:'';
+  var areaInp=document.getElementById('qt-area');var area=areaInp?areaInp.value:'';
+  var priInp=document.getElementById('qt-pri');var pri=priInp?priInp.value:'media';
+  if(!D.quickTasks)D.quickTasks=[];
+  D.quickTasks.push({id:Date.now(),text:text,done:false,area:area,priority:pri,date:due||todayStr(),remind:remind||null});
+  if(inp)inp.value='';if(remInp)remInp.value='';if(dueInp)dueInp.value='';
+  save();renderQuickTasks();toast('⚡ Tarea agregada');
+}
+
+function renderQtFilterBar(){
+  var bar=document.getElementById('qt-filter-bar');if(!bar)return;
+  var h='<button class="chip'+(_qtFilter===''?' active':'')+'" onclick="setQtFilter(\'\')">Todas las &aacute;reas</button>';
+  var usedAreas={};(D.quickTasks||[]).forEach(function(t){if(t.area&&!t.done)usedAreas[t.area]=true});
+  AREAS.forEach(function(a){if(usedAreas[a.id])h+='<button class="chip'+(_qtFilter===a.id?' active':'')+'" onclick="setQtFilter(\''+a.id+'\')">'+a.icon+' '+a.name+'</button>'});
+  bar.innerHTML=h;
+}
+
+function setQtFilter(areaId){_qtFilter=areaId;renderQuickTasks();}
+
+function renderQtAreaSummary(){
+  var el=document.getElementById('qt-area-summary');if(!el)return;
+  var tasks=(D.quickTasks||[]).filter(function(t){return !t.done});
+  var byArea={};
+  tasks.forEach(function(t){
+    var k=t.area||'__none';
+    if(!byArea[k])byArea[k]=[];
+    byArea[k].push(t);
+  });
+  var h='';
+  AREAS.forEach(function(a){
+    var arr=byArea[a.id];if(!arr||!arr.length)return;
+    var alta=arr.filter(function(t){return t.priority==='alta'}).length;
+    h+='<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--g200)">';
+    h+='<span style="color:'+a.color+';font-weight:700;min-width:130px;font-size:12px">'+a.icon+' '+a.name+'</span>';
+    h+='<span style="font-size:12px;color:var(--g500);flex:1">'+arr.length+' tarea'+(arr.length!==1?'s':'');
+    if(alta)h+=' · <span style="color:var(--red);font-weight:700">'+alta+' urgente'+(alta!==1?'s':'')+'</span>';
+    h+='</span>';
+    h+='</div>';
+  });
+  var noArea=byArea['__none'];
+  if(noArea&&noArea.length){
+    h+='<div style="display:flex;align-items:center;gap:8px;padding:7px 0;font-size:12px;color:var(--g400)">';
+    h+='<span style="min-width:130px">Sin área</span><span>'+noArea.length+' tarea'+(noArea.length!==1?'s':'')+'</span></div>';
+  }
+  el.innerHTML=h||'<div class="empty" style="font-size:12px">Sin tareas pendientes</div>';
+}
+
+function renderQuickTasks(){
+  initQtAreaSelect();
+  renderQtFilterBar();
+  renderQtAreaSummary();
+  var el=document.getElementById('quick-task-list');if(!el)return;
+  var all=D.quickTasks||[];
+  var tasks=all.filter(function(t){return !t.done&&(_qtFilter===''||t.area===_qtFilter)});
+  var done=all.filter(function(t){return t.done&&(_qtFilter===''||t.area===_qtFilter)});
+  var now=new Date();var nowIso=now.toISOString();
+  // orden: vencidos primero, luego por prioridad, luego por fecha
+  var priOrder={alta:0,media:1,baja:2};
+  tasks.sort(function(a,b){
+    var aDue=a.remind&&a.remind<=nowIso.slice(0,16);var bDue=b.remind&&b.remind<=nowIso.slice(0,16);
+    if(aDue&&!bDue)return -1;if(!aDue&&bDue)return 1;
+    var pa=priOrder[a.priority||'media']||1,pb=priOrder[b.priority||'media']||1;
+    if(pa!==pb)return pa-pb;
+    return(a.date||'9999').localeCompare(b.date||'9999');
+  });
+  var dueCount=tasks.filter(function(t){return t.remind&&t.remind<=nowIso.slice(0,16)}).length;
+  var badgeEl=document.getElementById('qt-reminder-badge');
+  if(badgeEl)badgeEl.textContent=dueCount?'🔔 '+dueCount+' ahora':'';
+  var priColors={alta:'var(--red)',media:'var(--amber)',baja:'var(--green)'};
+  var priIcons={alta:'🔴',media:'🟡',baja:'🟢'};
+  var h='';
+  tasks.forEach(function(t){
+    var a=t.area?getArea(t.area):null;
+    var isDue=t.remind&&t.remind<=nowIso.slice(0,16);
+    var isOverdue=t.date&&t.date<todayStr()&&t.date!==todayStr();
+    h+='<div class="t-item" style="'+(isDue?'background:rgba(239,68,68,.07);border-left:3px solid var(--red)':isOverdue?'border-left:3px solid var(--amber)':'')+'">';
+    h+='<span class="t-status" onclick="toggleQuickTask('+t.id+')" style="cursor:pointer">⬜</span>';
+    h+='<div style="flex:1;min-width:0">';
+    h+='<div style="font-weight:600;font-size:13px;color:var(--text)">'+esc(t.text)+'</div>';
+    var sub=[];
+    if(a)sub.push('<span style="color:'+a.color+';font-weight:600">'+a.icon+' '+a.name+'</span>');
+    if(t.priority&&t.priority!=='media')sub.push('<span style="color:'+priColors[t.priority||'media']+'">'+priIcons[t.priority||'media']+' '+(t.priority==='alta'?'Urgente':'Baja')+'</span>');
+    if(t.date&&t.date!==todayStr())sub.push('<span style="color:'+(isOverdue?'var(--red)':'var(--g400)')+'">📅 '+fmtDate(t.date)+'</span>');
+    if(isDue){var rd=new Date(t.remind);sub.push('<span style="color:var(--red);font-weight:700">🔔 '+rd.toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'})+'</span>')}
+    if(sub.length)h+='<div style="font-size:11px;margin-top:2px;display:flex;gap:8px;flex-wrap:wrap">'+sub.join('')+'</div>';
+    h+='</div>';
+    h+='<button class="t-del" onclick="editQuickReminder('+t.id+')" title="Recordatorio">🔔</button>';
+    h+='<button class="t-del" onclick="editQuickTask('+t.id+')" title="Editar">✏️</button>';
+    h+='<button class="t-del" onclick="delQuickTask('+t.id+')">✕</button></div>';
+  });
+  if(!tasks.length)h='<div class="empty" style="font-size:12px">'+(_qtFilter?'Sin tareas en esta área':'Sin tareas pendientes 🎉')+'</div>';
+  if(done.length){
+    h+='<details style="margin-top:6px"><summary style="font-size:11px;color:var(--g400);cursor:pointer">✅ '+done.length+' completada'+(done.length!==1?'s':'')+'</summary>';
+    done.forEach(function(t){
+      h+='<div class="t-item" style="opacity:.5"><span class="t-status" onclick="toggleQuickTask('+t.id+')" style="cursor:pointer">✅</span>';
+      h+='<span class="t-text" style="text-decoration:line-through;flex:1">'+esc(t.text)+'</span>';
+      if(t.area){var a=getArea(t.area);if(a)h+='<span style="font-size:10px;color:var(--g400)">'+a.icon+'</span>';}
+      h+='<button class="t-del" onclick="delQuickTask('+t.id+')">✕</button></div>';
+    });
+    h+='</details>';
+  }
+  el.innerHTML=h;
+}
+
+function editQuickTask(id){
+  var t=(D.quickTasks||[]).find(function(x){return x.id===id});if(!t)return;
+  var text=prompt('Editar tarea:',t.text);if(text===null)return;
+  t.text=text.trim()||t.text;save();renderQuickTasks();
+}
 
 // ═══ ATOMIC HABITS SYSTEM ═══
 // IDENTITY
@@ -1417,13 +1911,13 @@ document.getElementById('ahm-name').value=h.name;document.getElementById('ahm-ta
 document.getElementById('ahm-identity').value=h.identityId||'';document.getElementById('ahm-score').value=h.score||'+';
 document.getElementById('ahm-cue').value=h.cue||'';document.getElementById('ahm-craving').value=h.craving||'';
 document.getElementById('ahm-response').value=h.response||'';document.getElementById('ahm-twomin').value=h.twoMin||'';
-document.getElementById('ahm-reward').value=h.reward||'';document.getElementById('ahm-stack').value=h.stackAfter||'';
+document.getElementById('ahm-reward').value=h.reward||'';if(document.getElementById('ahm-envdesign'))document.getElementById('ahm-envdesign').value=h.envDesign||'';if(document.getElementById('ahm-bundle'))document.getElementById('ahm-bundle').value=h.bundle||'';document.getElementById('ahm-stack').value=h.stackAfter||'';
 document.getElementById('ahm-title').textContent='Editar Hábito';document.getElementById('ahm-del-btn').style.display='inline-block'}
 else{if(ahmArea)ahmArea.value='';document.getElementById('ahm-name').value='';document.getElementById('ahm-target').value=7;
 document.getElementById('ahm-identity').value='';document.getElementById('ahm-score').value='+';
 document.getElementById('ahm-cue').value='';document.getElementById('ahm-craving').value='';
 document.getElementById('ahm-response').value='';document.getElementById('ahm-twomin').value='';
-document.getElementById('ahm-reward').value='';document.getElementById('ahm-stack').value='';
+document.getElementById('ahm-reward').value='';if(document.getElementById('ahm-envdesign'))document.getElementById('ahm-envdesign').value='';if(document.getElementById('ahm-bundle'))document.getElementById('ahm-bundle').value='';document.getElementById('ahm-stack').value='';
 document.getElementById('ahm-title').textContent='Nuevo Hábito Atómico';document.getElementById('ahm-del-btn').style.display='none'}
 openModal('atomic-habit-modal')}
 function saveAtomicHabit(){
@@ -1435,6 +1929,8 @@ score:document.getElementById('ahm-score').value||'+',
 cue:document.getElementById('ahm-cue').value,craving:document.getElementById('ahm-craving').value,
 response:document.getElementById('ahm-response').value,twoMin:document.getElementById('ahm-twomin').value,
 reward:document.getElementById('ahm-reward').value,
+envDesign:document.getElementById('ahm-envdesign')?document.getElementById('ahm-envdesign').value:'',
+bundle:document.getElementById('ahm-bundle')?document.getElementById('ahm-bundle').value:'',
 stackAfter:document.getElementById('ahm-stack').value?+document.getElementById('ahm-stack').value:null};
 if(idx>=0){Object.assign(D.habits[idx],obj)}
 else{obj.id=Date.now();obj.done=false;D.habits.push(obj)}
@@ -1461,6 +1957,8 @@ if(hab.craving)h+='<div class="law-item"><div class="law-icon">💫</div><div><d
 if(hab.response)h+='<div class="law-item"><div class="law-icon">🎯</div><div><div class="law-label">Respuesta</div><div class="law-text">'+esc(hab.response)+'</div></div></div>';
 if(hab.reward)h+='<div class="law-item"><div class="law-icon">🏆</div><div><div class="law-label">Recompensa</div><div class="law-text">'+esc(hab.reward)+'</div></div></div>';
 if(hab.twoMin)h+='<div class="two-min"><div class="two-min-label">2️⃣ Versión de 2 minutos</div>'+esc(hab.twoMin)+'</div>';
+if(hab.envDesign)h+='<div class="law-item"><div class="law-icon">🏠</div><div><div class="law-label">Entorno</div><div class="law-text">'+esc(hab.envDesign)+'</div></div></div>';
+if(hab.bundle)h+='<div class="law-item"><div class="law-icon">🎁</div><div><div class="law-label">Bundling</div><div class="law-text">'+esc(hab.bundle)+'</div></div></div>';
 h+='</div></details>'}
 h+='</div>';return h;
 }
@@ -1521,12 +2019,25 @@ var el=document.getElementById('habit-scorecard');if(!el)return;
 var sum=document.getElementById('scorecard-summary');
 var plus=0,minus=0,neutral=0;
 D.habits.forEach(function(h){if(h.score==='+')plus++;else if(h.score==='-')minus++;else neutral++});
-if(sum)sum.innerHTML='<span style="color:var(--green)">+'+plus+'</span> <span style="color:var(--red)">-'+minus+'</span> <span style="color:var(--g400)">='+neutral+'</span>';
-var h='';D.habits.forEach(function(hab,i){
-var scoreClass=hab.score==='+'?'score-plus':hab.score==='-'?'score-minus':'score-neutral';
-h+='<div class="t-item"><div class="score-badge '+scoreClass+'" onclick="cycleScore('+i+')" style="cursor:pointer">'+hab.score+'</div><span class="t-text">'+esc(hab.name)+'</span></div>'});
+if(sum)sum.innerHTML='<span style="color:var(--green)">+'+plus+' positivos</span> &middot; <span style="color:var(--red)">&minus;'+minus+' negativos</span> &middot; <span style="color:var(--g400)">='+neutral+' neutros</span>';
+var h='<div style="font-size:12px;color:var(--g500);margin-bottom:12px;padding:10px;background:var(--g100);border-radius:8px;border-left:3px solid var(--pri)">&#128203; <b>Inventario de H&aacute;bitos (James Clear)</b><br>Clasifica cada h&aacute;bito: <span style="color:var(--green);font-weight:700">+ positivo</span> = reforzar &middot; <span style="color:var(--red);font-weight:700">&minus; negativo</span> = eliminar &middot; <span style="color:var(--g400);font-weight:700">= neutro</span> = evaluar. Toca la insignia para cambiar.</div>';
+function scoreRow(hab){
+var sc=D.habits.indexOf(hab);
+var scoreClass=hab.score==="+"?"score-plus":hab.score==="-"?"score-minus":"score-neutral";
+var log=D.habitLog||{};var last7=0;
+for(var d=0;d<7;d++){var dt=new Date();dt.setDate(dt.getDate()-d);var iso=dt.toISOString().slice(0,10);if(log[iso]&&log[iso][hab.id])last7++}
+var pct7=Math.round(last7/7*100);
+var colorPct=pct7>=70?"var(--green)":pct7>=40?"var(--amber)":"var(--red)";
+var bg=hab.score==="+"?"rgba(46,204,113,.04)":hab.score==="-"?"rgba(217,91,91,.04)":"transparent";
+return "<div class=\"t-item\" style=\"margin-bottom:4px;background:"+bg+"\"><div class=\"score-badge "+scoreClass+"\" onclick=\"cycleScore("+sc+")\" style=\"cursor:pointer;width:32px;height:32px;font-size:16px\" title=\"Toca para cambiar\">"+hab.score+"</div><div style=\"flex:1\"><div style=\"font-weight:600;font-size:13px\">"+esc(hab.name)+"</div><div style=\"font-size:11px;color:var(--g400);margin-top:2px\">&#218;ltima semana: <b style=\"color:"+colorPct+"\">"+pct7+"%</b> &middot; "+last7+"/7 d&iacute;as"+(hab.envDesign?"<br>&#127968; <em>"+esc(hab.envDesign)+"</em>":"")+"</div></div>"+(hab.score==="-"?"<div style=\"font-size:10px;color:var(--red);font-weight:600;text-align:right;line-height:1.3\">Estrategia:<br>Hacerlo<br>invisible</div>":"")+"</div>"}
+var pos=D.habits.filter(function(h){return h.score==="+"});
+var neg=D.habits.filter(function(h){return h.score==="-"});
+var neu=D.habits.filter(function(h){return h.score==="="});
+if(pos.length){h+="<div style=\"font-weight:700;font-size:11px;color:var(--green);margin:10px 0 6px;text-transform:uppercase;letter-spacing:.5px\">&#10003; H&aacute;bitos positivos &mdash; Reforzar con las 4 Leyes</div>";pos.forEach(function(hab){h+=scoreRow(hab)})}
+if(neg.length){h+="<div style=\"font-weight:700;font-size:11px;color:var(--red);margin:14px 0 6px;text-transform:uppercase;letter-spacing:.5px\">&times; H&aacute;bitos negativos &mdash; Hacer invisible la se&ntilde;al</div>";neg.forEach(function(hab){h+=scoreRow(hab)})}
+if(neu.length){h+="<div style=\"font-weight:700;font-size:11px;color:var(--g400);margin:14px 0 6px;text-transform:uppercase;letter-spacing:.5px\">&equals; H&aacute;bitos neutros &mdash; Evaluar si suman</div>";neu.forEach(function(hab){h+=scoreRow(hab)})}
 el.innerHTML=h}
-function cycleScore(i){var s=D.habits[i].score;D.habits[i].score=s==='+'?'-':s==='-'?'=':'+';save();renderAll()}
+function cycleScore(i){var s=D.habits[i].score;D.habits[i].score=s==="+"?"-":s==="-"?"=":"+";save();renderAll()}
 // TRACKER
 function calcStreak(habitId){
 var streak=0;var d=new Date();d.setDate(d.getDate()-1);
@@ -1574,6 +2085,35 @@ var ht=Math.max(4,pct*1.1);
 var color=pct>=75?'var(--pri)':pct>=50?'var(--pri2)':pct>=25?'rgba(107,143,113,.4)':'var(--g200)';
 h+='<div style="width:8px;height:'+ht+'px;background:'+color+';border-radius:2px;transition:height .3s" title="'+pct+'%"></div>'});
 el.innerHTML=h}
+function renderPlateauViz(){
+var el=document.getElementById('plateau-viz');if(!el)return;
+var log=D.habitLog||{};var total=D.habits.length;if(!total){el.innerHTML='<div class="empty">Sin hábitos aún</div>';return}
+// calcular días acumulados con al menos 1 hábito hecho (últimos 90 días)
+var cumulative=[];var count=0;var today=new Date();
+for(var i=89;i>=0;i--){var d=new Date(today);d.setDate(d.getDate()-i);var iso=d.toISOString().slice(0,10);
+var dayLog=log[iso]||{};var done=0;D.habits.forEach(function(h){if(dayLog[h.id])done++});
+if(i===0)done=D.habits.filter(function(x){return x.done}).length;
+if(done>0)count++;cumulative.push(count)}
+var maxVal=Math.max.apply(null,cumulative)||1;
+// Renderizar como área chart SVG simple
+var w=300,h=80;var pts=cumulative.map(function(v,i){return[(i/89)*w,(h-(v/maxVal)*h*0.9)].join(',')}).join(' ');
+var html='<div style="position:relative;overflow:hidden;border-radius:8px;background:var(--g100);padding:8px">';
+html+='<svg viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none" style="width:100%;height:60px;display:block">';
+html+='<defs><linearGradient id="plateauGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--pri)" stop-opacity="0.4"/><stop offset="100%" stop-color="var(--pri)" stop-opacity="0.05"/></linearGradient></defs>';
+html+='<polygon points="0,'+h+' '+pts+' '+w+','+h+'" fill="url(#plateauGrad)"/>';
+html+='<polyline points="'+pts+'" fill="none" stroke="var(--pri)" stroke-width="2"/>';
+// Línea del umbral (75% de días)
+var thresholdY=h-(0.75*h*0.9);
+html+='<line x1="0" y1="'+thresholdY+'" x2="'+w+'" y2="'+thresholdY+'" stroke="var(--amber)" stroke-width="1" stroke-dasharray="4,3"/>';
+html+='<text x="4" y="'+(thresholdY-3)+'" fill="var(--amber)" font-size="8" font-family="Inter,sans-serif">Umbral de consistencia</text>';
+html+='</svg>';
+var diasActivos=count;var pct=Math.round(diasActivos/90*100);
+html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:12px">';
+html+='<span style="color:var(--g400)">Días activos últimos 90</span>';
+html+='<span style="font-weight:800;font-size:16px;color:'+(pct>=75?'var(--green)':pct>=50?'var(--pri)':'var(--amber)')+'">'+(pct>=75?'🎯 ':'⏳ ')+diasActivos+' días ('+pct+'%)</span>';
+html+='</div>';
+html+='</div>';
+el.innerHTML=html}
 function renderTrackerSummary(){
 var el=document.getElementById('tracker-summary');if(!el)return;
 var log=D.habitLog||{};var total=D.habits.length;if(!total){el.innerHTML='<div class="empty">Sin hábitos</div>';return}
@@ -1707,11 +2247,19 @@ function openAtomicHabitModalForArea(areaId){openAtomicHabitModal();setTimeout(f
 // ============ STACKING & FRICTION ============
 function renderStackTable(){
 var el=document.getElementById('stack-table');if(!el)return;
-var html='<thead><tr><th>Área</th><th>Después de...</th><th>Yo haré...</th><th>Racha</th></tr></thead><tbody>';
-D.habits.forEach(function(h){var a=getArea(h.area);var stack=h.stackAfter?(D.habits.find(function(x){return x.id==h.stackAfter})||{}).name:'';
-html+='<tr><td>'+(a?'<span style="color:'+a.color+';font-weight:600">'+a.icon+' '+a.name+'</span>':'—')+'</td><td class="stack-formula">'+(stack?esc(stack):'—')+'</td><td><b>'+esc(h.name)+'</b></td><td>🔥'+calcStreak(h.id)+'</td></tr>'});
-if(!D.habits.length)html+='<tr><td colspan="4" class="empty">Sin hábitos aún</td></tr>';
-html+='</tbody>';el.innerHTML=html;
+// tabla de stacking con implementación intención completa
+var stackedHabits=D.habits.filter(function(h){return h.stackAfter||h.cue||h.bundle});
+var html='<div style="font-size:11px;color:var(--g400);margin-bottom:10px;padding:8px;background:var(--g100);border-radius:6px">&#128279; <b>F&#243;rmula:</b> <em>Despu&#233;s de [h&#225;bito actual], yo har&#233; [h&#225;bito nuevo] a las [HORA] en [LUGAR]</em></div>';
+html+='<table class="stack-table"><thead><tr><th>&#193;rea</th><th>Despu&#233;s de...</th><th>Yo har&#233;...</th><th>Se&#241;al (hora/lugar)</th><th>Bundling &#127873;</th><th>&#128293;</th></tr></thead><tbody>';
+D.habits.forEach(function(h){var a=getArea(h.area);var stackHab=h.stackAfter?D.habits.find(function(x){return x.id==h.stackAfter}):null;
+html+='<tr onclick="openAtomicHabitModal('+D.habits.indexOf(h)+')" style="cursor:pointer"><td>'+(a?'<span style="color:'+a.color+';font-weight:600">'+a.icon+'</span>':'—')+'</td>';
+html+='<td class="stack-formula">'+(stackHab?esc(stackHab.name):'<span style="color:var(--g300)">—</span>')+'</td>';
+html+='<td><b>'+esc(h.name)+'</b></td>';
+html+='<td style="font-size:11px;color:var(--g500)">'+(h.cue?esc(h.cue):'<em style="color:var(--g300)">Definir &#8594;</em>')+'</td>';
+html+='<td style="font-size:11px;color:var(--g500)">'+(h.bundle?esc(h.bundle):'<em style="color:var(--g300)">&#8212;</em>')+'</td>';
+html+='<td style="font-weight:800;color:var(--pri)">&#128293;'+calcStreak(h.id)+'</td></tr>'});
+if(!D.habits.length)html+='<tr><td colspan="6" class="empty">Sin h&#225;bitos a&#250;n</td></tr>';
+html+='</tbody></table>';el.innerHTML=html;
 }
 function renderFriction(){
 var el=document.getElementById('friction-table');if(!el)return;
@@ -2075,12 +2623,95 @@ function loadTheme(){var t=localStorage.getItem('theme')||'light';document.docum
 
 // Hook renderAll
 var _origRenderAll=renderAll;
-renderAll=function(){_origRenderAll();try{ensureAreaFields();ensurePlanFields();renderAreasGrid();renderStackTable();renderFriction();renderWeeklyAudit();renderDailyPlan();renderHomeExec();renderLazoMillonario()}catch(e){console.warn(e)}};
+renderAll=function(){_origRenderAll();try{ensureAreaFields();ensurePlanFields();renderAreasGrid();renderStackTable();renderFriction();renderWeeklyAudit();renderDailyPlan();renderHomeExec();renderLazoMillonario();checkAutoBackup()}catch(e){console.warn(e)}};
 
-// INIT
+// ============ BANNER SEGUNDO DÍA FALLIDO ============
+function renderSecondMissBanner(){
+var banner=document.getElementById('second-miss-banner');
+var listEl=document.getElementById('second-miss-list');
+if(!banner||!listEl)return;
+var log=D.habitLog||{};
+var ayer=new Date();ayer.setDate(ayer.getDate()-1);var isoAyer=ayer.toISOString().slice(0,10);
+var anteayer=new Date();anteayer.setDate(anteayer.getDate()-2);var isoAnteayer=anteayer.toISOString().slice(0,10);
+var misses=[];
+D.habits.forEach(function(h){
+var failAyer=(log[isoAyer]&&log[isoAyer][h.id]===false)||(log[isoAyer]&&log[isoAyer][h.id]===undefined&&!h.done);
+// si ayer el log no existe para ese hábito, también cuenta como fallo
+var nologAyer=!log[isoAyer]||log[isoAyer][h.id]===undefined||log[isoAyer][h.id]===false;
+var nologAnteayer=!log[isoAnteayer]||log[isoAnteayer][h.id]===undefined||log[isoAnteayer][h.id]===false;
+// solo alertar si tiene historial (al menos 3 días de log)
+var logDates=Object.keys(log);
+if(logDates.length<3)return;
+if(nologAyer&&nologAnteayer&&!h.done)misses.push(h.name)
+});
+if(misses.length>0){banner.style.display='block';listEl.innerHTML=misses.map(function(n){return'<div style="padding:2px 0">• '+esc(n)+'</div>'}).join('')}
+else banner.style.display='none'
+}
+// ============ ALERTA 2DO DÍA FALLIDO (James Clear) ============
+function checkSecondMissAlert(habitId){
+var log=D.habitLog||{};
+var ayer=new Date();ayer.setDate(ayer.getDate()-1);var isoAyer=ayer.toISOString().slice(0,10);
+var antes=new Date();antes.setDate(antes.getDate()-2);var isoAntes=antes.toISOString().slice(0,10);
+var failAyer=log[isoAyer]&&log[isoAyer][habitId]===false;
+var failAntes=log[isoAntes]&&log[isoAntes][habitId]===false;
+// Caso: ayer no lo hizo y hoy tampoco lo está marcando = 2do día
+if(failAyer){
+var hab=D.habits.find(function(h){return h.id===habitId});
+if(hab)setTimeout(function(){
+toast('⚠️ 2do día sin "'+hab.name+'". Clear: nunca falles dos veces seguidas.');
+},600)}
+}
+// ============ BACKUP AUTOMÁTICO SEMANAL ============
+function markBackupDone(){
+var key=getWeekKey();
+localStorage.setItem('lastBackupWeek',key);
+var el=document.getElementById('backup-status');
+var ind=document.getElementById('backup-indicator');
+var msg='Último backup: '+new Date().toLocaleDateString('es-CO',{day:'numeric',month:'long',year:'numeric'});
+if(el)el.textContent=msg;
+if(ind){ind.textContent='✅ Al día';ind.style.color='var(--green)'}
+}
+function checkAutoBackup(){
+var lastWeek=localStorage.getItem('lastBackupWeek');
+var currentWeek=getWeekKey();
+var el=document.getElementById('backup-status');
+var ind=document.getElementById('backup-indicator');
+if(lastWeek===currentWeek){
+var msg='Último backup: semana de '+currentWeek;
+if(el)el.textContent=msg;
+if(ind){ind.textContent='✅ Al día';ind.style.color='var(--green)'}
+return;
+}
+// Calcular semanas sin backup
+var weeksSince=0;
+if(lastWeek){
+var last=new Date(lastWeek+'T12:00:00');
+var now=new Date();
+weeksSince=Math.round((now-last)/(7*24*3600*1000));
+}
+var urgente=weeksSince>=2||!lastWeek;
+if(el){
+if(!lastWeek)el.textContent='⚠️ Nunca has hecho un backup. ¡Hazlo ahora!';
+else el.textContent='⚠️ Último backup hace '+weeksSince+' semana'+(weeksSince!==1?'s':'')+'. Semana actual: '+currentWeek;
+el.style.color=urgente?'var(--red)':'var(--amber)';
+}
+if(ind){
+ind.textContent=urgente?'⚠️ Pendiente':'🕐 Esta semana';
+ind.style.color=urgente?'var(--red)':'var(--amber)';
+}
+// Auto-exportar si han pasado 2+ semanas sin backup (silencioso, solo muestra toast)
+if(weeksSince>=2){
+setTimeout(function(){
+toast('⚠️ Llevas '+weeksSince+' semanas sin backup. Descarga uno desde Inicio → 💾 Backup');
+},3000);
+}
+}
+
+
 document.addEventListener('DOMContentLoaded',function(){loadTheme();load();renderAll();
 var ct=document.getElementById('pom-count');if(ct)ct.textContent=D.pomCount||0;
 setTimeout(cloudInit,500);
+setTimeout(checkAutoBackup,1000);
 setInterval(function(){checkDayChange();checkWeeklyReset()},60000);
 // Pull periódico cada 2 min para sincronizar entre dispositivos (solo si no hay cambios pendientes y la pestaña está visible)
 setInterval(function(){if(supaClient&&!document.hidden&&!_dirty&&!_syncing)cloudPull()},120000);
