@@ -1658,7 +1658,7 @@ function renderProyectos(){
     if(!total)html+='<div class="proj-empty" style="padding:10px">Sin pasos aún. Agrega el primero ↓</div>';
     // input rápido inline
     html+='<div style="display:flex;gap:6px;margin-top:10px">';
-    html+='<input class="inp" id="paso-inp-'+realIdx+'" placeholder="+ Agregar paso rápido…" style="flex:1;font-size:12px" onkeydown="if(event.key==='Enter')addPasoInline('+realIdx+')">';
+    html+='<input class="inp" id="paso-inp-'+realIdx+'" placeholder="+ Agregar paso rápido…" style="flex:1;font-size:12px" onkeydown="if(event.key===\'Enter\')addPasoInline('+realIdx+')">';
     html+='<button class="btn btn-pri btn-sm" onclick="addPasoInline('+realIdx+')">+</button>';
     html+='<button class="btn btn-out btn-sm" onclick="openPasoModal('+realIdx+')" title="Paso con detalle">📋</button>';
     html+='</div>';
