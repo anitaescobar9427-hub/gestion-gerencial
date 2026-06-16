@@ -1695,14 +1695,33 @@ function renderProjFilterBar(){
   var bar=document.getElementById('proj-filter-bar');if(!bar)return;
   var cur=bar.dataset.filter||'activo';
   var h='';
-  h+='<button class="chip'+(_qtAreaFilter===''?' active':'')+'" onclick="setProjAreaFilter(\'\')">Todas</button>';
-  AREAS.forEach(function(a){h+='<button class="chip"+(_qtAreaFilter===a.id?" active":"")+" onclick="setProjAreaFilter(\''+a.id+'\')">'+a.icon+' '+a.name+'</button>'});
-  h+=' ';
-  var statuses=[{v:'activo',l:'Activos'},{v:'pausado',l:'Pausados'},{v:'completado',l:'Completados'},{v:'todos',l:'Todos'}];
-  statuses.forEach(function(s){h+='<button class="chip'+(cur===s.v?' active':'')+'" onclick="setProjStatusFilter(\''+s.v+'\',this)">'+s.l+'</button>'});
+  var areaAll='chip'+(_qtAreaFilter===''?' active':'');
+  h='<button class="'+areaAll+'" onclick="clearProjFilter()">• Todos</button>';
+  AREAS.forEach(function(a){
+    var cls='chip'+(_qtAreaFilter===a.id?' active':'');
+    h+='<button class="'+cls+'" onclick="setProjAreaFilter(''+a.id+'')">'+a.icon+' '+a.name+'</button>';
+  });
+  h+='<span style="padding:0 4px;color:var(--g300)">|</span>';
+  [{v:'activo',l:'Activos'},{v:'pausado',l:'Pausados'},{v:'completado',l:'Completados'},{v:'todos',l:'Todos'}].forEach(function(s){
+    var cls2='chip'+(cur===s.v?' active':'');
+    h+='<button class="'+cls2+'" onclick="setProjStatusFilter(''+s.v+'',this)">'+s.l+'</button>';
+  });
+  bar.innerHTML=h;
+},{v:'pausado',l:'Pausados'},{v:'completado',l:'Completados'},{v:'todos',l:'Todos'}];
+  h+='<button class="chip"+(_qtAreaFilter===''?' active':'')+'" onclick="setProjAreaFilter(\'\')">Todos</button>';
+  AREAS.forEach(function(a){
+    h+='<button class="chip'+(_qtAreaFilter===a.id?' active':'')+'" onclick="setProjAreaFilter(\''+a.id+'\')">'+a.icon+' '+a.name+'</button>';
+  });
+  h+='<span style="color:var(--g300);padding:0 6px">|</span>';
+  statuses.forEach(function(s){
+    h+='<button class="chip"+(cur===s.v?" active":"")+" onclick="setProjStatusFilter(\''+s.v+'\',this)">'+s.l+'</button>';
+  });
   bar.innerHTML=h;
 }
 
+
+function clearProjFilter(){setProjAreaFilter('')}
+function clearQtFilter(){setQtFilter('')}
 function setProjAreaFilter(areaId){
   _qtAreaFilter=areaId;renderProyectos();
 }
@@ -1735,9 +1754,21 @@ function addQuickTask(){
 
 function renderQtFilterBar(){
   var bar=document.getElementById('qt-filter-bar');if(!bar)return;
-  var h='<button class="chip'+(_qtFilter===''?' active':'')+'" onclick="setQtFilter(\'\')">Todas las &aacute;reas</button>';
-  var usedAreas={};(D.quickTasks||[]).forEach(function(t){if(t.area&&!t.done)usedAreas[t.area]=true});
-  AREAS.forEach(function(a){if(usedAreas[a.id])h+='<button class="chip'+(_qtFilter===a.id?' active':'')+'" onclick="setQtFilter(\''+a.id+'\')">'+a.icon+' '+a.name+'</button>'});
+  var clsAll='chip'+(_qtFilter===''?' active':'');
+  var h='<button class="'+clsAll+'" onclick="clearQtFilter()">Todas las áreas</button>';
+  var usedAreas={};
+  (D.quickTasks||[]).forEach(function(t){if(t.area&&!t.done)usedAreas[t.area]=true});
+  AREAS.forEach(function(a){
+    if(!usedAreas[a.id])return;
+    var cls='chip'+(_qtFilter===a.id?' active':'');
+    h+='<button class="'+cls+'" onclick="setQtFilter(''+a.id+'')">'+a.icon+' '+a.name+'</button>';
+  });
+  bar.innerHTML=h;
+};(D.quickTasks||[]).forEach(function(t){if(t.area&&!t.done)usedAreas[t.area]=true});
+  AREAS.forEach(function(a){
+    if(!usedAreas[a.id])return;
+    h+='<button class="chip"+(_qtFilter===a.id?" active":"")+" onclick="setQtFilter(\''+a.id+'\')">'+a.icon+' '+a.name+'</button>';
+  });
   bar.innerHTML=h;
 }
 
