@@ -1061,6 +1061,9 @@ function moveHabit(id,dir){const i=D.habits.findIndex(x=>x.id===id);if(i<0)retur
 let _dragHabitId=null;
 function dragHabit(e,id){_dragHabitId=id;e.dataTransfer.effectAllowed='move';if(e.target&&e.target.classList)e.target.style.opacity='0.4'}
 function dropHabit(e,targetId){e.preventDefault();const src=_dragHabitId;_dragHabitId=null;document.querySelectorAll('[data-hid]').forEach(x=>x.style.opacity='');if(src==null||src===targetId)return;const i=D.habits.findIndex(x=>x.id===src);const j=D.habits.findIndex(x=>x.id===targetId);if(i<0||j<0)return;const item=D.habits.splice(i,1)[0];D.habits.splice(j,0,item);save();renderHabits();renderHomeHabitsQuick&&renderHomeHabitsQuick();renderAtomicHabits&&renderAtomicHabits()}
+function habitDragOver(e){e.preventDefault();var card=e.currentTarget;card.style.borderTop='2.5px solid var(--pri)';card.style.marginTop='-2px';}
+function habitDragLeave(e){var card=e.currentTarget;card.style.borderTop='';card.style.marginTop='';}
+function habitDrop(e,targetId){e.preventDefault();document.querySelectorAll('[data-hid]').forEach(function(x){x.style.borderTop='';x.style.marginTop='';});dropHabit(e,targetId);}
 function toggleHabit(id){const h=D.habits.find(x=>x.id===id);if(h){h.done=!h.done;const t=todayStr();if(!D.habitLog[t])D.habitLog[t]={};D.habitLog[t][id]=h.done;D.habitHistory[t]={total:D.habits.length,done:D.habits.filter(x=>x.done).length};save();renderHabits();renderOverview();renderHomeHabitsQuick();renderAtomicHabits();renderHomeChain&&renderHomeChain();renderIdentityVotes&&renderIdentityVotes();renderScorecard&&renderScorecard();
 // Toast de voto de identidad al marcar como hecho
 if(h.done&&h.identityId){var idObj=D.identities.find(function(x){return x.id===h.identityId});if(idObj)setTimeout(function(){toast('🗳️ Voto: "Soy '+idObj.statement+'"')},400)}
@@ -1955,24 +1958,26 @@ function habitCardHTML(hab,i){
 var idObj=hab.identityId?D.identities.find(function(x){return x.id===hab.identityId}):null;
 var streak=calcStreak(hab.id);
 var scoreClass=hab.score==='+'?'score-plus':hab.score==='-'?'score-minus':'score-neutral';
-var h='<div class="habit-card"><div class="habit-header">';
-h+='<div class="habit-check'+(hab.done?' done':'')+'" onclick="event.stopPropagation();toggleHabit('+hab.id+')">'+( hab.done?'✓':'')+'</div>';
-h+='<div style="flex:1;cursor:pointer" onclick="openAtomicHabitModal('+i+')">';
-h+='<div class="habit-name">'+esc(hab.name)+'</div>';
-if(idObj)h+='<div style="font-size:11px;color:'+idObj.color+';font-weight:600;margin-top:2px">'+esc(idObj.statement)+'</div>';
+var h='<div class="habit-card" draggable="true" data-hid="'+hab.id+'" ondragstart="dragHabit(event,'+hab.id+')" ondragover="habitDragOver(event)" ondragleave="habitDragLeave(event)" ondrop="habitDrop(event,'+hab.id+')">';
+h+='<div class="habit-header">';
+h+='<div class="habit-check'+(hab.done?' done':'')+'\" onclick=\"event.stopPropagation();toggleHabit('+hab.id+')\">'+( hab.done?'✓':'')+'</div>';
+h+='<div style=\"flex:1;cursor:pointer\" onclick=\"openAtomicHabitModal('+i+')\">';
+h+='<div class=\"habit-name\">'+esc(hab.name)+'</div>';
+if(idObj)h+='<div style=\"font-size:11px;color:'+idObj.color+';font-weight:600;margin-top:2px\">'+esc(idObj.statement)+'</div>';
 h+='</div>';
-h+='<div class="score-badge '+scoreClass+'">'+hab.score+'</div>';
-if(streak>0)h+='<div class="habit-streak"><span class="fire">🔥</span> '+streak+'</div>';
+h+='<span style=\"font-size:18px;color:var(--g300);cursor:grab;padding:0 4px;line-height:1\" title=\"Arrastra para reordenar\">&#8942;</span>';
+h+='<div class=\"score-badge '+scoreClass+'\">'+hab.score+'</div>';
+if(streak>0)h+='<div class=\"habit-streak\"><span class=\"fire\">🔥</span> '+streak+'</div>';
 h+='</div>';
 if(hab.cue||hab.craving||hab.response||hab.reward||hab.twoMin){
-h+='<details><summary style="font-size:11px;color:var(--g400);padding:4px 0">Ver las 4 Leyes</summary><div class="laws-section">';
-if(hab.cue)h+='<div class="law-item"><div class="law-icon">🔔</div><div><div class="law-label">Señal</div><div class="law-text">'+esc(hab.cue)+'</div></div></div>';
-if(hab.craving)h+='<div class="law-item"><div class="law-icon">💫</div><div><div class="law-label">Deseo</div><div class="law-text">'+esc(hab.craving)+'</div></div></div>';
-if(hab.response)h+='<div class="law-item"><div class="law-icon">🎯</div><div><div class="law-label">Respuesta</div><div class="law-text">'+esc(hab.response)+'</div></div></div>';
-if(hab.reward)h+='<div class="law-item"><div class="law-icon">🏆</div><div><div class="law-label">Recompensa</div><div class="law-text">'+esc(hab.reward)+'</div></div></div>';
-if(hab.twoMin)h+='<div class="two-min"><div class="two-min-label">2️⃣ Versión de 2 minutos</div>'+esc(hab.twoMin)+'</div>';
-if(hab.envDesign)h+='<div class="law-item"><div class="law-icon">🏠</div><div><div class="law-label">Entorno</div><div class="law-text">'+esc(hab.envDesign)+'</div></div></div>';
-if(hab.bundle)h+='<div class="law-item"><div class="law-icon">🎁</div><div><div class="law-label">Bundling</div><div class="law-text">'+esc(hab.bundle)+'</div></div></div>';
+h+='<details><summary style=\"font-size:11px;color:var(--g400);padding:4px 0\">Ver las 4 Leyes</summary><div class=\"laws-section\">';
+if(hab.cue)h+='<div class=\"law-item\"><div class=\"law-icon\">🔔</div><div><div class=\"law-label\">Señal</div><div class=\"law-text\">'+esc(hab.cue)+'</div></div></div>';
+if(hab.craving)h+='<div class=\"law-item\"><div class=\"law-icon\">💫</div><div><div class=\"law-label\">Deseo</div><div class=\"law-text\">'+esc(hab.craving)+'</div></div></div>';
+if(hab.response)h+='<div class=\"law-item\"><div class=\"law-icon\">🎯</div><div><div class=\"law-label\">Respuesta</div><div class=\"law-text\">'+esc(hab.response)+'</div></div></div>';
+if(hab.reward)h+='<div class=\"law-item\"><div class=\"law-icon\">🏆</div><div><div class=\"law-label\">Recompensa</div><div class=\"law-text\">'+esc(hab.reward)+'</div></div></div>';
+if(hab.twoMin)h+='<div class=\"two-min\"><div class=\"two-min-label\">2️⃣ Versión de 2 minutos</div>'+esc(hab.twoMin)+'</div>';
+if(hab.envDesign)h+='<div class=\"law-item\"><div class=\"law-icon\">🏠</div><div><div class=\"law-label\">Entorno</div><div class=\"law-text\">'+esc(hab.envDesign)+'</div></div></div>';
+if(hab.bundle)h+='<div class=\"law-item\"><div class=\"law-icon\">🎁</div><div><div class=\"law-label\">Bundling</div><div class=\"law-text\">'+esc(hab.bundle)+'</div></div></div>';
 h+='</div></details>'}
 h+='</div>';return h;
 }
