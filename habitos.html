@@ -1965,7 +1965,10 @@ h+='<div style=\"flex:1;cursor:pointer\" onclick=\"openAtomicHabitModal('+i+')\"
 h+='<div class=\"habit-name\">'+esc(hab.name)+'</div>';
 if(idObj)h+='<div style=\"font-size:11px;color:'+idObj.color+';font-weight:600;margin-top:2px\">'+esc(idObj.statement)+'</div>';
 h+='</div>';
-h+='<span style=\"font-size:18px;color:var(--g300);cursor:grab;padding:0 4px;line-height:1\" title=\"Arrastra para reordenar\">&#8942;</span>';
+h+='<div style=\"display:flex;flex-direction:column;flex-shrink:0\">';
+h+='<button class=\"t-del\" style=\"padding:1px 8px;font-size:14px\" onclick=\"event.stopPropagation();moveHabit('+hab.id+',-1)\" title=\"Subir\">▲</button>';
+h+='<button class=\"t-del\" style=\"padding:1px 8px;font-size:14px\" onclick=\"event.stopPropagation();moveHabit('+hab.id+',1)\" title=\"Bajar\">▼</button>';
+h+='</div>';
 h+='<div class=\"score-badge '+scoreClass+'\">'+hab.score+'</div>';
 if(streak>0)h+='<div class=\"habit-streak\"><span class=\"fire\">🔥</span> '+streak+'</div>';
 h+='</div>';
