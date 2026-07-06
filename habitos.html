@@ -322,13 +322,15 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <span id="home-plan-pct" style="margin-left:auto;font-size:12px;color:var(--g400)"></span>
 <button class="btn btn-pri btn-sm" style="margin-left:8px" onclick="showTab('plan')">✏️ Editar</button>
 </div>
-<!-- OBJETIVO DEL DÍA -->
+<!-- OBJETIVOS DEL DÍA -->
 <div style="margin-bottom:12px">
-<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--g500);margin-bottom:6px">🎯 Objetivo del día</div>
-<div style="display:flex;gap:8px;align-items:center">
-<input class="inp" id="home-daily-goal" placeholder="¿Cuál es tu intención para hoy?" style="flex:1;font-size:13px;font-weight:600" onkeydown="if(event.key==='Enter')saveDailyGoal()" oninput="saveDailyGoal()">
+<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--g500);margin-bottom:8px">🎯 Objetivos del día</div>
+<div id="home-daily-goals-list" style="margin-bottom:8px"></div>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<input class="inp" id="home-goal-inp" placeholder="Agregar objetivo…" style="flex:3;min-width:140px;font-size:13px" onkeydown="if(event.key==='Enter')addDailyGoal()">
+<select class="inp" id="home-goal-area" style="flex:1;min-width:100px;font-size:12px"><option value="">— Área —</option></select>
+<button class="btn btn-pri btn-sm" onclick="addDailyGoal()">+</button>
 </div>
-<div id="home-daily-goal-saved" style="font-size:11px;color:var(--g400);margin-top:4px;min-height:16px"></div>
 </div>
 <div id="home-plan-today"></div>
 </div>
@@ -555,9 +557,15 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <div id="proj-summary-bar" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px"></div>
 
 <!-- FILTRO Y ACCIONES -->
-<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px">
-<div id="proj-filter-bar" class="chip-bar" style="flex:1"></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
 <button class="btn btn-pri btn-sm" onclick="openProyectoModal()">+ Proyecto</button>
+</div>
+<!-- FILA 1: filtro estado -->
+<div id="proj-filter-bar" class="chip-bar" style="margin-bottom:8px"></div>
+<!-- FILA 2: ordenar + agrupar -->
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px">
+<span style="font-size:11px;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:.3px">Ordenar por:</span>
+<div id="proj-sort-bar" class="chip-bar" style="flex:1"></div>
 </div>
 
 <!-- LISTA DE PROYECTOS -->
@@ -1504,23 +1512,60 @@ if('Notification' in window&&Notification.permission==='default'){try{Notificati
 
 
 
-// ── Objetivo diario ──
-function saveDailyGoal(){
-  var inp=document.getElementById('home-daily-goal');if(!inp)return;
+// ── Objetivos diarios (múltiples con área) ──
+function ensureDailyGoals(){
   if(!D.dailyGoals)D.dailyGoals={};
-  D.dailyGoals[todayStr()]=inp.value.trim();
-  save();
-  var saved=document.getElementById('home-daily-goal-saved');
-  if(saved&&inp.value.trim())saved.textContent='✓ Guardado';
+  var t=todayStr();
+  // migrar formato antiguo (string) a array
+  if(typeof D.dailyGoals[t]==='string'){
+    var old=D.dailyGoals[t];
+    D.dailyGoals[t]=old?[{id:Date.now(),text:old,area:'',done:false}]:[];
+  }
+  if(!D.dailyGoals[t])D.dailyGoals[t]=[];
 }
-function loadDailyGoal(){
-  if(!D.dailyGoals)D.dailyGoals={};
-  var inp=document.getElementById('home-daily-goal');if(!inp)return;
-  var val=D.dailyGoals[todayStr()]||'';
-  inp.value=val;
-  var saved=document.getElementById('home-daily-goal-saved');
-  if(saved&&val)saved.textContent='✓ '+val;
+function addDailyGoal(){
+  var inp=document.getElementById('home-goal-inp');
+  var text=inp?inp.value.trim():'';if(!text)return;
+  var area=(document.getElementById('home-goal-area')||{}).value||'';
+  ensureDailyGoals();
+  D.dailyGoals[todayStr()].push({id:Date.now(),text:text,area:area,done:false});
+  if(inp)inp.value='';
+  save();renderDailyGoals();
 }
+function toggleDailyGoal(id){
+  ensureDailyGoals();
+  var g=D.dailyGoals[todayStr()].find(function(x){return x.id===id});
+  if(g){g.done=!g.done;save();renderDailyGoals();}
+}
+function delDailyGoal(id){
+  ensureDailyGoals();
+  D.dailyGoals[todayStr()]=D.dailyGoals[todayStr()].filter(function(x){return x.id!==id});
+  save();renderDailyGoals();
+}
+function renderDailyGoals(){
+  // Llenar selector de área
+  var sel=document.getElementById('home-goal-area');
+  if(sel&&sel.options.length<=1){
+    sel.innerHTML='<option value="">— Área —</option>'+AREAS.map(function(a){return'<option value="'+a.id+'">'+a.icon+' '+a.name+'</option>'}).join('');
+  }
+  var el=document.getElementById('home-daily-goals-list');if(!el)return;
+  ensureDailyGoals();
+  var goals=D.dailyGoals[todayStr()];
+  if(!goals.length){el.innerHTML='';return;}
+  var h='';
+  goals.forEach(function(g){
+    var a=g.area?getArea(g.area):null;
+    var color=a?a.color:'var(--pri)';
+    h+='<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--g200)">';
+    h+='<span onclick="toggleDailyGoal('+g.id+')" style="cursor:pointer;font-size:16px;flex-shrink:0">'+(g.done?'✅':'⬜')+'</span>';
+    h+='<span style="flex:1;font-size:13px;font-weight:600'+(g.done?';text-decoration:line-through;opacity:.5':'')+';color:var(--text)">'+esc(g.text)+'</span>';
+    if(a)h+='<span style="font-size:10px;font-weight:700;color:'+color+';white-space:nowrap">'+a.icon+' '+a.name+'</span>';
+    h+='<button class="t-del" onclick="delDailyGoal('+g.id+')">✕</button>';
+    h+='</div>';
+  });
+  el.innerHTML=h;
+}
+function loadDailyGoal(){renderDailyGoals();}
 // ============================================================
 // PROYECTOS ANCLADOS EN INICIO
 // ============================================================
@@ -1759,100 +1804,171 @@ function renderProyectos(){
   renderProjSummaryBar();
   renderProjFilterBar();
   var el=document.getElementById('proyectos-list');if(!el)return;
-  var filtArea=_qtAreaFilter; // reutilizo misma variable de filtro
-  var proyFilter=document.getElementById('proj-status-filter')?document.getElementById('proj-status-filter').value:'activo';
-  var items=D.proyectos.filter(function(p,i){
-    if(filtArea&&p.area!==filtArea)return false;
-    if(proyFilter==='todos')return true;
-    return (p.status||'activo')===proyFilter;
-  });
-  if(!items.length){
-    el.innerHTML='<div class="proj-empty">'+
-      (D.proyectos.length?'Sin proyectos en este filtro.':'Sin proyectos aún. Crea tu primera meta →')+
-      '</div>';return;
-  }
-  var html='';
-  items.forEach(function(p){
-    var realIdx=D.proyectos.indexOf(p);
-    var a=getArea(p.area);
-    var color=a?a.color:'var(--pri)';
-    var pasos=p.pasos||[];
-    var done=pasos.filter(function(s){return s.status==='completado'}).length;
-    var total=pasos.length;
-    var pct=total?Math.round(done/total*100):0;
-    var diasRestantes='';
-    if(p.date){
-      var diff=Math.ceil((new Date(p.date+'T12:00:00')-new Date())/(86400000));
-      diasRestantes=diff>0?diff+' días':diff===0?'¡Hoy!':'⏰ '+Math.abs(diff)+' días vencido';
-    }
-    var statusBadgeClass='proj-badge-status-'+(p.status||'activo');
-    var statusIcons={activo:'🟢',pausado:'🟡',completado:'✅',cancelado:'❌'};
-    var priColors={alta:'var(--red)',media:'var(--amber)',baja:'var(--green)'};
 
-    html+='<div class="proj-card" id="proj-card-'+realIdx+'">';
-    // header clickeable para expandir
-    html+='<div class="proj-header" onclick="toggleProjBody('+realIdx+')">';
-    html+='<div class="proj-color-bar" style="background:'+color+'"></div>';
-    html+='<div class="proj-meta">';
-    html+='<div class="proj-title">'+esc(p.name)+'</div>';
-    if(p.desc)html+='<div class="proj-desc">'+esc(p.desc)+'</div>';
-    html+='<div class="proj-badges">';
-    if(a)html+='<span class="proj-badge" style="background:'+color+'22;color:'+color+'">'+a.icon+' '+a.name+'</span>';
-    html+='<span class="proj-badge '+statusBadgeClass+'">'+(statusIcons[p.status||'activo'])+' '+(p.status||'activo')+'</span>';
-    if(p.pri)html+='<span class="proj-badge" style="color:'+priColors[p.pri||'media']+'">'+{alta:'🔴 Alta',media:'🟡 Media',baja:'🟢 Baja'}[p.pri||'media']+'</span>';
-    if(diasRestantes)html+='<span class="proj-badge" style="color:var(--g500)">📅 '+diasRestantes+'</span>';
-    html+='<span class="proj-badge" style="color:var(--g400)">'+done+'/'+total+' pasos</span>';
-    html+='</div></div>';
-    html+='<button class="btn btn-out btn-sm" style="flex-shrink:0;margin-left:4px" onclick="event.stopPropagation();openProyectoModal('+realIdx+')">✏️</button>';
-    html+='</div>';
-    // barra de progreso
-    html+='<div class="proj-progress-wrap">';
-    html+='<div class="proj-progress-bar"><div class="proj-progress-fill" style="width:'+pct+'%;background:'+color+'"></div></div>';
-    html+='<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--g400)"><span>'+pct+'% completado</span><span>'+done+'/'+total+' pasos</span></div>';
-    html+='</div>';
-    // cuerpo (pasos) — visible por defecto si hay pasos activos
-    var bodyOpen=pasos.some(function(s){return s.status==='en progreso'})||total===0;
-    html+='<div class="proj-body" id="proj-body-'+realIdx+'" style="'+(bodyOpen?'':'display:none')+'">';
-    // pasos agrupados por estado
-    var pending=pasos.filter(function(s){return s.status!=='completado'});
-    var completed=pasos.filter(function(s){return s.status==='completado'});
-    if(pending.length){
-      pending.forEach(function(paso,pi){
-        var ri=pasos.indexOf(paso);
-        var stIcon={pendiente:'⏳',bloqueado:'🚫','en progreso':'🔄',completado:'✅'}[paso.status||'pendiente']||'⏳';
-        var stClass=paso.status==='completado'?'done':paso.status==='bloqueado'?'bloqueado':paso.status==='en progreso'?'en-progreso':'';
-        var checkIcon=paso.status==='completado'?'✓':paso.status==='bloqueado'?'✕':paso.status==='en progreso'?'▶':'';
-        html+='<div class="paso-item '+stClass+'" onclick="openPasoModal('+realIdx+','+ri+')">';
-        html+='<div class="paso-check '+(paso.status==='completado'?'done':paso.status==='bloqueado'?'bloqueado':paso.status==='en progreso'?'en-progreso':'')+'" onclick="event.stopPropagation();cyclePasoStatus('+realIdx+','+ri+')">'+checkIcon+'</div>';
-        html+='<div class="paso-info"><div class="paso-text">'+esc(paso.text)+'</div>';
-        var sub=[];
-        if(paso.date)sub.push('📅 '+fmtDate(paso.date));
-        if(paso.pri&&paso.pri!=='media')sub.push(paso.pri==='alta'?'🔴 Alta':'🟢 Baja');
-        if(paso.notes)sub.push('📝 '+esc(paso.notes).slice(0,40)+'...');
-        if(sub.length)html+='<div class="paso-sub">'+sub.join(' · ')+'</div>';
-        html+='</div></div>';
-      });
-    }
-    if(completed.length){
-      html+='<details style="margin-top:6px"><summary style="font-size:11px;color:var(--g400);cursor:pointer">✅ '+completed.length+' completado'+(completed.length!==1?'s':'')+'</summary><div style="margin-top:4px;opacity:.6">';
-      completed.forEach(function(paso){
-        var ri=pasos.indexOf(paso);
-        html+='<div class="paso-item done" onclick="openPasoModal('+realIdx+','+ri+')">';
-        html+='<div class="paso-check done" onclick="event.stopPropagation();cyclePasoStatus('+realIdx+','+ri+')">✓</div>';
-        html+='<div class="paso-info"><div class="paso-text" style="text-decoration:line-through">'+esc(paso.text)+'</div></div></div>';
-      });
-      html+='</div></details>';
-    }
-    if(!total)html+='<div class="proj-empty" style="padding:10px">Sin pasos aún. Agrega el primero ↓</div>';
-    // input rápido inline
-    html+='<div style="display:flex;gap:6px;margin-top:10px">';
-    html+='<input class="inp" id="paso-inp-'+realIdx+'" placeholder="+ Agregar paso rápido…" style="flex:1;font-size:12px" onkeydown="if(event.key===\'Enter\')addPasoInline('+realIdx+')">';
-    html+='<button class="btn btn-pri btn-sm" onclick="addPasoInline('+realIdx+')">+</button>';
-    html+='<button class="btn btn-out btn-sm" onclick="openPasoModal('+realIdx+')" title="Paso con detalle">📋</button>';
-    html+='</div>';
-    html+='</div></div>';
+  // Filtro estado
+  var bar=document.getElementById('proj-filter-bar');
+  var filtStatus=bar?bar.dataset.filter||'activo':'activo';
+  // Sort
+  var sb=document.getElementById('proj-sort-bar');
+  var sortMode=sb?sb.dataset.sort||'manual':'manual';
+  // Filtro área (variable global)
+  var filtArea=_qtAreaFilter;
+
+  var items=D.proyectos.filter(function(p){
+    if(filtArea&&p.area!==filtArea)return false;
+    if(filtStatus==='todos')return true;
+    return (p.status||'activo')===filtStatus;
   });
+
+  if(!items.length){
+    el.innerHTML='<div class="proj-empty">'+(D.proyectos.length?'Sin proyectos en este filtro.':'Sin proyectos aún. Crea tu primera meta →')+'</div>';
+    return;
+  }
+
+  // ── Ordenar ──
+  var priOrder={alta:0,media:1,baja:2};
+  if(sortMode==='urgencia'){
+    items=items.slice().sort(function(a,b){
+      return (priOrder[a.pri||'media']||1)-(priOrder[b.pri||'media']||1);
+    });
+  } else if(sortMode==='fecha'){
+    items=items.slice().sort(function(a,b){
+      var da=a.date||'9999-12-31', db=b.date||'9999-12-31';
+      return da.localeCompare(db);
+    });
+  } else if(sortMode==='area'){
+    items=items.slice().sort(function(a,b){
+      var na=a.area||'zzz', nb=b.area||'zzz';
+      return na.localeCompare(nb);
+    });
+  }
+  // manual: orden original del array
+
+  var html='';
+
+  // ── Agrupar por área si sortMode===area ──
+  if(sortMode==='area'){
+    var groups={};var noArea=[];
+    items.forEach(function(p){
+      if(p.area){if(!groups[p.area])groups[p.area]=[];groups[p.area].push(p);}
+      else noArea.push(p);
+    });
+    AREAS.forEach(function(a){
+      var arr=groups[a.id];if(!arr||!arr.length)return;
+      html+='<div style="margin-bottom:6px;padding:8px 12px 4px;border-radius:var(--radius-sm) var(--radius-sm) 0 0;background:'+a.color+'18;border-left:4px solid '+a.color+'">';
+      html+='<span style="font-weight:800;font-size:12px;color:'+a.color+'">'+a.icon+' '+a.name+'</span>';
+      html+='<span style="font-size:11px;color:'+a.color+';margin-left:8px;opacity:.7">'+arr.length+' proyecto'+(arr.length!==1?'s':'')+'</span>';
+      html+='</div>';
+      arr.forEach(function(p){html+=projCardHTML(p,D.proyectos.indexOf(p));});
+      html+='<div style="margin-bottom:16px"></div>';
+    });
+    if(noArea.length){
+      html+='<div style="margin-bottom:6px;padding:8px 12px 4px;border-radius:var(--radius-sm) var(--radius-sm) 0 0;background:var(--g200);border-left:4px solid var(--g300)">';
+      html+='<span style="font-weight:800;font-size:12px;color:var(--g500)">Sin área asignada</span></div>';
+      noArea.forEach(function(p){html+=projCardHTML(p,D.proyectos.indexOf(p));});
+    }
+  } else {
+    // Lista plana (con cabecera de urgencia si sortMode===urgencia)
+    var lastPri='';
+    items.forEach(function(p){
+      if(sortMode==='urgencia'){
+        var pri=p.pri||'media';
+        if(pri!==lastPri){
+          var priLabels={alta:'🔴 Alta prioridad',media:'🟡 Prioridad media',baja:'🟢 Prioridad baja'};
+          var priColors2={alta:'var(--red)',media:'var(--amber)',baja:'var(--green)'};
+          html+='<div style="font-size:11px;font-weight:700;color:'+priColors2[pri]+';text-transform:uppercase;letter-spacing:.5px;padding:10px 4px 4px">'+priLabels[pri]+'</div>';
+          lastPri=pri;
+        }
+      } else if(sortMode==='fecha'){
+        // Cabecera si está vencido / hoy / próximos
+        var today=new Date();today.setHours(0,0,0,0);
+        var diff=p.date?Math.ceil((new Date(p.date+'T12:00:00')-today)/86400000):null;
+        var bucket=diff===null?'sin-fecha':diff<0?'vencido':diff===0?'hoy':diff<=7?'esta-semana':'futuro';
+        var bucketLabels={'vencido':'⏰ Vencidos','hoy':'📌 Hoy','esta-semana':'📅 Esta semana','futuro':'🗓️ Próximos','sin-fecha':'— Sin fecha'};
+        if(!html.includes('data-bucket="'+bucket+'"')){
+          html+='<div data-bucket="'+bucket+'" style="font-size:11px;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:.5px;padding:10px 4px 4px">'+bucketLabels[bucket]+'</div>';
+        }
+      }
+      html+=projCardHTML(p,D.proyectos.indexOf(p));
+    });
+  }
+
   el.innerHTML=html;
+}
+
+function projCardHTML(p,realIdx){
+  var a=getArea(p.area);
+  var color=a?a.color:'var(--pri)';
+  var pasos=p.pasos||[];
+  var done=pasos.filter(function(s){return s.status==='completado'}).length;
+  var total=pasos.length;
+  var pct=total?Math.round(done/total*100):0;
+  var diasRestantes='';
+  if(p.date){
+    var diff=Math.ceil((new Date(p.date+'T12:00:00')-new Date())/(86400000));
+    diasRestantes=diff>0?diff+' días':diff===0?'¡Hoy!':'⏰ '+Math.abs(diff)+' días vencido';
+  }
+  var statusBadgeClass='proj-badge-status-'+(p.status||'activo');
+  var statusIcons={activo:'🟢',pausado:'🟡',completado:'✅',cancelado:'❌'};
+  var priColors={alta:'var(--red)',media:'var(--amber)',baja:'var(--green)'};
+  var html='';
+  html+='<div class="proj-card" id="proj-card-'+realIdx+'">';
+  html+='<div class="proj-header" onclick="toggleProjBody('+realIdx+')">';
+  html+='<div class="proj-color-bar" style="background:'+color+'"></div>';
+  html+='<div class="proj-meta">';
+  html+='<div class="proj-title">'+esc(p.name)+'</div>';
+  if(p.desc)html+='<div class="proj-desc">'+esc(p.desc)+'</div>';
+  html+='<div class="proj-badges">';
+  if(a)html+='<span class="proj-badge" style="background:'+color+'22;color:'+color+'">'+a.icon+' '+a.name+'</span>';
+  html+='<span class="proj-badge '+statusBadgeClass+'">'+(statusIcons[p.status||'activo'])+' '+(p.status||'activo')+'</span>';
+  if(p.pri)html+='<span class="proj-badge" style="color:'+priColors[p.pri||'media']+'">'+{alta:'🔴 Alta',media:'🟡 Media',baja:'🟢 Baja'}[p.pri||'media']+'</span>';
+  if(diasRestantes)html+='<span class="proj-badge" style="color:var(--g500)">📅 '+diasRestantes+'</span>';
+  html+='<span class="proj-badge" style="color:var(--g400)">'+done+'/'+total+' pasos</span>';
+  html+='</div></div>';
+  html+='<button class="btn btn-out btn-sm" style="flex-shrink:0;margin-left:4px" onclick="event.stopPropagation();openProyectoModal('+realIdx+')">✏️</button>';
+  html+='</div>';
+  html+='<div class="proj-progress-wrap">';
+  html+='<div class="proj-progress-bar"><div class="proj-progress-fill" style="width:'+pct+'%;background:'+color+'"></div></div>';
+  html+='<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--g400)"><span>'+pct+'% completado</span><span>'+done+'/'+total+' pasos</span></div>';
+  html+='</div>';
+  var bodyOpen=pasos.some(function(s){return s.status==='en progreso'})||total===0;
+  html+='<div class="proj-body" id="proj-body-'+realIdx+'" style="'+(bodyOpen?'':'display:none')+'">';
+  var pending=pasos.filter(function(s){return s.status!=='completado'});
+  var completed=pasos.filter(function(s){return s.status==='completado'});
+  if(pending.length){
+    pending.forEach(function(paso){
+      var ri=pasos.indexOf(paso);
+      var stClass=paso.status==='bloqueado'?'bloqueado':paso.status==='en progreso'?'en-progreso':'';
+      var checkIcon=paso.status==='completado'?'✓':paso.status==='bloqueado'?'✕':paso.status==='en progreso'?'▶':'';
+      html+='<div class="paso-item '+stClass+'" onclick="openPasoModal('+realIdx+','+ri+')">';
+      html+='<div class="paso-check '+(paso.status==='bloqueado'?'bloqueado':paso.status==='en progreso'?'en-progreso':'')+'" onclick="event.stopPropagation();cyclePasoStatus('+realIdx+','+ri+')">'+checkIcon+'</div>';
+      html+='<div class="paso-info"><div class="paso-text">'+esc(paso.text)+'</div>';
+      var sub=[];
+      if(paso.date)sub.push('📅 '+fmtDate(paso.date));
+      if(paso.pri&&paso.pri!=='media')sub.push(paso.pri==='alta'?'🔴 Alta':'🟢 Baja');
+      if(paso.notes)sub.push('📝 '+esc(paso.notes).slice(0,40)+'...');
+      if(sub.length)html+='<div class="paso-sub">'+sub.join(' · ')+'</div>';
+      html+='</div></div>';
+    });
+  }
+  if(completed.length){
+    html+='<details style="margin-top:6px"><summary style="font-size:11px;color:var(--g400);cursor:pointer">✅ '+completed.length+' completado'+(completed.length!==1?'s':'')+'</summary><div style="margin-top:4px;opacity:.6">';
+    completed.forEach(function(paso){
+      var ri=pasos.indexOf(paso);
+      html+='<div class="paso-item done" onclick="openPasoModal('+realIdx+','+ri+')">';
+      html+='<div class="paso-check done" onclick="event.stopPropagation();cyclePasoStatus('+realIdx+','+ri+')">✓</div>';
+      html+='<div class="paso-info"><div class="paso-text" style="text-decoration:line-through">'+esc(paso.text)+'</div></div></div>';
+    });
+    html+='</div></details>';
+  }
+  if(!total)html+='<div class="proj-empty" style="padding:10px">Sin pasos aún. Agrega el primero ↓</div>';
+  html+='<div style="display:flex;gap:6px;margin-top:10px">';
+  html+='<input class="inp" id="paso-inp-'+realIdx+'" placeholder="+ Agregar paso rápido…" style="flex:1;font-size:12px" onkeydown="if(event.key===\'Enter\')addPasoInline('+realIdx+')">';
+  html+='<button class="btn btn-pri btn-sm" onclick="addPasoInline('+realIdx+')">+</button>';
+  html+='<button class="btn btn-out btn-sm" onclick="openPasoModal('+realIdx+')" title="Paso con detalle">📋</button>';
+  html+='</div>';
+  html+='</div></div>';
+  return html;
 }
 
 function toggleProjBody(idx){
@@ -1882,25 +1998,33 @@ function renderProjSummaryBar(){
 function renderProjFilterBar(){
   var bar=document.getElementById('proj-filter-bar');if(!bar)return;
   var cur=bar.dataset.filter||'activo';
+  var statuses=[{v:'activo',l:'🟢 Activos'},{v:'pausado',l:'🟡 Pausados'},{v:'completado',l:'✅ Completados'},{v:'todos',l:'📋 Todos'}];
   var h='';
-  var areaAll='chip'+(_qtAreaFilter===''?' active':'');
-  h='<button class="'+areaAll+'" onclick="clearProjFilter()">• Todos</button>';
-  AREAS.forEach(function(a){
-    var cls='chip'+(_qtAreaFilter===a.id?' active':'');
-    h+='<button class="'+cls+'" data-area="'+a.id+'" onclick="setProjAreaFilter(this.dataset.area)">'+a.icon+' '+a.name+'</button>';
-  });
-  h+='<span style="padding:0 4px;color:var(--g300)">|</span>';
-  [{v:'activo',l:'Activos'},{v:'pausado',l:'Pausados'},{v:'completado',l:'Completados'},{v:'todos',l:'Todos'}].forEach(function(s){
-    var cls2='chip'+(cur===s.v?' active':'');
-    h+='<button class="'+cls2+'" data-status="'+s.v+'" onclick="setProjStatusFilter(this.dataset.status,this)">'+s.l+'</button>';
+  statuses.forEach(function(s){
+    var cls='chip'+(cur===s.v?' active':'');
+    h+='<button class="'+cls+'" data-status="'+s.v+'" onclick="setProjStatusFilter(this.dataset.status,this)">'+s.l+'</button>';
   });
   bar.innerHTML=h;
+  // Sort bar
+  var sb=document.getElementById('proj-sort-bar');if(!sb)return;
+  var sorts=[{v:'manual',l:'📌 Manual'},{v:'area',l:'🏢 Área'},{v:'urgencia',l:'🔴 Urgencia'},{v:'fecha',l:'📅 Fecha'}];
+  var curSort=sb.dataset.sort||'manual';
+  var sh='';
+  sorts.forEach(function(s){
+    var cls='chip'+(curSort===s.v?' active':'');
+    sh+='<button class="'+cls+'" data-sort="'+s.v+'" onclick="setProjSort(this.dataset.sort,this)">'+s.l+'</button>';
+  });
+  sb.innerHTML=sh;
 }
 
 function clearProjFilter(){setProjAreaFilter('')}
 function clearQtFilter(){setQtFilter('')}
 function setProjAreaFilter(areaId){
   _qtAreaFilter=areaId;renderProyectos();
+}
+function setProjSort(val,btn){
+  var sb=document.getElementById('proj-sort-bar');if(sb)sb.dataset.sort=val;
+  renderProyectos();
 }
 function setProjStatusFilter(val,btn){
   var bar=document.getElementById('proj-filter-bar');if(bar)bar.dataset.filter=val;
