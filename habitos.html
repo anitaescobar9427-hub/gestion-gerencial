@@ -315,26 +315,24 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <div id="home-affirmation-line" style="font-size:13px;color:var(--g500);margin-top:4px;font-style:italic"></div>
 </div>
 
-<!-- KPIs -->
-<div class="kpi-grid" id="home-kpis"></div>
 
 <!-- PLAN DEL DÍA -->
 <div class="card">
 <div class="card-title">📋 Plan de Hoy
 <span id="home-plan-pct" style="margin-left:auto;font-size:12px;color:var(--g400)"></span>
-<button class="btn btn-pri btn-sm" style="margin-left:8px" onclick="showTab('plan')">✏️ Editar plan</button>
+<button class="btn btn-pri btn-sm" style="margin-left:8px" onclick="showTab('plan')">✏️ Editar</button>
+</div>
+<!-- OBJETIVO DEL DÍA -->
+<div style="margin-bottom:12px">
+<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--g500);margin-bottom:6px">🎯 Objetivo del día</div>
+<div style="display:flex;gap:8px;align-items:center">
+<input class="inp" id="home-daily-goal" placeholder="¿Cuál es tu intención para hoy?" style="flex:1;font-size:13px;font-weight:600" onkeydown="if(event.key==='Enter')saveDailyGoal()" oninput="saveDailyGoal()">
+</div>
+<div id="home-daily-goal-saved" style="font-size:11px;color:var(--g400);margin-top:4px;min-height:16px"></div>
 </div>
 <div id="home-plan-today"></div>
 </div>
 
-<!-- PLAN DE MAÑANA -->
-<div class="card">
-<div class="card-title">🌅 Plan de Mañana
-<span id="home-plan-tomorrow-count" style="margin-left:auto;font-size:12px;color:var(--g400)"></span>
-<button class="btn btn-out btn-sm" onclick="showTab('plan');setTimeout(function(){var d=new Date();d.setDate(d.getDate()+1);document.getElementById('plan-date').value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');renderDailyPlan()},100)">✏️ Planear</button>
-</div>
-<div id="home-plan-tomorrow"></div>
-</div>
 
 <!-- PROYECTOS ANCLADOS -->
 <div class="card">
@@ -792,7 +790,7 @@ if(!D.cabalgatas)D.cabalgatas={tasks:[],kpis:[],notes:''};
 if(!D.eisenhower)D.eisenhower={do:[],schedule:[],delegate:[],eliminate:[]};
 if(!D.m333)D.m333={project:[],urgent:[],maint:[]};
 if(!D.frog)D.frog={task:'',history:[]};
-if(!D.timeBlocks)D.timeBlocks=[];if(!D.pomCount)D.pomCount=0;if(!D.quickTasks)D.quickTasks=[];if(!D.proyectos)D.proyectos=[];if(!D.homeProjPins)D.homeProjPins=[];
+if(!D.timeBlocks)D.timeBlocks=[];if(!D.pomCount)D.pomCount=0;if(!D.quickTasks)D.quickTasks=[];if(!D.proyectos)D.proyectos=[];if(!D.homeProjPins)D.homeProjPins=[];if(!D.dailyGoals)D.dailyGoals={};
 if(!D.longtermGoals){D.longtermGoals=[];if(D.personal&&D.personal.longterm&&D.personal.longterm.length){D.personal.longterm.forEach(function(t){D.longtermGoals.push({name:t.text,desc:'',date:t.date||'',status:t.status||'pendiente',tasks:[]});})}}
 if(D.pomDate!==new Date().toISOString().slice(0,10)){D.pomCount=0;D.pomDate=new Date().toISOString().slice(0,10)}
 if(!D.identities)D.identities=[];
@@ -1505,6 +1503,24 @@ if('Notification' in window&&Notification.permission==='default'){try{Notificati
 
 
 
+
+// ── Objetivo diario ──
+function saveDailyGoal(){
+  var inp=document.getElementById('home-daily-goal');if(!inp)return;
+  if(!D.dailyGoals)D.dailyGoals={};
+  D.dailyGoals[todayStr()]=inp.value.trim();
+  save();
+  var saved=document.getElementById('home-daily-goal-saved');
+  if(saved&&inp.value.trim())saved.textContent='✓ Guardado';
+}
+function loadDailyGoal(){
+  if(!D.dailyGoals)D.dailyGoals={};
+  var inp=document.getElementById('home-daily-goal');if(!inp)return;
+  var val=D.dailyGoals[todayStr()]||'';
+  inp.value=val;
+  var saved=document.getElementById('home-daily-goal-saved');
+  if(saved&&val)saved.textContent='✓ '+val;
+}
 // ============================================================
 // PROYECTOS ANCLADOS EN INICIO
 // ============================================================
@@ -2814,7 +2830,7 @@ function loadTheme(){var t=localStorage.getItem('theme')||'light';document.docum
 
 // Hook renderAll
 var _origRenderAll=renderAll;
-renderAll=function(){_origRenderAll();try{ensureAreaFields();ensurePlanFields();renderAreasGrid();renderStackTable();renderFriction();renderWeeklyAudit();renderDailyPlan();renderHomeExec();renderLazoMillonario();checkAutoBackup()}catch(e){console.warn(e)}};
+renderAll=function(){_origRenderAll();try{ensureAreaFields();ensurePlanFields();renderAreasGrid();renderStackTable();renderFriction();renderWeeklyAudit();renderDailyPlan();renderHomeExec();renderLazoMillonario();checkAutoBackup();loadDailyGoal()}catch(e){console.warn(e)}};
 
 // ============ BANNER SEGUNDO DÍA FALLIDO ============
 function renderSecondMissBanner(){
