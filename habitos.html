@@ -308,10 +308,44 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <button class="tab-btn" onclick="showTab('revision')" data-tab="revision">📋 Revisión</button>
 </div></div>
 <div id="tab-inicio" class="section active">
+
+<!-- SALUDO -->
 <div id="home-hero" class="card" style="background:linear-gradient(135deg,var(--priGlow),transparent);border-left:4px solid var(--pri)">
 <div id="home-greeting" style="font-size:18px;font-weight:700"></div>
 <div id="home-affirmation-line" style="font-size:13px;color:var(--g500);margin-top:4px;font-style:italic"></div>
 </div>
+
+<!-- KPIs -->
+<div class="kpi-grid" id="home-kpis"></div>
+
+<!-- PLAN DEL DÍA -->
+<div class="card">
+<div class="card-title">📋 Plan de Hoy
+<span id="home-plan-pct" style="margin-left:auto;font-size:12px;color:var(--g400)"></span>
+<button class="btn btn-pri btn-sm" style="margin-left:8px" onclick="showTab('plan')">✏️ Editar plan</button>
+</div>
+<div id="home-plan-today"></div>
+</div>
+
+<!-- PLAN DE MAÑANA -->
+<div class="card">
+<div class="card-title">🌅 Plan de Mañana
+<span id="home-plan-tomorrow-count" style="margin-left:auto;font-size:12px;color:var(--g400)"></span>
+<button class="btn btn-out btn-sm" onclick="showTab('plan');setTimeout(function(){var d=new Date();d.setDate(d.getDate()+1);document.getElementById('plan-date').value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');renderDailyPlan()},100)">✏️ Planear</button>
+</div>
+<div id="home-plan-tomorrow"></div>
+</div>
+
+<!-- PROYECTOS ANCLADOS -->
+<div class="card">
+<div class="card-title">🎯 Mis proyectos clave
+<button class="btn btn-out btn-sm" style="margin-left:auto;font-size:11px" onclick="openHomeProjSelector()">⚙️ Elegir cuáles ver</button>
+<button class="btn btn-pri btn-sm" onclick="showTab('proyectos')">Ver todos →</button>
+</div>
+<div id="home-proj-pinned"></div>
+</div>
+
+<!-- NO OLVIDAR -->
 <div class="card"><div class="card-title">🔥 No Olvidar <span id="qt-reminder-badge" style="margin-left:auto;font-size:11px;color:var(--red);font-weight:700"></span> <button class="btn btn-pri btn-sm" onclick="addQuickTask()">+ Agregar</button></div>
 <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
 <input class="inp" id="qt-text" placeholder="¿Qué no debes olvidar?" style="flex:3;min-width:150px" onkeydown="if(event.key==='Enter')addQuickTask()">
@@ -326,49 +360,53 @@ input[type="checkbox"]{accent-color:var(--pri)}
 </div>
 <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
 <input type="datetime-local" class="inp" id="qt-remind" style="flex:1;min-width:140px;font-size:11px" title="Recordatorio (opcional)">
-<input type="date" class="inp" id="qt-due" style="flex:1;min-width:120px;font-size:11px" title="Fecha límite (opcional)">
+<input type="date" class="inp" id="qt-due" style="flex:1;min-width:120px;font-size:11px" title="Fecha límite">
 </div>
-<!-- filtro por área -->
 <div id="qt-filter-bar" class="chip-bar" style="margin-bottom:10px"></div>
 <div id="quick-task-list"></div>
-<!-- resumen por área -->
-<details id="qt-area-summary-wrap" style="margin-top:10px">
+<details style="margin-top:10px">
 <summary style="font-size:12px;font-weight:600;color:var(--g500);cursor:pointer;padding:4px 0">📊 Resumen por área</summary>
 <div id="qt-area-summary" style="margin-top:8px"></div>
 </details>
 </div>
-<div class="kpi-grid" id="home-kpis"></div>
-<div class="card"><div class="card-title">📋 Plan de Hoy <span id="home-plan-pct" style="margin-left:auto;font-size:12px;color:var(--g400)"></span></div><div id="home-plan-today"></div></div>
-<div class="card"><div class="card-title">🌅 Plan de Mañana <span id="home-plan-tomorrow-count" style="margin-left:auto;font-size:12px;color:var(--g400)"></span> <button class="btn btn-out btn-sm" onclick="showTab('plan');setTimeout(function(){var d=new Date();d.setDate(d.getDate()+1);document.getElementById('plan-date').value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');renderDailyPlan()},100)">✏️ Editar</button></div><div id="home-plan-tomorrow"></div></div>
-<div class="card"><div class="card-title">🏢 Resumen por área (últimos 7 días)</div><div id="home-area-summary"></div></div>
-<details style="margin-bottom:14px"><summary style="padding:8px;cursor:pointer;color:var(--g500);font-size:12px;font-weight:600">▼ Ver vistas secundarias (semana, calendario, rutinas, metas)</summary>
+
+<!-- SECUNDARIO COLAPSADO -->
+<details style="margin-bottom:14px">
+<summary style="padding:8px;cursor:pointer;color:var(--g500);font-size:12px;font-weight:600">▼ Semana, calendario, rutinas y más</summary>
 <div class="ov-grid" id="ov-grid"></div>
 <div class="card"><div class="card-title">📅 Semana</div><div id="hw-strip"></div></div>
 <div class="card"><div class="card-title" id="hw-detail-title">📋 Programación del día</div><div id="hw-detail"></div></div>
 <div class="card"><div class="card-title">🗓️ Calendario del mes</div><div id="home-month-cal"></div></div>
 <div class="card"><div class="card-title">🔁 Rutina de hoy</div><div id="home-rutina-hoy"></div></div>
 <div class="card"><div class="card-title">🔴 Vencidas</div><div id="overdue-list"></div></div>
-<div class="card"><div class="card-title">🎯 Metas y proyectos</div><div id="home-goals"></div></div>
+<div class="card"><div class="card-title">🏢 Resumen por área (últimos 7 días)</div><div id="home-area-summary"></div></div>
 <div id="home-upcoming-tasks"></div>
 <div id="home-habits-quick" style="display:none"></div>
 <div id="home-chain" style="display:none"></div>
 </details>
-<div class="card"><div class="card-title">☁️ Sincronización <span id="sync-indicator" style="font-size:11px;font-weight:500;color:var(--g400);margin-left:auto"></span></div>
-<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+
+<!-- SYNC Y BACKUP COLAPSADOS -->
+<details style="margin-bottom:14px">
+<summary style="padding:8px;cursor:pointer;color:var(--g400);font-size:11px;font-weight:600">☁️ Sincronización y backup <span id="sync-indicator" style="margin-left:8px;font-size:11px;color:var(--g400)"></span></summary>
+<div class="card" style="margin-top:8px">
+<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px">
 <button class="btn btn-pri btn-sm" onclick="cloudPush(true)">⬆️ Subir</button>
 <button class="btn btn-pri btn-sm" onclick="cloudForceSync()">⬇️ Descargar</button>
 <button class="btn btn-out btn-sm" onclick="cloudForceSync()">🔄 Forzar sync</button>
-</div><div id="sync-status" style="font-size:11px;margin-top:6px;color:var(--g400)"></div></div>
+</div><div id="sync-status" style="font-size:11px;color:var(--g400)"></div>
+</div>
 <div class="card" style="border-left:4px solid var(--amber)">
 <div class="card-title">💾 Backup local <span id="backup-indicator" style="font-size:11px;font-weight:500;color:var(--g400);margin-left:auto"></span></div>
-<div style="font-size:12px;color:var(--g500);margin-bottom:10px">Descarga una copia de seguridad de todos tus datos. Se hace automáticamente cada semana.</div>
 <div style="display:flex;gap:6px;flex-wrap:wrap">
-<button class="btn btn-pri btn-sm" onclick="exportData();markBackupDone()" style="background:var(--amber);border-color:var(--amber)">📥 Descargar backup ahora</button>
-<button class="btn btn-out btn-sm" onclick="importData()">📤 Restaurar backup</button>
+<button class="btn btn-pri btn-sm" onclick="exportData();markBackupDone()" style="background:var(--amber);border-color:var(--amber)">📥 Descargar backup</button>
+<button class="btn btn-out btn-sm" onclick="importData()">📤 Restaurar</button>
 <button class="btn btn-out btn-sm" onclick="manualWeekClose()">🔄 Cerrar semana</button>
 </div>
 <div id="backup-status" style="font-size:11px;margin-top:6px;color:var(--g400)"></div>
-</div></div>
+</div>
+</details>
+
+</div>
 <div id="tab-areas" class="section">
 <div class="card"><div class="card-title">🏢 Mis 8 Áreas — Sistema de Hábitos Atómicos</div>
 <div style="font-size:12px;color:var(--g400);margin-bottom:12px">Cada área tiene su identidad, sus hábitos y su racha. Haz clic en una para editar.</div>
@@ -700,6 +738,17 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <div style="font-size:11px;color:var(--g400);margin-bottom:8px">Marca los hábitos que SÍ hiciste ese día:</div>
 <div id="retro-habit-list" style="max-height:50vh;overflow-y:auto"></div>
 <div class="modal-btns"><button class="btn btn-pri" onclick="saveRetro()">Guardar día</button><button class="btn btn-out" onclick="closeModal('retro-modal')">Cancelar</button></div></div></div>
+
+<!-- MODAL SELECTOR PROYECTOS INICIO -->
+<div class="overlay" id="home-proj-modal"><div class="modal">
+<div class="modal-title">⚙️ Proyectos en pantalla de inicio</div>
+<div style="font-size:12px;color:var(--g400);margin-bottom:12px">Elige los proyectos que quieres tener siempre visibles en Inicio. Máximo 5.</div>
+<div id="home-proj-selector-list"></div>
+<div class="modal-btns">
+<button class="btn btn-pri" onclick="saveHomeProjPins();closeModal('home-proj-modal')">Guardar</button>
+<button class="btn btn-out" onclick="closeModal('home-proj-modal')">Cancelar</button>
+</div>
+</div></div>
 <div class="toast" id="toast"></div>
 <script>
 const STORE='gm-v5';
@@ -743,7 +792,7 @@ if(!D.cabalgatas)D.cabalgatas={tasks:[],kpis:[],notes:''};
 if(!D.eisenhower)D.eisenhower={do:[],schedule:[],delegate:[],eliminate:[]};
 if(!D.m333)D.m333={project:[],urgent:[],maint:[]};
 if(!D.frog)D.frog={task:'',history:[]};
-if(!D.timeBlocks)D.timeBlocks=[];if(!D.pomCount)D.pomCount=0;if(!D.quickTasks)D.quickTasks=[];if(!D.proyectos)D.proyectos=[];
+if(!D.timeBlocks)D.timeBlocks=[];if(!D.pomCount)D.pomCount=0;if(!D.quickTasks)D.quickTasks=[];if(!D.proyectos)D.proyectos=[];if(!D.homeProjPins)D.homeProjPins=[];
 if(!D.longtermGoals){D.longtermGoals=[];if(D.personal&&D.personal.longterm&&D.personal.longterm.length){D.personal.longterm.forEach(function(t){D.longtermGoals.push({name:t.text,desc:'',date:t.date||'',status:t.status||'pendiente',tasks:[]});})}}
 if(D.pomDate!==new Date().toISOString().slice(0,10)){D.pomCount=0;D.pomDate=new Date().toISOString().slice(0,10)}
 if(!D.identities)D.identities=[];
@@ -850,7 +899,7 @@ const btn=document.querySelector('[data-tab="'+id+'"]');if(btn)btn.classList.add
 
 function renderAll(){renderDate();renderHomeAffirmation();renderHomeChain();renderHomeHabitsQuick();renderOverview();renderHabits();renderHWStrip();renderHomeMonthCal();renderOverdue();renderHomeGoals();renderHomeRutHoy();renderHomeUpcoming();renderQuickTasks();
 renderIdentities();renderIdentityVotes();renderAtomicHabits();renderHabitStacking();renderScorecard();
-renderTrackerGrid();renderStreakPerHabit();renderCompoundViz();renderPlateauViz();renderTrackerSummary();renderSecondMissBanner();renderProyectos();
+renderTrackerGrid();renderStreakPerHabit();renderCompoundViz();renderPlateauViz();renderTrackerSummary();renderSecondMissBanner();renderProyectos();renderHomeProjPinned();
 renderTaskList('personal','weekly');renderLTGoals();
 BIZ.filter(b=>b!=='personal').forEach(b=>{renderGoals(b);renderTaskList(b);renderKPIs(b);renderBizSched(b);renderNote(b);renderBizRut(b)});renderGoals('personal');
 renderBizRut('personal');renderNote('personal');renderNote('news');renderSchedule();renderHistorico();renderNews();renderReview();renderBooks();renderHabitTracker();
@@ -1454,6 +1503,126 @@ if(tasks.length){save();renderQuickTasks()}
 if('Notification' in window&&Notification.permission==='default'){try{Notification.requestPermission()}catch(e){}}
 // renderQuickTasks redefinida abajo en PROYECTOS JS
 
+
+
+// ============================================================
+// PROYECTOS ANCLADOS EN INICIO
+// ============================================================
+function ensureHomePins(){
+  if(!D.homeProjPins)D.homeProjPins=[];
+}
+
+function openHomeProjSelector(){
+  ensureProyectos();ensureHomePins();
+  var el=document.getElementById('home-proj-selector-list');if(!el)return;
+  if(!D.proyectos.length){
+    el.innerHTML='<div class="empty">Sin proyectos aún. Crea uno en la pestaña 🎯 Proyectos.</div>';
+    openModal('home-proj-modal');return;
+  }
+  var h='';
+  D.proyectos.forEach(function(p,i){
+    var pinned=D.homeProjPins.indexOf(i)>=0;
+    var a=getArea(p.area);
+    var color=a?a.color:'var(--pri)';
+    h+='<label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--g200);cursor:pointer">';
+    h+='<input type="checkbox" data-idx="'+i+'" '+(pinned?'checked':'')+' style="width:18px;height:18px;accent-color:var(--pri)">';
+    h+='<div style="flex:1"><div style="font-weight:600;font-size:13px">'+esc(p.name)+'</div>';
+    if(a)h+='<div style="font-size:11px;color:'+color+';font-weight:600">'+a.icon+' '+a.name+'</div>';
+    h+='</div>';
+    var pasos=p.pasos||[];var done=pasos.filter(function(s){return s.status==='completado'}).length;
+    h+='<span style="font-size:11px;color:var(--g400)">'+done+'/'+pasos.length+'</span>';
+    h+='</label>';
+  });
+  el.innerHTML=h;
+  openModal('home-proj-modal');
+}
+
+function saveHomeProjPins(){
+  ensureHomePins();
+  var checks=document.querySelectorAll('#home-proj-selector-list input[type=checkbox]');
+  var pins=[];
+  checks.forEach(function(cb){if(cb.checked)pins.push(+cb.dataset.idx)});
+  if(pins.length>5){toast('Máximo 5 proyectos en Inicio');return;}
+  D.homeProjPins=pins;
+  save();renderHomeProjPinned();
+}
+
+function renderHomeProjPinned(){
+  ensureProyectos();ensureHomePins();
+  var el=document.getElementById('home-proj-pinned');if(!el)return;
+  var pins=D.homeProjPins.filter(function(i){return D.proyectos[i]});
+  if(!pins.length){
+    el.innerHTML='<div style="font-size:12px;color:var(--g400);padding:8px 0">Sin proyectos anclados. Toca ⚙️ para elegir cuáles ver aquí.</div>';
+    return;
+  }
+  var h='';
+  pins.forEach(function(idx){
+    var p=D.proyectos[idx];if(!p)return;
+    var a=getArea(p.area);
+    var color=a?a.color:'var(--pri)';
+    var pasos=p.pasos||[];
+    var done=pasos.filter(function(s){return s.status==='completado'}).length;
+    var total=pasos.length;
+    var pct=total?Math.round(done/total*100):0;
+    var pending=pasos.filter(function(s){return s.status!=='completado'}).slice(0,3);
+    var statusIcons={activo:'🟢',pausado:'🟡',completado:'✅',cancelado:'❌'};
+
+    h+='<div style="border:1.5px solid var(--g200);border-radius:var(--radius-sm);overflow:hidden;margin-bottom:10px">';
+    // Header
+    h+='<div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:'+color+'0D;border-bottom:1px solid var(--g200)">';
+    h+='<div style="width:4px;height:32px;border-radius:2px;background:'+color+';flex-shrink:0"></div>';
+    h+='<div style="flex:1;min-width:0">';
+    h+='<div style="font-weight:700;font-size:13px;color:var(--text)">'+esc(p.name)+'</div>';
+    h+='<div style="display:flex;align-items:center;gap:8px;margin-top:3px">';
+    if(a)h+='<span style="font-size:10px;color:'+color+';font-weight:700">'+a.icon+' '+a.name+'</span>';
+    h+='<span style="font-size:10px;color:var(--g400)">'+statusIcons[p.status||'activo']+' '+(p.status||'activo')+'</span>';
+    h+='</div></div>';
+    h+='<div style="text-align:right;flex-shrink:0">';
+    h+='<div style="font-size:18px;font-weight:800;color:'+color+'">'+pct+'%</div>';
+    h+='<div style="font-size:10px;color:var(--g400)">'+done+'/'+total+' pasos</div>';
+    h+='</div></div>';
+    // Barra progreso
+    h+='<div style="height:4px;background:var(--g200)"><div style="height:100%;width:'+pct+'%;background:'+color+';transition:width .4s"></div></div>';
+    // Pasos pendientes
+    if(pending.length){
+      h+='<div style="padding:8px 12px">';
+      pending.forEach(function(paso){
+        var ri=pasos.indexOf(paso);
+        var stIcon={pendiente:'⏳','en progreso':'🔄',bloqueado:'🚫'}[paso.status||'pendiente']||'⏳';
+        h+='<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--g100)">';
+        h+='<span style="cursor:pointer;font-size:14px;flex-shrink:0" onclick="cyclePasoStatus('+idx+','+ri+');renderHomeProjPinned()">'+stIcon+'</span>';
+        h+='<span style="font-size:12px;flex:1;color:var(--text)'+(paso.status==='bloqueado'?';color:var(--red)':'')+'">';
+        h+=esc(paso.text)+'</span>';
+        if(paso.date)h+='<span style="font-size:10px;color:var(--g400)">'+fmtDate(paso.date)+'</span>';
+        h+='</div>';
+      });
+      // Input rápido inline
+      h+='<div style="display:flex;gap:6px;margin-top:8px">';
+      h+='<input class="inp" id="pin-paso-inp-'+idx+'" placeholder="+ Paso rápido…" style="flex:1;font-size:12px;padding:7px 10px" onkeydown="if(event.key===\'Enter\')addPasoFromHome('+idx+')">';
+      h+='<button class="btn btn-pri btn-sm" onclick="addPasoFromHome('+idx+')">+</button>';
+      h+='</div>';
+      h+='</div>';
+    } else {
+      h+='<div style="padding:10px 12px;font-size:12px;color:var(--g400)">';
+      h+= total ? '✅ Todos los pasos completados' : 'Sin pasos aún.';
+      h+='<div style="display:flex;gap:6px;margin-top:8px">';
+      h+='<input class="inp" id="pin-paso-inp-'+idx+'" placeholder="+ Agregar primer paso…" style="flex:1;font-size:12px;padding:7px 10px" onkeydown="if(event.key===\'Enter\')addPasoFromHome('+idx+')">';
+      h+='<button class="btn btn-pri btn-sm" onclick="addPasoFromHome('+idx+')">+</button>';
+      h+='</div></div>';
+    }
+    h+='</div>';
+  });
+  el.innerHTML=h;
+}
+
+function addPasoFromHome(projIdx){
+  var inp=document.getElementById('pin-paso-inp-'+projIdx);
+  if(!inp||!inp.value.trim())return;
+  var p=D.proyectos[projIdx];if(!p)return;
+  if(!p.pasos)p.pasos=[];
+  p.pasos.push({text:inp.value.trim(),date:'',pri:'media',status:'pendiente',notes:''});
+  inp.value='';save();renderHomeProjPinned();renderProyectos();toast('✅ Paso agregado');
+}
 
 // ============================================================
 // PROYECTOS / METAS — Sistema de metas desglosadas en pasos
