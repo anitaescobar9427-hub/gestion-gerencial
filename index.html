@@ -321,6 +321,7 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <div class="nav-tabs">
 <button class="tab-btn active" onclick="showTab('inicio')" data-tab="inicio">🏠 Inicio</button>
 <button class="tab-btn" onclick="showTab('areas')" data-tab="areas">🏢 Áreas</button>
+<button class="tab-btn" onclick="showTab('rutinas')" data-tab="rutinas">🔁 Rutinas</button>
 <button class="tab-btn" onclick="showTab('plan')" data-tab="plan">📋 Plan Diario</button>
 <button class="tab-btn" onclick="showTab('identidad')" data-tab="identidad">🪞 Identidad</button>
 <button class="tab-btn" onclick="showTab('habitos')" data-tab="habitos">🧬 Hábitos</button>
@@ -405,7 +406,6 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <div class="card"><div class="card-title">📅 Semana</div><div id="hw-strip"></div></div>
 <div class="card"><div class="card-title" id="hw-detail-title">📋 Programación del día</div><div id="hw-detail"></div></div>
 <div class="card"><div class="card-title">🗓️ Calendario del mes</div><div id="home-month-cal"></div></div>
-<div class="card"><div class="card-title">🔁 Rutina de hoy</div><div id="home-rutina-hoy"></div></div>
 <div class="card"><div class="card-title">🔴 Vencidas</div><div id="overdue-list"></div></div>
 <div class="card"><div class="card-title">🏢 Resumen por área (últimos 7 días)</div><div id="home-area-summary"></div></div>
 <div id="home-upcoming-tasks"></div>
@@ -441,6 +441,13 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <div style="font-size:12px;color:var(--g400);margin-bottom:12px">Cada área tiene su identidad, sus hábitos y su racha. Haz clic en una para editar.</div>
 <div id="areas-grid" class="area-grid"></div></div>
 <div id="area-detail" class="card" style="display:none"></div>
+</div>
+<div id="tab-rutinas" class="section">
+<div class="page-hero"><div class="hero-eyebrow">Seguimiento operativo</div><div class="hero-title">Rutinas por Centro de Costo</div><div class="hero-sub">Define las rutinas de cada centro de costo, márcalas cumplidas y revisa el cumplimiento en el tiempo.</div><div class="hero-actions"><button class="hero-btn solid" onclick="openRutModal()">+ Nueva Rutina</button></div></div>
+<div id="rut-centro-chips" class="chip-bar" style="margin-bottom:12px"></div>
+<div class="card"><div class="card-title">📊 Cumplimiento</div><div id="rut-cumplimiento"></div></div>
+<div class="card"><div class="card-title">✅ Hoy</div><div id="rut-hoy-list"></div></div>
+<div class="card"><div class="card-title">📋 Todas las rutinas</div><div id="rut-lista"></div></div>
 </div>
 <div id="tab-plan" class="section">
 <div class="page-hero"><div class="hero-eyebrow">Cada día cuenta</div><div class="hero-title">Plan Diario</div><div class="hero-sub">Planifica tu día: cada actividad vinculada a un área. Marca 🎯 los 3 MIT.</div><div class="hero-actions"><button class="hero-btn solid" onclick="copyYesterdayPlan()">📄 Copiar ayer</button></div></div>
@@ -719,8 +726,8 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <div class="overlay" id="rut-modal"><div class="modal"><div class="modal-title" id="rm-title">Nueva Rutina</div>
 <input type="hidden" id="rm-id">
 <div class="fg"><label>Actividad</label><input class="inp" id="rm-name" placeholder="ej: Revisar recepción leche"></div>
-<div class="fg"><label>Área / Categoría</label><input class="inp" id="rm-area" placeholder="ej: Operaciones, Financiero…"></div>
-<div class="fg"><label>Categoría</label><select class="inp" id="rm-biz"><option value="personal">👤 Personal</option></select></div>
+<div class="fg"><label>🏢 Centro de Costo</label><select class="inp" id="rm-centro"></select></div>
+<div class="fg"><label>Detalle (opcional)</label><input class="inp" id="rm-detalle" placeholder="ej: Finca La Patria, turno mañana…"></div>
 <div class="fg"><label>Frecuencia</label><select class="inp" id="rm-freq" onchange="toggleRutFields()"><option value="diaria">📅 Diaria</option><option value="entresemana">🏢 Entre Semana (L-V)</option><option value="finsemana">🌴 Fines de Semana (S-D)</option><option value="semanal">📆 Semanal</option><option value="quincenal">🔄 Quincenal</option><option value="mensual">🗓️ Mensual</option><option value="trimestral">📊 Trimestral</option><option value="semestral">🔷 Semestral</option><option value="anual">🌟 Anual</option></select></div>
 <div class="fg" id="rm-time-wrap"><label>Hora</label><input class="inp" id="rm-time" type="time"></div>
 <div class="fg" id="rm-day-wrap" style="display:none"><label>Día de la semana</label><select class="inp" id="rm-day"><option value="1">Lunes</option><option value="2">Martes</option><option value="3">Miércoles</option><option value="4">Jueves</option><option value="5">Viernes</option><option value="6">Sábado</option><option value="0">Domingo</option></select></div>
@@ -842,54 +849,13 @@ if(!D.identities)D.identities=[];
 D.habits.forEach(h=>{if(!h.target)h.target=7;if(h.cue===undefined)h.cue='';if(h.craving===undefined)h.craving='';if(h.response===undefined)h.response='';if(h.reward===undefined)h.reward='';if(h.twoMin===undefined)h.twoMin='';if(h.stackAfter===undefined)h.stackAfter=null;if(h.identityId===undefined)h.identityId=null;if(h.score===undefined)h.score='+';if(h.envDesign===undefined)h.envDesign='';if(h.bundle===undefined)h.bundle=''});
 BIZ.forEach(b=>{const obj=D[b]||{};['tasks','weekly','longterm'].forEach(f=>{if(obj[f])obj[f].forEach(t=>{if(!t.priority)t.priority='media';if(!t.status)t.status=t.done?'completado':'pendiente'})})});
 (D.schedule||[]).forEach(s=>{if(!s.id)s.id=Date.now().toString(36)+Math.random().toString(36).slice(2,6)})
-seedProcessChecklist()}
-// ═══ CHECKLIST DE PROCESOS PERIÓDICOS — carga inicial (una sola vez, no duplica ni borra rutinas existentes) ═══
-function seedProcessChecklist(){
-if(D._checklistSeededV1)return;
-var base=Date.now();
-var items=[
-// ── GERENCIA GENERAL ──
-{name:'Revisar flujo de caja y saldos bancarios',area:'Gerencia General',freq:'diaria',time:'07:00',block:'mañana'},
-{name:'Actualizar tablero de KPIs (litros/día, ventas, costos)',area:'Gerencia General',freq:'semanal',day:1,block:'mañana'},
-{name:'Reunión de seguimiento con equipo / socios',area:'Gerencia General',freq:'semanal',day:5,block:'tarde'},
-{name:'Cierre y conciliación mensual (P&G, liquidaciones, nómina)',area:'Gerencia General',freq:'mensual',dom:1,block:'mañana'},
-{name:'Revisión de avance del portafolio de proyectos',area:'Gerencia General',freq:'mensual',dom:5,block:'mañana'},
-{name:'Pago de nómina y prestaciones sociales',area:'Gerencia General',freq:'mensual',dom:28,block:'tarde'},
-{name:'Presentar informe gerencial a socios',area:'Gerencia General',freq:'trimestral',months:'1,4,7,10',dom:15,block:'mañana'},
-{name:'Revisión anual de estrategia, presupuesto y metas',area:'Gerencia General',freq:'anual',months:'1',dom:15,block:'mañana'},
-// ── PLANTA & BPM ──
-{name:'Limpieza y desinfección de planta (POES)',area:'Planta & BPM',freq:'diaria',time:'06:30',block:'mañana'},
-{name:'Verificar filtro sanitario / pediluvio en entrada',area:'Planta & BPM',freq:'diaria',time:'06:45',block:'mañana'},
-{name:'Verificar cadena de frío (cámara fría, refrigeración)',area:'Planta & BPM',freq:'diaria',block:'tarde'},
-{name:'Revisión de separación zona sucia / zona limpia',area:'Planta & BPM',freq:'semanal',day:1,block:'mañana'},
-{name:'Inspección de piso, drenaje y estado de infraestructura',area:'Planta & BPM',freq:'semanal',day:3,block:'mañana'},
-{name:'Mantenimiento de equipos (tanques, moldeadora, pailas)',area:'Planta & BPM',freq:'quincenal',day:5,block:'tarde'},
-{name:'Auditoría interna BPM (checklist Resolución 2674)',area:'Planta & BPM',freq:'mensual',dom:10,block:'mañana'},
-{name:'Revisar avance del plan de renovación de planta por fases',area:'Planta & BPM',freq:'mensual',dom:20,block:'mañana'},
-{name:'Revisión de documentación / certificación sanitaria (INVIMA)',area:'Planta & BPM',freq:'trimestral',months:'2,5,8,11',dom:10,block:'mañana'},
-// ── COMPRA DE LECHE ──
-{name:'Recepción y registro de remisiones de leche (La Zona, Las Cavas)',area:'Compra de Leche',freq:'diaria',time:'08:00',block:'mañana'},
-{name:'Verificar precio por litro vs. mercado',area:'Compra de Leche',freq:'semanal',day:1,block:'mañana'},
-{name:'Conciliar volúmenes entregados vs. facturados',area:'Compra de Leche',freq:'semanal',day:5,block:'tarde'},
-{name:'Elaborar liquidación de compra de leche',area:'Compra de Leche',freq:'quincenal',day:5,block:'tarde'},
-{name:'Pago a proveedores de leche',area:'Compra de Leche',freq:'quincenal',day:1,block:'mañana'},
-{name:'Revisar y reconciliar el workbook de compra de leche',area:'Compra de Leche',freq:'mensual',dom:1,block:'mañana'},
-{name:'Evaluar proveedores (calidad y cumplimiento)',area:'Compra de Leche',freq:'mensual',dom:25,block:'tarde'},
-// ── BUFALERA / CRÍA ──
-{name:'Recorrido y verificación sanitaria del hato',area:'Bufalera / Cría',freq:'diaria',time:'06:00',block:'mañana'},
-{name:'Revisión de praderas y disponibilidad de pasto/agua',area:'Bufalera / Cría',freq:'diaria',block:'mañana'},
-{name:'Registro de pesajes levante y ceba',area:'Bufalera / Cría',freq:'semanal',day:3,block:'mañana'},
-{name:'Control reproductivo (celos, montas, preñeces)',area:'Bufalera / Cría',freq:'semanal',day:1,block:'mañana'},
-{name:'Reporte de destetes',area:'Bufalera / Cría',freq:'mensual',dom:1,block:'mañana'},
-{name:'Vacunación y control parasitario (según calendario sanitario)',area:'Bufalera / Cría',freq:'mensual',dom:15,block:'mañana'},
-{name:'Inventario de hato por finca (La Patria, El Campano, Costa Rica)',area:'Bufalera / Cría',freq:'mensual',dom:28,block:'tarde'},
-{name:'Evaluación de contratos de ceba/cría a utilidades',area:'Bufalera / Cría',freq:'trimestral',months:'3,6,9,12',dom:20,block:'mañana'}
-];
-items.forEach(function(it,i){
-var obj={id:base+i,biz:'all',name:it.name,area:it.area,freq:it.freq,time:it.time||'',block:it.block||'mañana',day:it.day||1,dom:it.dom||1,months:it.months||''};
-D.rutinas.push(obj);
-});
-D._checklistSeededV1=true;
+cleanupSeededChecklistV1()}
+// ═══ Limpieza única: quita el checklist de ejemplo que se precargó en una versión anterior ═══
+function cleanupSeededChecklistV1(){
+if(D._checklistCleanupV1)return;
+var seededNames=['Revisar flujo de caja y saldos bancarios','Actualizar tablero de KPIs (litros/día, ventas, costos)','Reunión de seguimiento con equipo / socios','Cierre y conciliación mensual (P&G, liquidaciones, nómina)','Revisión de avance del portafolio de proyectos','Pago de nómina y prestaciones sociales','Presentar informe gerencial a socios','Revisión anual de estrategia, presupuesto y metas','Limpieza y desinfección de planta (POES)','Verificar filtro sanitario / pediluvio en entrada','Verificar cadena de frío (cámara fría, refrigeración)','Revisión de separación zona sucia / zona limpia','Inspección de piso, drenaje y estado de infraestructura','Mantenimiento de equipos (tanques, moldeadora, pailas)','Auditoría interna BPM (checklist Resolución 2674)','Revisar avance del plan de renovación de planta por fases','Revisión de documentación / certificación sanitaria (INVIMA)','Recepción y registro de remisiones de leche (La Zona, Las Cavas)','Verificar precio por litro vs. mercado','Conciliar volúmenes entregados vs. facturados','Elaborar liquidación de compra de leche','Pago a proveedores de leche','Revisar y reconciliar el workbook de compra de leche','Evaluar proveedores (calidad y cumplimiento)','Recorrido y verificación sanitaria del hato','Revisión de praderas y disponibilidad de pasto/agua','Registro de pesajes levante y ceba','Control reproductivo (celos, montas, preñeces)','Reporte de destetes','Vacunación y control parasitario (según calendario sanitario)','Inventario de hato por finca (La Patria, El Campano, Costa Rica)','Evaluación de contratos de ceba/cría a utilidades'];
+if(D.rutinas&&D.rutinas.length){D.rutinas=D.rutinas.filter(function(r){return seededNames.indexOf(r.name)===-1});}
+D._checklistCleanupV1=true;D._checklistSeededV1=false;
 }
 function doDayReset(){
 const today=new Date().toDateString();
@@ -1183,17 +1149,73 @@ document.getElementById('rm-day-wrap').style.display=(f==='semanal'||f==='quince
 document.getElementById('rm-dom-wrap').style.display=['mensual','trimestral','semestral','anual'].includes(f)?'block':'none';
 document.getElementById('rm-month-wrap').style.display=['trimestral','semestral','anual'].includes(f)?'block':'none';
 const mp=document.getElementById('rm-months');if(f==='semestral'&&mp)mp.placeholder='1,7';if(f==='anual'&&mp)mp.placeholder='1';if(f==='trimestral'&&mp)mp.placeholder='1,4,7,10'}
-function openRutModal(biz){document.getElementById('rm-id').value='';document.getElementById('rm-name').value='';document.getElementById('rm-area').value='';document.getElementById('rm-freq').value='diaria';document.getElementById('rm-time').value='';document.getElementById('rm-day').value='1';document.getElementById('rm-dom').value='1';document.getElementById('rm-months').value='';document.getElementById('rm-block').value='mañana';document.getElementById('rm-title').textContent='Nueva Rutina';document.getElementById('rm-del-btn').style.display='none';
-if(biz)document.getElementById('rm-biz').value=biz;else document.getElementById('rm-biz').value='all';toggleRutFields();openModal('rut-modal')}
+function fillCentroSelect(sel){const el=document.getElementById('rm-centro');if(!el)return;
+el.innerHTML=AREAS.map(function(a){return '<option value="'+a.id+'">'+a.icon+' '+a.name+'</option>'}).join('');
+el.value=sel||(window._centroFilter&&window._centroFilter!=='all'?window._centroFilter:AREAS[0].id)}
+function openRutModal(centro){document.getElementById('rm-id').value='';document.getElementById('rm-name').value='';document.getElementById('rm-detalle').value='';document.getElementById('rm-freq').value='diaria';document.getElementById('rm-time').value='';document.getElementById('rm-day').value='1';document.getElementById('rm-dom').value='1';document.getElementById('rm-months').value='';document.getElementById('rm-block').value='mañana';document.getElementById('rm-title').textContent='Nueva Rutina';document.getElementById('rm-del-btn').style.display='none';
+fillCentroSelect(centro);toggleRutFields();openModal('rut-modal')}
 function editRut(id){const r=D.rutinas.find(x=>x.id===id||String(x.id)===String(id));if(!r)return;
-document.getElementById('rm-id').value=r.id;document.getElementById('rm-name').value=r.name;document.getElementById('rm-area').value=r.area||'';document.getElementById('rm-biz').value=r.biz||'all';document.getElementById('rm-freq').value=r.freq;document.getElementById('rm-time').value=r.time||'';document.getElementById('rm-day').value=r.day||1;document.getElementById('rm-dom').value=r.dom||1;document.getElementById('rm-months').value=r.months||'';document.getElementById('rm-block').value=r.block||'mañana';document.getElementById('rm-title').textContent='Editar Rutina';document.getElementById('rm-del-btn').style.display='inline-block';toggleRutFields();openModal('rut-modal')}
+document.getElementById('rm-id').value=r.id;document.getElementById('rm-name').value=r.name;document.getElementById('rm-detalle').value=r.detalle||'';fillCentroSelect(r.centro);document.getElementById('rm-freq').value=r.freq;document.getElementById('rm-time').value=r.time||'';document.getElementById('rm-day').value=r.day||1;document.getElementById('rm-dom').value=r.dom||1;document.getElementById('rm-months').value=r.months||'';document.getElementById('rm-block').value=r.block||'mañana';document.getElementById('rm-title').textContent='Editar Rutina';document.getElementById('rm-del-btn').style.display='inline-block';toggleRutFields();openModal('rut-modal')}
 function delRutFromModal(){const id=document.getElementById('rm-id').value;if(!id)return;D.rutinas=D.rutinas.filter(x=>String(x.id)!==String(id));save();closeModal('rut-modal');renderAll();toast('Rutina eliminada')}
-function saveRut(){const id=document.getElementById('rm-id').value;const name=document.getElementById('rm-name').value.trim();if(!name)return;const freq=document.getElementById('rm-freq').value;
-const obj={name,area:document.getElementById('rm-area').value.trim(),biz:document.getElementById('rm-biz').value,freq,time:document.getElementById('rm-time').value,block:document.getElementById('rm-block').value,day:+document.getElementById('rm-day').value,dom:+document.getElementById('rm-dom').value,months:document.getElementById('rm-months').value.trim()};
+function saveRut(){const id=document.getElementById('rm-id').value;const name=document.getElementById('rm-name').value.trim();if(!name){toast('⚠️ Ponle un nombre a la rutina');return}
+const centro=document.getElementById('rm-centro').value;if(!centro){toast('⚠️ Elige un centro de costo');return}
+const freq=document.getElementById('rm-freq').value;
+const obj={name,centro,detalle:document.getElementById('rm-detalle').value.trim(),freq,time:document.getElementById('rm-time').value,block:document.getElementById('rm-block').value,day:+document.getElementById('rm-day').value,dom:+document.getElementById('rm-dom').value,months:document.getElementById('rm-months').value.trim()};
 if(freq==='semestral'&&!obj.months)obj.months='1,7';if(freq==='anual'&&!obj.months)obj.months='1';if(freq==='trimestral'&&!obj.months)obj.months='1,4,7,10';
 if(id){const r=D.rutinas.find(x=>x.id===+id);if(r)Object.assign(r,obj)}else{obj.id=Date.now();D.rutinas.push(obj)}
 save();closeModal('rut-modal');renderAll();toast('Rutina guardada')}
 function delRut(id){D.rutinas=D.rutinas.filter(x=>x.id!==id&&String(x.id)!==String(id));save();renderAll();toast('Rutina eliminada')}
+// ═══ PESTAÑA RUTINAS POR CENTRO DE COSTO ═══
+function rutItemHtmlCentro(r,iso){const done=isRutDone(r.id,iso);const a=getArea(r.centro);
+return '<div class="rut-item">'+(r.time?'<div class="rut-time">'+fmt12(r.time)+'</div>':'')+
+'<div class="rut-info"><div class="rut-name">'+esc(r.name)+'</div><div class="rut-area">'+(a?'<span style="color:'+a.color+'">'+a.icon+' '+a.name+'</span>':'<span style="color:var(--g400)">Sin centro</span>')+(r.detalle?' · '+esc(r.detalle):'')+'</div></div>'+
+freqLabel(r.freq)+'<div class="rut-check'+(done?' done':'')+'" onclick="toggleRut('+r.id+',\''+iso+'\')">'+(done?'✓':'')+'</div></div>'}
+function renderCentroChips(){const el=document.getElementById('rut-centro-chips');if(!el)return;
+let h='<button class="chip'+((!window._centroFilter||window._centroFilter==='all')?' active':'')+'" onclick="setCentroFilter(\'all\')">Todas</button>';
+AREAS.forEach(function(a){h+='<button class="chip'+(window._centroFilter===a.id?' active':'')+'" onclick="setCentroFilter(\''+a.id+'\')">'+a.icon+' '+a.name+'</button>'});
+el.innerHTML=h}
+function setCentroFilter(id){window._centroFilter=id;renderRutinasTab()}
+function rutComplianceStats(days,centroId){const byCentro={};let totalSlots=0,doneSlots=0;
+for(let i=0;i<days;i++){const d=new Date();d.setDate(d.getDate()-i);const iso=d.toISOString().slice(0,10);
+let ruts=getRutinasForDate(d);if(centroId&&centroId!=='all')ruts=ruts.filter(r=>r.centro===centroId);
+ruts.forEach(function(r){totalSlots++;const done=isRutDone(r.id,iso);if(done)doneSlots++;
+const key=r.centro||'_sin';if(!byCentro[key])byCentro[key]={total:0,done:0};byCentro[key].total++;if(done)byCentro[key].done++})}
+return{totalSlots,doneSlots,pct:totalSlots?Math.round(doneSlots/totalSlots*100):0,byCentro}}
+function setRutPeriodo(d){window._rutPeriodo=d;renderRutinasCumplimiento()}
+function renderRutinasCumplimiento(){const el=document.getElementById('rut-cumplimiento');if(!el)return;
+const days=window._rutPeriodo||7;const stats=rutComplianceStats(days,'all');
+let h='<div style="display:flex;gap:8px;margin-bottom:10px"><button class="chip'+(days===7?' active':'')+'" onclick="setRutPeriodo(7)">7 días</button><button class="chip'+(days===30?' active':'')+'" onclick="setRutPeriodo(30)">30 días</button></div>';
+h+='<div style="text-align:center;margin-bottom:12px"><div style="font-size:32px;font-weight:800;color:'+(stats.pct>=80?'var(--green)':stats.pct>=50?'var(--amber)':'var(--red)')+'">'+stats.pct+'%</div><div style="font-size:11px;color:var(--g400)">cumplimiento general ('+stats.doneSlots+'/'+stats.totalSlots+')</div></div>';
+let any=false;
+AREAS.forEach(function(a){const s=stats.byCentro[a.id];if(!s)return;any=true;const pct=s.total?Math.round(s.done/s.total*100):0;
+h+='<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--g200)"><span style="color:'+a.color+'">'+a.icon+'</span><span style="flex:1;font-size:13px;font-weight:600">'+a.name+'</span><div style="width:80px;height:6px;background:var(--g200);border-radius:3px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:'+a.color+'"></div></div><span style="font-size:12px;font-weight:700;min-width:36px;text-align:right">'+pct+'%</span></div>'});
+if(!any)h+='<div class="empty">Aún no hay rutinas definidas</div>';
+el.innerHTML=h}
+function renderRutinasHoy(){const el=document.getElementById('rut-hoy-list');if(!el)return;
+const today=todayStr();let ruts=getRutinasForDate(new Date());
+if(window._centroFilter&&window._centroFilter!=='all')ruts=ruts.filter(r=>r.centro===window._centroFilter);
+if(!ruts.length){el.innerHTML='<div class="empty">Sin rutinas para hoy'+(window._centroFilter&&window._centroFilter!=='all'?' en este centro':'')+'</div>';return}
+const byBlock={};ruts.forEach(function(r){const b=r.block||'mañana';if(!byBlock[b])byBlock[b]=[];byBlock[b].push(r)});
+const blocks=[{k:'mañana',icon:'🌅',label:'Mañana'},{k:'tarde',icon:'🌟',label:'Tarde'},{k:'noche',icon:'🌙',label:'Noche'}];
+const done=ruts.filter(r=>isRutDone(r.id,today)).length;
+let h='<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><div style="flex:1;height:6px;background:var(--g200);border-radius:3px;overflow:hidden"><div style="height:100%;width:'+(ruts.length?Math.round(done/ruts.length*100):0)+'%;background:var(--green);border-radius:3px"></div></div><span style="font-size:12px;font-weight:700;color:var(--g500)">'+done+'/'+ruts.length+'</span></div>';
+blocks.forEach(function(bl){const items=byBlock[bl.k];if(!items||!items.length)return;
+items.sort(function(a,b){return(a.time||'').localeCompare(b.time||'')});
+h+='<div class="rut-block"><div class="rut-block-title">'+bl.icon+' '+bl.label+'</div>';
+items.forEach(function(r){h+=rutItemHtmlCentro(r,today)});h+='</div>'});
+el.innerHTML=h}
+function renderRutinasLista(){const el=document.getElementById('rut-lista');if(!el)return;
+let ruts=(D.rutinas||[]).slice();
+if(window._centroFilter&&window._centroFilter!=='all')ruts=ruts.filter(r=>r.centro===window._centroFilter);
+if(!ruts.length){el.innerHTML='<div class="empty">Sin rutinas — crea la primera con el botón de arriba</div>';return}
+const groups={};ruts.forEach(function(r){const k=r.centro||'_sin';if(!groups[k])groups[k]=[];groups[k].push(r)});
+let h='';const order=AREAS.map(a=>a.id).concat(['_sin']);
+order.forEach(function(cid){const items=groups[cid];if(!items||!items.length)return;const a=getArea(cid);
+h+='<div style="margin:14px 0 6px;font-weight:800;font-size:13px;color:'+(a?a.color:'var(--g400)')+'">'+(a?a.icon+' '+a.name:'Sin centro')+' <span style="font-weight:400;color:var(--g400)">('+items.length+')</span></div>';
+items.sort(function(x,y){return(x.time||'99').localeCompare(y.time||'99')});
+items.forEach(function(r){h+='<div class="t-item"><div style="flex:1"><div style="font-weight:600;font-size:13px">'+esc(r.name)+' '+freqLabel(r.freq)+'</div><div style="font-size:11px;color:var(--g400)">'+(r.detalle?esc(r.detalle)+' · ':'')+(r.time?fmt12(r.time)+' · ':'')+(r.block||'')+'</div></div><button class="t-del" onclick="editRut('+r.id+')">✏️</button><button class="t-del" onclick="delRut('+r.id+')">🗑️</button></div>'})});
+el.innerHTML=h}
+function renderRutinasTab(){renderCentroChips();renderRutinasCumplimiento();renderRutinasHoy();renderRutinasLista()}
 // HABITS
 function renderHabits(){const el=document.getElementById('habit-list');if(!el)return;
 let h='';const N=D.habits.length;D.habits.forEach((hb,idx)=>{const upDis=idx===0?'opacity:.2;pointer-events:none':'';const dnDis=idx===N-1?'opacity:.2;pointer-events:none':'';h+='<div class="t-item" draggable="true" data-hid="'+hb.id+'" ondragstart="dragHabit(event,'+hb.id+')" ondragover="event.preventDefault()" ondrop="dropHabit(event,'+hb.id+')"><div style="display:flex;flex-direction:column;gap:0;flex-shrink:0;margin-right:2px"><button class="t-del" style="padding:0 4px;font-size:10px;'+upDis+'" onclick="moveHabit('+hb.id+',-1)" title="Subir">▲</button><button class="t-del" style="padding:0 4px;font-size:10px;'+dnDis+'" onclick="moveHabit('+hb.id+',1)" title="Bajar">▼</button></div><span style="font-size:10px;color:var(--g400);min-width:18px;text-align:right;font-weight:700">'+(idx+1)+'</span><label style="display:flex;align-items:center;gap:8px;cursor:pointer;flex:1"><input type="checkbox" '+(hb.done?'checked':'')+' onchange="toggleHabit('+hb.id+')"> <span'+(hb.done?' style="text-decoration:line-through;opacity:.5"':'')+'>'+esc(hb.name)+'</span></label><span style="font-size:11px;color:var(--g400);cursor:pointer" onclick="editHabitTarget('+hb.id+')">'+hb.target+'/sem ✏️</span><button class="t-del" onclick="delHabit('+hb.id+')">🗑️</button></div>'});
@@ -2743,7 +2765,7 @@ var kpis=[
 {l:'Pendientes',v:pendCount,c:pendCount>10?'var(--red)':'var(--g500)',i:'📌'}
 ];
 var kel=document.getElementById('home-kpis');
-kel.innerHTML=kpis.map(function(k){return'<div class="kpi-card" style="border-top:3px solid '+k.c+'"><div style="font-size:18px">'+k.i+'</div><div class="kpi-val" style="color:'+k.c+'">'+k.v+'</div><div class="kpi-name">'+k.l+'</div></div>'}).join('');
+if(kel)kel.innerHTML=kpis.map(function(k){return'<div class="kpi-card" style="border-top:3px solid '+k.c+'"><div style="font-size:18px">'+k.i+'</div><div class="kpi-val" style="color:'+k.c+'">'+k.v+'</div><div class="kpi-name">'+k.l+'</div></div>'}).join('');
 // plan de hoy detallado
 var pel=document.getElementById('home-plan-today');
 var now=new Date();var curTime=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
@@ -3040,7 +3062,7 @@ function loadTheme(){var t=localStorage.getItem('theme')||'light';document.docum
 
 // Hook renderAll
 var _origRenderAll=renderAll;
-renderAll=function(){_origRenderAll();try{ensureAreaFields();ensurePlanFields();renderAreasGrid();renderStackTable();renderFriction();renderWeeklyAudit();renderDailyPlan();renderHomeExec();renderLazoMillonario();checkAutoBackup();loadDailyGoal()}catch(e){console.warn(e)}};
+renderAll=function(){_origRenderAll();try{renderRutinasTab()}catch(e){console.warn(e)}try{ensureAreaFields();ensurePlanFields();renderAreasGrid();renderStackTable();renderFriction();renderWeeklyAudit();renderDailyPlan();renderHomeExec();renderLazoMillonario();checkAutoBackup();loadDailyGoal()}catch(e){console.warn(e)}};
 
 // ============ BANNER SEGUNDO DÍA FALLIDO ============
 function renderSecondMissBanner(){
