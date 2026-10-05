@@ -337,6 +337,7 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <button class="tab-btn active" onclick="showTab('inicio')" data-tab="inicio">🏠 Inicio</button>
 <button class="tab-btn" onclick="showTab('rutinas')" data-tab="rutinas">🔁 Hábitos y Rutinas</button>
 <button class="tab-btn" onclick="showTab('entrenamiento')" data-tab="entrenamiento">💪 Entrenamiento</button>
+<button class="tab-btn" onclick="showTab('lectura')" data-tab="lectura">📚 Lectura</button>
 <button class="tab-btn" onclick="showTab('plan')" data-tab="plan">📋 Plan Diario</button>
 <button class="tab-btn" onclick="showTab('areas')" data-tab="areas">🏢 Áreas</button>
 <button class="tab-btn" onclick="showTab('proyectos')" data-tab="proyectos">🎯 Proyectos</button>
@@ -591,6 +592,25 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <button class="btn btn-out btn-sm" style="margin:6px 0 10px" onclick="addRoutineExerciseRow()">+ Agregar ejercicio</button>
 <div class="fg"><label>Notas</label><input class="inp" id="rtm-notes" placeholder="opcional"></div>
 <div class="modal-btns"><button class="btn btn-pri" onclick="saveRoutine()">Guardar</button><button class="btn btn-out" onclick="closeModal('routine-modal')">Cancelar</button><button class="btn btn-danger btn-sm" id="rtm-del-btn" style="display:none" onclick="delRoutineFromModal()">🗑️ Eliminar</button></div>
+</div></div>
+
+<div id="tab-lectura" class="section">
+<div class="page-hero"><div class="hero-eyebrow">Mente y conocimiento</div><div class="hero-title">Lectura</div><div class="hero-sub">Lleva el control de tus libros y audiolibros: lo que quieres leer/escuchar, lo que estás avanzando y lo que ya terminaste.</div></div>
+<div class="card">
+<div class="card-title">📚 Libros y Audiolibros</div>
+<div id="books-stats" class="ov-grid" style="margin-bottom:12px"></div>
+<div id="books-section"></div>
+</div>
+</div>
+
+<!-- MODAL LIBRO/AUDIOLIBRO: empezar o actualizar progreso -->
+<div class="overlay" id="book-modal"><div class="modal"><div class="modal-title" id="bkm-title">Empezar a leer/escuchar</div>
+<input type="hidden" id="bkm-list"><input type="hidden" id="bkm-idx">
+<div class="fg"><label>Formato</label><select class="inp" id="bkm-format" onchange="toggleBkmFields()"><option value="libro">📖 Libro</option><option value="audiolibro">🎧 Audiolibro</option></select></div>
+<div class="row2" id="bkm-pages-row"><div class="fg"><label>Total de páginas</label><input class="inp" id="bkm-totalpages" type="number" min="1" placeholder="320"></div><div class="fg"><label>Página actual</label><input class="inp" id="bkm-curpages" type="number" min="0" placeholder="0"></div></div>
+<div class="row2" id="bkm-hours-row" style="display:none"><div class="fg"><label>Duración total (horas)</label><input class="inp" id="bkm-totalhours" type="number" min="0.1" step="0.1" placeholder="8.5"></div><div class="fg"><label>Horas escuchadas</label><input class="inp" id="bkm-curhours" type="number" min="0" step="0.1" placeholder="0"></div></div>
+<div class="fg"><label>Fecha de inicio</label><input class="inp" id="bkm-start" type="date"></div>
+<div class="modal-btns"><button class="btn btn-pri" onclick="saveBookProgress()">Guardar</button><button class="btn btn-out" onclick="closeModal('book-modal')">Cancelar</button></div>
 </div></div>
 
 <div id="tab-stacking" class="section">
@@ -942,7 +962,8 @@ scheduleCloudSync()}
 function saveLocal(){localStorage.setItem(STORE,JSON.stringify(D))}
 function ensureFields(){
 if(!D.habitLog)D.habitLog={};if(!D.books)D.books={toread:[],reading:[],read:[]};
-if(!D.books.reading)D.books.reading=[];
+if(!D.books.reading)D.books.reading=[];if(!D.books.toread)D.books.toread=[];if(!D.books.read)D.books.read=[];
+['toread','reading','read'].forEach(function(k){D.books[k].forEach(function(b){if(!b.id)b.id=Date.now()+Math.floor(Math.random()*1000);if(!b.format)b.format='libro';if(b.totalPages===undefined)b.totalPages=null;if(b.totalMinutes===undefined)b.totalMinutes=null;if(b.currentPage===undefined)b.currentPage=0;if(b.currentMinutes===undefined)b.currentMinutes=0})});
 if(!D.rutinas)D.rutinas=[];if(!D.rutLog)D.rutLog={};
 if(!D.vaqueria)D.vaqueria={tasks:[],kpis:[],notes:''};
 if(!D.inmoglobal)D.inmoglobal={tasks:[],kpis:[],notes:''};
@@ -1616,25 +1637,109 @@ if(!D.schedule)D.schedule=[];if(id){const idx=D.schedule.findIndex(e=>e.id===id)
 save();closeModal('sch-modal');renderAll();toast('Actividad guardada')}
 function delSched(id){D.schedule=(D.schedule||[]).filter(e=>e.id!==id);save();closeModal('sch-modal');setTimeout(renderAll,50);toast('Eliminada')}
 function renderBizSched(biz){const el=document.getElementById('biz-sched-'+biz);if(!el)return;const evs=(D.schedule||[]).filter(e=>e.biz===biz&&e.status!=='completado'&&e.status!=='cancelado').sort((a,b)=>(a.date||'').localeCompare(b.date||'')).slice(0,5);el.innerHTML=evs.length?evs.map(e=>schHtml(e)).join(''):'<div class="empty">Sin actividades próximas</div>'}
-// BOOKS - 3 columns: toread, reading, read
+// BOOKS - 3 columns: toread, reading, read — con formato (libro/audiolibro) y progreso (páginas/horas)
+function ensureBookFields(b){
+if(!b.id)b.id=Date.now()+Math.floor(Math.random()*1000);
+if(!b.format)b.format='libro';
+if(b.totalPages===undefined)b.totalPages=null;
+if(b.totalMinutes===undefined)b.totalMinutes=null;
+if(b.currentPage===undefined)b.currentPage=0;
+if(b.currentMinutes===undefined)b.currentMinutes=0;
+return b}
+function bookProgressPct(b){
+if(b.format==='audiolibro'){if(!b.totalMinutes)return 0;return Math.min(100,Math.round((b.currentMinutes||0)/b.totalMinutes*100))}
+if(!b.totalPages)return 0;return Math.min(100,Math.round((b.currentPage||0)/b.totalPages*100))}
+function bookProgressLabel(b){
+if(b.format==='audiolibro'){var cur=(b.currentMinutes||0)/60,tot=b.totalMinutes?(b.totalMinutes/60):null;return tot?(cur.toFixed(1)+' / '+tot.toFixed(1)+' h'):(cur.toFixed(1)+' h escuchadas')}
+var tot=b.totalPages;return tot?((b.currentPage||0)+' / '+tot+' pág.'):((b.currentPage||0)+' pág. leídas')}
 function renderBooks(){const el=document.getElementById('books-section');if(!el)return;
 if(!D.books)D.books={toread:[],reading:[],read:[]};if(!D.books.reading)D.books.reading=[];if(!D.books.toread)D.books.toread=[];if(!D.books.read)D.books.read=[];
-const cols=[{k:'toread',icon:'📖',label:'Por leer',color:'var(--amber)'},{k:'reading',icon:'📘',label:'En proceso',color:'var(--pri)'},{k:'read',icon:'✅',label:'Terminados',color:'var(--green)'}];
+['toread','reading','read'].forEach(function(k){D.books[k].forEach(ensureBookFields)});
+const cols=[{k:'toread',icon:'📖',label:'Por leer/escuchar',color:'var(--amber)'},{k:'reading',icon:'📘',label:'En progreso',color:'var(--pri)'},{k:'read',icon:'✅',label:'Terminados',color:'var(--green)'}];
 let h='<div class="books-board">';
 cols.forEach(col=>{h+='<div class="book-col"><div class="book-col-title" style="border-bottom-color:'+col.color+'"><span>'+col.icon+'</span> '+col.label+' ('+D.books[col.k].length+')</div>';
-D.books[col.k].forEach((b,i)=>{h+='<div class="book-item"><div style="flex:1"><div style="font-weight:600">'+esc(b.title)+'</div>'+(b.author?'<div style="font-size:10px;color:var(--g400)">'+esc(b.author)+'</div>':'')+'</div>';
-if(col.k==='toread')h+='<button class="t-del" onclick="moveBook(\'toread\',\'reading\','+i+')" title="Empezar">▶</button>';
-if(col.k==='reading')h+='<button class="t-del" onclick="moveBook(\'reading\',\'read\','+i+')" title="Terminado">✅</button>';
-if(col.k==='read')h+='<button class="t-del" onclick="moveBook(\'read\',\'toread\','+i+')" title="Releer">↩</button>';
-h+='<button class="t-del" onclick="delBook(\''+col.k+'\','+i+')">✕</button></div>'});
+D.books[col.k].forEach((b,i)=>{
+var fmtIcon=b.format==='audiolibro'?'🎧':'📖';
+h+='<div class="book-item" style="flex-direction:column;align-items:stretch;gap:4px">';
+h+='<div style="display:flex;align-items:flex-start;gap:6px"><div style="flex:1"><div style="font-weight:600">'+fmtIcon+' '+esc(b.title)+'</div>'+(b.author?'<div style="font-size:10px;color:var(--g400)">'+esc(b.author)+'</div>':'')+'</div>';
+if(col.k==='toread')h+='<button class="t-del" onclick="openBookStartModal(\'toread\','+i+')" title="Empezar">▶</button>';
+if(col.k==='reading')h+='<button class="t-del" onclick="openBookUpdateModal('+i+')" title="Actualizar progreso">📊</button><button class="t-del" onclick="finishBook('+i+')" title="Terminado">✅</button>';
+if(col.k==='read')h+='<button class="t-del" onclick="moveBook(\'read\',\'toread\','+i+')" title="Releer / Reescuchar">↩</button>';
+h+='<button class="t-del" onclick="delBook(\''+col.k+'\','+i+')">✕</button></div>';
+if(col.k==='reading'){var pct=bookProgressPct(b);h+='<div class="proj-progress-bar"><div class="proj-progress-fill" style="width:'+pct+'%;background:var(--pri)"></div></div><div style="font-size:10px;color:var(--g400)">'+bookProgressLabel(b)+' · '+pct+'%'+(b.startDate?' · Desde '+fmtDate(b.startDate):'')+'</div>'}
+if(col.k==='read')h+='<div style="font-size:10px;color:var(--g400)">'+(b.format==='audiolibro'?(b.totalMinutes?(b.totalMinutes/60).toFixed(1)+' h':''):(b.totalPages?b.totalPages+' pág.':''))+(b.readDate?' · Terminado '+fmtDate(b.readDate):'')+'</div>';
+h+='</div>'});
 if(!D.books[col.k].length)h+='<div class="empty" style="padding:12px;font-size:11px">Vacío</div>';
 h+='</div>'});
 h+='</div>';
-h+='<div class="add-row" style="margin-top:10px"><input class="inp" id="book-title" placeholder="Título…"><input class="inp" id="book-author" placeholder="Autor…" style="max-width:120px"><button class="btn btn-pri btn-sm" onclick="addBook()">+</button></div>';
-el.innerHTML=h}
-function addBook(){const t=document.getElementById('book-title'),a=document.getElementById('book-author');const title=t?t.value.trim():'';if(!title)return;if(!D.books)D.books={toread:[],reading:[],read:[]};D.books.toread.push({title,author:a?a.value.trim():''});if(t)t.value='';if(a)a.value='';save();renderBooks()}
-function moveBook(from,to,i){const b=D.books[from].splice(i,1)[0];if(b){if(to==='read')b.readDate=todayStr();D.books[to].push(b)}save();renderBooks()}
+h+='<div class="add-row" style="margin-top:10px"><input class="inp" id="book-title" placeholder="Título…"><input class="inp" id="book-author" placeholder="Autor…" style="max-width:120px"><select class="inp" id="book-format" style="max-width:130px"><option value="libro">📖 Libro</option><option value="audiolibro">🎧 Audiolibro</option></select><button class="btn btn-pri btn-sm" onclick="addBook()">+</button></div>';
+el.innerHTML=h;
+renderBooksStats()}
+function renderBooksStats(){
+var el=document.getElementById('books-stats');if(!el)return;
+if(!D.books)return;
+var thisYear=''+new Date().getFullYear();
+var terminadosEsteAno=D.books.read.filter(function(b){return b.readDate&&b.readDate.slice(0,4)===thisYear}).length;
+var libros=D.books.read.filter(function(b){return b.format!=='audiolibro'}).length;
+var audiolibros=D.books.read.filter(function(b){return b.format==='audiolibro'}).length;
+el.innerHTML=
+'<div class="ov-card" style="border-color:var(--pri)"><div class="ov-label">En progreso</div><div class="ov-val">'+D.books.reading.length+'</div></div>'+
+'<div class="ov-card" style="border-color:var(--green)"><div class="ov-label">Terminados en '+thisYear+'</div><div class="ov-val">'+terminadosEsteAno+'</div></div>'+
+'<div class="ov-card"><div class="ov-label">📖 Libros leídos (total)</div><div class="ov-val" style="font-size:16px">'+libros+'</div></div>'+
+'<div class="ov-card"><div class="ov-label">🎧 Audiolibros (total)</div><div class="ov-val" style="font-size:16px">'+audiolibros+'</div></div>'}
+function addBook(){const t=document.getElementById('book-title'),a=document.getElementById('book-author'),f=document.getElementById('book-format');const title=t?t.value.trim():'';if(!title)return;if(!D.books)D.books={toread:[],reading:[],read:[]};D.books.toread.push(ensureBookFields({title:title,author:a?a.value.trim():'',format:f?f.value:'libro'}));if(t)t.value='';if(a)a.value='';if(f)f.value='libro';save();renderBooks();toast('📚 Agregado a "Por leer/escuchar"')}
+function moveBook(from,to,i){const b=D.books[from].splice(i,1)[0];if(b){if(to==='read')b.readDate=todayStr();if(to==='toread'){b.currentPage=0;b.currentMinutes=0;b.readDate=null}D.books[to].push(b)}save();renderBooks()}
 function delBook(list,i){D.books[list].splice(i,1);save();renderBooks()}
+// Empezar a leer/escuchar: toread -> reading, pidiendo páginas/horas totales
+function openBookStartModal(list,i){
+var b=D.books[list][i];if(!b)return;ensureBookFields(b);
+document.getElementById('bkm-list').value=list;document.getElementById('bkm-idx').value=i;
+document.getElementById('bkm-title').textContent='Empezar: '+b.title;
+document.getElementById('bkm-format').value=b.format;toggleBkmFields();
+document.getElementById('bkm-totalpages').value=b.totalPages||'';
+document.getElementById('bkm-curpages').value=b.currentPage||0;
+document.getElementById('bkm-totalhours').value=b.totalMinutes?(b.totalMinutes/60):'';
+document.getElementById('bkm-curhours').value=b.currentMinutes?(b.currentMinutes/60):0;
+document.getElementById('bkm-start').value=todayStr();
+openModal('book-modal')}
+// Actualizar progreso de un libro/audiolibro ya "en progreso"
+function openBookUpdateModal(i){
+var b=D.books.reading[i];if(!b)return;ensureBookFields(b);
+document.getElementById('bkm-list').value='reading';document.getElementById('bkm-idx').value=i;
+document.getElementById('bkm-title').textContent='Actualizar progreso: '+b.title;
+document.getElementById('bkm-format').value=b.format;toggleBkmFields();
+document.getElementById('bkm-totalpages').value=b.totalPages||'';
+document.getElementById('bkm-curpages').value=b.currentPage||0;
+document.getElementById('bkm-totalhours').value=b.totalMinutes?(b.totalMinutes/60):'';
+document.getElementById('bkm-curhours').value=b.currentMinutes?(b.currentMinutes/60):0;
+document.getElementById('bkm-start').value=b.startDate||todayStr();
+openModal('book-modal')}
+function toggleBkmFields(){
+var isAudio=document.getElementById('bkm-format').value==='audiolibro';
+document.getElementById('bkm-pages-row').style.display=isAudio?'none':'flex';
+document.getElementById('bkm-hours-row').style.display=isAudio?'flex':'none'}
+function saveBookProgress(){
+var list=document.getElementById('bkm-list').value,idx=+document.getElementById('bkm-idx').value;
+var b=D.books[list][idx];if(!b)return closeModal('book-modal');
+var format=document.getElementById('bkm-format').value;
+b.format=format;
+if(format==='audiolibro'){
+var totH=document.getElementById('bkm-totalhours').value;b.totalMinutes=totH?Math.round(+totH*60):null;
+var curH=document.getElementById('bkm-curhours').value;b.currentMinutes=curH?Math.round(+curH*60):0;
+}else{
+var totP=document.getElementById('bkm-totalpages').value;b.totalPages=totP?+totP:null;
+var curP=document.getElementById('bkm-curpages').value;b.currentPage=curP?+curP:0;
+}
+b.startDate=document.getElementById('bkm-start').value||todayStr();
+var wasNew=(list==='toread');
+if(wasNew){D.books.toread.splice(idx,1);D.books.reading.push(b)}
+save();closeModal('book-modal');renderBooks();toast(wasNew?'▶ ¡A leer/escuchar!':'📊 Progreso actualizado')}
+function finishBook(i){
+var b=D.books.reading.splice(i,1)[0];if(!b)return;
+if(b.format==='audiolibro'){if(b.totalMinutes)b.currentMinutes=b.totalMinutes}else{if(b.totalPages)b.currentPage=b.totalPages}
+b.readDate=todayStr();
+D.books.read.push(b);
+save();renderBooks();toast('✅ ¡Terminado! '+b.title)}
 // NOTES
 function renderNote(biz){const el=document.getElementById('notes-'+biz);if(el)el.value=(D[biz]&&D[biz].notes)||''}
 function saveNote(biz,val){if(!D[biz])D[biz]={};D[biz].notes=val;save()}
@@ -3470,7 +3575,7 @@ return '<details class="goal-item" style="margin-bottom:8px"><summary class="goa
 function renderEntrenamientoTab(){renderBodyMetrics();renderExerciseChips();renderExerciseProgress();renderRuns();renderRoutines()}
 // Hook renderAll
 var _origRenderAll=renderAll;
-renderAll=function(){_origRenderAll();try{renderRutinasTab()}catch(e){console.warn(e)}try{ensureAreaFields();ensurePlanFields();renderAreasGrid();renderStackTable();renderFriction();renderWeeklyAudit();renderDailyPlan();renderHomeExec();renderLazoMillonario();checkAutoBackup();loadDailyGoal()}catch(e){console.warn(e)}try{renderEntrenamientoTab()}catch(e){console.warn(e)}};
+renderAll=function(){_origRenderAll();try{renderRutinasTab()}catch(e){console.warn(e)}try{ensureAreaFields();ensurePlanFields();renderAreasGrid();renderStackTable();renderFriction();renderWeeklyAudit();renderDailyPlan();renderHomeExec();renderLazoMillonario();checkAutoBackup();loadDailyGoal()}catch(e){console.warn(e)}try{renderEntrenamientoTab()}catch(e){console.warn(e)}try{renderBooks()}catch(e){console.warn(e)}};
 
 // ============ BANNER SEGUNDO DÍA FALLIDO ============
 function renderSecondMissBanner(){
