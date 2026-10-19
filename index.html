@@ -613,6 +613,13 @@ input[type="checkbox"]{accent-color:var(--pri)}
 <div class="modal-btns"><button class="btn btn-pri" onclick="saveBookProgress()">Guardar</button><button class="btn btn-out" onclick="closeModal('book-modal')">Cancelar</button></div>
 </div></div>
 
+<!-- MODAL LIBRO/AUDIOLIBRO: marcar como terminado, con fecha editable -->
+<div class="overlay" id="book-finish-modal"><div class="modal"><div class="modal-title" id="bfm-title">Marcar como terminado</div>
+<input type="hidden" id="bfm-idx"><input type="hidden" id="bfm-mode">
+<div class="fg"><label>Fecha de finalización</label><input class="inp" id="bfm-date" type="date"></div>
+<div class="modal-btns"><button class="btn btn-pri" onclick="confirmFinishBook()">Guardar</button><button class="btn btn-out" onclick="closeModal('book-finish-modal')">Cancelar</button></div>
+</div></div>
+
 <div id="tab-stacking" class="section">
 <div class="page-hero"><div class="hero-eyebrow">1ª y 3ª ley</div><div class="hero-title">Habit Stacking</div><div class="hero-sub">Ancla hábitos nuevos a rutinas existentes y reduce la fricción a menos de 2 minutos.</div></div>
 <div class="card"><div class="card-title">🔗 Habit Stacking — 1ª Ley: Hacerlo Obvio</div>
@@ -1663,8 +1670,8 @@ var fmtIcon=b.format==='audiolibro'?'🎧':'📖';
 h+='<div class="book-item" style="flex-direction:column;align-items:stretch;gap:4px">';
 h+='<div style="display:flex;align-items:flex-start;gap:6px"><div style="flex:1"><div style="font-weight:600">'+fmtIcon+' '+esc(b.title)+'</div>'+(b.author?'<div style="font-size:10px;color:var(--g400)">'+esc(b.author)+'</div>':'')+'</div>';
 if(col.k==='toread')h+='<button class="t-del" onclick="openBookStartModal(\'toread\','+i+')" title="Empezar">▶</button>';
-if(col.k==='reading')h+='<button class="t-del" onclick="openBookUpdateModal('+i+')" title="Actualizar progreso">📊</button><button class="t-del" onclick="finishBook('+i+')" title="Terminado">✅</button>';
-if(col.k==='read')h+='<button class="t-del" onclick="moveBook(\'read\',\'toread\','+i+')" title="Releer / Reescuchar">↩</button>';
+if(col.k==='reading')h+='<button class="t-del" onclick="openBookUpdateModal('+i+')" title="Actualizar progreso">📊</button><button class="t-del" onclick="openBookFinishModal('+i+')" title="Terminado">✅</button>';
+if(col.k==='read')h+='<button class="t-del" onclick="openBookReadDateModal('+i+')" title="Editar fecha de finalización">📅</button><button class="t-del" onclick="moveBook(\'read\',\'toread\','+i+')" title="Releer / Reescuchar">↩</button>';
 h+='<button class="t-del" onclick="delBook(\''+col.k+'\','+i+')">✕</button></div>';
 if(col.k==='reading'){var pct=bookProgressPct(b);h+='<div class="proj-progress-bar"><div class="proj-progress-fill" style="width:'+pct+'%;background:var(--pri)"></div></div><div style="font-size:10px;color:var(--g400)">'+bookProgressLabel(b)+' · '+pct+'%'+(b.startDate?' · Desde '+fmtDate(b.startDate):'')+'</div>'}
 if(col.k==='read')h+='<div style="font-size:10px;color:var(--g400)">'+(b.format==='audiolibro'?(b.totalMinutes?(b.totalMinutes/60).toFixed(1)+' h':''):(b.totalPages?b.totalPages+' pág.':''))+(b.readDate?' · Terminado '+fmtDate(b.readDate):'')+'</div>';
@@ -1734,12 +1741,31 @@ b.startDate=document.getElementById('bkm-start').value||todayStr();
 var wasNew=(list==='toread');
 if(wasNew){D.books.toread.splice(idx,1);D.books.reading.push(b)}
 save();closeModal('book-modal');renderBooks();toast(wasNew?'▶ ¡A leer/escuchar!':'📊 Progreso actualizado')}
-function finishBook(i){
-var b=D.books.reading.splice(i,1)[0];if(!b)return;
+// Marcar como terminado, pidiendo la fecha real de finalización (no siempre es "hoy")
+function openBookFinishModal(i){
+var b=D.books.reading[i];if(!b)return;
+document.getElementById('bfm-idx').value=i;document.getElementById('bfm-mode').value='finish';
+document.getElementById('bfm-title').textContent='Marcar como terminado: '+b.title;
+document.getElementById('bfm-date').value=todayStr();
+openModal('book-finish-modal')}
+// Corregir la fecha de finalización de un libro/audiolibro que ya está en "Terminados"
+function openBookReadDateModal(i){
+var b=D.books.read[i];if(!b)return;
+document.getElementById('bfm-idx').value=i;document.getElementById('bfm-mode').value='editdate';
+document.getElementById('bfm-title').textContent='Fecha de finalización: '+b.title;
+document.getElementById('bfm-date').value=b.readDate||todayStr();
+openModal('book-finish-modal')}
+function confirmFinishBook(){
+var i=+document.getElementById('bfm-idx').value,mode=document.getElementById('bfm-mode').value;
+var date=document.getElementById('bfm-date').value||todayStr();
+if(mode==='editdate'){
+var b=D.books.read[i];if(!b)return closeModal('book-finish-modal');
+b.readDate=date;save();closeModal('book-finish-modal');renderBooks();toast('📅 Fecha actualizada');return}
+var b=D.books.reading.splice(i,1)[0];if(!b)return closeModal('book-finish-modal');
 if(b.format==='audiolibro'){if(b.totalMinutes)b.currentMinutes=b.totalMinutes}else{if(b.totalPages)b.currentPage=b.totalPages}
-b.readDate=todayStr();
+b.readDate=date;
 D.books.read.push(b);
-save();renderBooks();toast('✅ ¡Terminado! '+b.title)}
+save();closeModal('book-finish-modal');renderBooks();toast('✅ ¡Terminado! '+b.title)}
 // NOTES
 function renderNote(biz){const el=document.getElementById('notes-'+biz);if(el)el.value=(D[biz]&&D[biz].notes)||''}
 function saveNote(biz,val){if(!D[biz])D[biz]={};D[biz].notes=val;save()}
@@ -3672,5 +3698,6 @@ document.querySelectorAll('.overlay').forEach(function(ov){ov.addEventListener('
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){})}
 </script>
 <button class="theme-toggle" id="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema">🌙</button>
+
 </body>
 </html>
