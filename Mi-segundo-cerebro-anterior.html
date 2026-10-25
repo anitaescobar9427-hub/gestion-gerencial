@@ -4225,7 +4225,7 @@ if(first.nodeType===3){var t=first.nodeValue.replace(EM,'');if(t!==first.nodeVal
 else if(first.nodeType===1&&first.tagName==='SPAN'&&first.children.length===0&&!first.className&&EM.test(first.textContent)&&!first.textContent.replace(EM,'').trim()){if(el.textContent.replace(first.textContent,'').trim())first.remove()}}
 function clean(){document.querySelectorAll('.card-title,.ov-label,.btn,.book-col-title,.kpi-name,.hero-btn,#eis-matrix>div>div:first-child,#tab-productividad .card div[style*="font-weight:700;font-size:13px"]').forEach(cleanNode);
 document.querySelectorAll('#tab-productividad span[onclick]').forEach(function(s){var x=s.textContent.trim();if(x==='\u2B1C'){s.className='ck';s.textContent=''}else if(x==='\u2705'){s.className='ck on';s.textContent='\u2713'}})}
-var pend=false;function later(){if(pend)return;pend=true;requestAnimationFrame(function(){pend=false;clean();post()})}
+var pend=false;function later(){if(pend)return;pend=true;requestAnimationFrame(function(){pend=false;post()})}
 function post(){try{var h=Math.ceil(document.body.getBoundingClientRect().height)+6;if(h!==post.h){post.h=h;parent.postMessage({sbH:h},'*')}}catch(e){}}
 new MutationObserver(later).observe(document.body,{childList:true,subtree:true,characterData:true});
 if(window.ResizeObserver)new ResizeObserver(later).observe(document.body);
