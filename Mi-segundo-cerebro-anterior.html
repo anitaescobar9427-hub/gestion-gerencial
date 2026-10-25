@@ -432,10 +432,71 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.003em}
 [data-theme="dark"] .tab-btn.active{background:var(--yellow);color:var(--on-yellow)}
 @media(min-width:860px){.section{margin:0 auto}}
 
-/* Modo incrustado: dentro de la app nueva se oculta la navegación propia */
+/* ═══ MODO INCRUSTADO · mismo diseño que la app nueva (paleta lima/lavanda, tarjetas blancas, tipografía del sistema) ═══ */
+html.embed{
+--bg:#F5F5F2;--card:#fff;--text:#1D2020;--line:#E1E4DE;--chip:#EDF0E7;
+--yellow:#DBF578;--yellow2:#C9E35E;--on-yellow:#20251A;--gold:#DBF578;--gold2:#C9E35E;
+--pri:#1D2020;--pri2:#303831;--pri3:#73824B;--priGlow:rgba(219,245,120,.28);--on-pri:#fff;
+--green:#38604B;--green2:#2E5040;--red:#A3443D;--amber:#9A7B2E;--cyan:#5A7047;--purple:#7960C7;--pink:#A3443D;
+--g50:#fff;--g100:#F5F5F2;--g200:#E1E4DE;--g300:#CFD4CB;--g400:#8D938F;--g500:#636966;--g600:#4A504D;--g700:#363B39;--g800:#262A29;--g900:#1D2020;
+--radius:16px;--radius-sm:12px;--radius-xs:9px;--font-display:inherit;--shadow:none;--shadow-md:0 8px 24px rgba(23,32,27,.08);--shadow-lg:0 24px 60px rgba(23,32,27,.16)}
 html.embed .nav,html.embed .theme-toggle,html.embed .page-hero{display:none!important}
-html.embed body{padding:0 0 24px 0!important;background:#fff}
-html.embed .section{margin:0;max-width:none}
+html.embed body{font:14px -apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;line-height:1.5;background:transparent!important;color:var(--text);padding:2px 2px 8px 2px!important;min-height:0!important;letter-spacing:0;-webkit-font-smoothing:antialiased}
+html.embed .section{margin:0;max-width:none;padding:0}
+html.embed *{font-family:inherit}
+html.embed #pom-display{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+/* tarjetas */
+html.embed .card{background:#fff;border:1px solid var(--g200);border-radius:16px;padding:23px;margin-bottom:20px;box-shadow:none}
+html.embed .card:hover{box-shadow:none;border-color:var(--g200)}
+html.embed .card-title{font-size:15px;font-weight:650;letter-spacing:-.3px;margin-bottom:18px;gap:10px;color:var(--text)}
+html.embed .card-title .ml{margin-left:auto}
+html.embed .empty{color:var(--g500);font-size:12px;padding:30px 12px;text-align:center}
+/* botones y campos */
+html.embed .btn{border-radius:9px;font-size:12px;font-weight:600;padding:8px 14px;box-shadow:none;border:1px solid var(--g200);transform:none}
+html.embed .btn-sm{padding:6px 11px;font-size:11px}
+html.embed .btn-pri{background:#1D2020;color:#fff;border-color:#1D2020;box-shadow:none}
+html.embed .btn-pri:hover{box-shadow:none;transform:none;filter:brightness(1.25)}
+html.embed .btn-out{background:#fff;color:#1D2020;border:1px solid var(--g200)}
+html.embed .btn-out:hover{background:#fff;border-color:#1D2020;color:#1D2020}
+html.embed .inp,html.embed select.inp,html.embed textarea.inp{border:1px solid #CFD4CB;border-radius:9px;background:#fff;color:var(--text);padding:10px 12px;font-size:13px}
+html.embed .inp:focus{outline:2px solid #B8C4A0;outline-offset:1px;border-color:#CFD4CB;box-shadow:none}
+html.embed label{font-size:12px;font-weight:650}
+html.embed .chip{border:1px solid var(--g200);background:#fff;color:var(--g500);border-radius:9px;padding:6px 12px;font-size:12px;font-weight:600}
+html.embed .chip:hover{border-color:#1D2020;color:#1D2020}
+html.embed .chip.active{background:#1D2020;color:#fff;border-color:#1D2020;box-shadow:none}
+/* indicadores: una sola barra con divisores, como en Hoy */
+html.embed .ov-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--g200);border:1px solid var(--g200);border-radius:13px;overflow:hidden;margin-bottom:18px}
+html.embed .ov-card,html.embed .kpi-card{background:#fff;border:0!important;border-radius:0;box-shadow:none;padding:16px 20px;text-align:left;transform:none}
+html.embed .ov-card:hover,html.embed .kpi-card:hover{transform:none;box-shadow:none}
+html.embed .ov-label{font-size:10px;font-weight:600;letter-spacing:.05em;color:var(--g500);text-transform:uppercase}
+html.embed .ov-val{font-size:24px;font-weight:550;letter-spacing:-1px;margin-top:2px;color:var(--text)}
+/* Productividad */
+html.embed #tab-productividad .card [style*="border-radius:10px;padding:10px"]{background:#F5F5F2!important;border:1px solid var(--g200)!important;border-radius:12px!important}
+html.embed #eis-matrix>div:nth-child(1){background:#F7EEEC!important}
+html.embed #eis-matrix>div:nth-child(2){background:#ECE9F4!important}
+html.embed #eis-matrix>div:nth-child(3){background:#F5F0E1!important}
+html.embed #eis-matrix>div:nth-child(4){background:#EDF0E7!important}
+html.embed #pom-display{font-weight:600;letter-spacing:-2px;color:var(--text)}
+html.embed #tab-productividad .card [style*="background:var(--g100)"]{background:#F5F5F2!important}
+/* Lectura */
+html.embed .book-col{background:#F5F5F2;border:1px solid var(--g200);border-radius:12px;padding:12px}
+html.embed .book-col-title{font-size:11px;letter-spacing:.06em;color:var(--g600);border-bottom-width:2px}
+html.embed .book-item{background:#fff;border:1px solid var(--g200);border-radius:9px}
+html.embed .book-item:hover{border-color:#1D2020}
+/* Entrenamiento */
+html.embed .rut-block{background:#fff;border:1px solid var(--g200);border-radius:14px;box-shadow:none}
+html.embed table{font-size:12px}
+/* ventanas y avisos: se centran en lo que ve la persona, aunque la hoja sea larga */
+html.embed .overlay{position:absolute!important;left:0!important;right:0!important;bottom:auto!important;top:var(--vt,0px)!important;height:var(--vh,100vh)!important;background:rgba(23,32,27,.35);backdrop-filter:blur(4px)}
+html.embed .modal{border:1px solid var(--g200);border-radius:20px;box-shadow:var(--shadow-lg)}
+html.embed .toast{position:absolute;top:calc(var(--vt,0px) + var(--vh,600px) - 74px);bottom:auto;background:#1D2020;border-radius:10px;font-size:12px}
+html.embed .hero-btn.on{background:#1D2020;color:#fff}
+html.embed body{padding:2px 4px 8px 4px!important}
+html.embed .ov-val{font-size:24px!important}
+html.embed #tab-productividad .card div[style*="rgba(20,19,16,.08);border-radius:10px;padding:12px"]{background:#F5F5F2!important;border:1px solid var(--g200)!important;border-radius:12px!important}
+html.embed input[type=checkbox]{accent-color:#38604B;width:18px;height:18px}
+html.embed .ck{display:inline-grid;place-items:center;width:17px;height:17px;border:1.5px solid #CFD4CB;border-radius:5px;font-size:10px;line-height:1;color:#fff;vertical-align:middle;background:#fff}
+html.embed .ck.on{background:#38604B;border-color:#38604B}
 </style>
 </head>
 <body>
@@ -4152,6 +4213,26 @@ setInterval(function(){if(supaClient&&!document.hidden&&!_dirty&&!_syncing)cloud
 document.addEventListener('visibilitychange',function(){if(!document.hidden){checkDayChange();checkWeeklyReset();onVisibilitySync()}});
 document.querySelectorAll('.overlay').forEach(function(ov){ov.addEventListener('click',function(e){if(e.target===ov)ov.classList.remove('open')})})});
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){})}
+
+/* Modo incrustado: quita emojis de títulos y botones (la app nueva usa un estilo sobrio), avisa el alto a la app y recibe la posición visible */
+(function(){
+if(!window.EMB||!EMB.embed)return;
+var EM=/^[\s]*(?:[\p{Extended_Pictographic}\u{FE0F}\u{200D}\u{20E3}\p{Emoji_Modifier}]|[0-9#*]\u{FE0F}?\u{20E3})+\s*/u;
+function cleanNode(el){
+var first=el.firstChild;while(first&&first.nodeType===3&&!first.nodeValue.trim())first=first.nextSibling;
+if(!first)return;
+if(first.nodeType===3){var t=first.nodeValue.replace(EM,'');if(t!==first.nodeValue&&(t.trim()||el.children.length)){first.nodeValue=t}}
+else if(first.nodeType===1&&first.tagName==='SPAN'&&first.children.length===0&&!first.className&&EM.test(first.textContent)&&!first.textContent.replace(EM,'').trim()){if(el.textContent.replace(first.textContent,'').trim())first.remove()}}
+function clean(){document.querySelectorAll('.card-title,.ov-label,.btn,.book-col-title,.kpi-name,.hero-btn,#eis-matrix>div>div:first-child,#tab-productividad .card div[style*="font-weight:700;font-size:13px"]').forEach(cleanNode);
+document.querySelectorAll('#tab-productividad span[onclick]').forEach(function(s){var x=s.textContent.trim();if(x==='\u2B1C'){s.className='ck';s.textContent=''}else if(x==='\u2705'){s.className='ck on';s.textContent='\u2713'}})}
+var pend=false;function later(){if(pend)return;pend=true;requestAnimationFrame(function(){pend=false;clean();post()})}
+function post(){try{var h=Math.ceil(document.body.getBoundingClientRect().height)+6;if(h!==post.h){post.h=h;parent.postMessage({sbH:h},'*')}}catch(e){}}
+new MutationObserver(later).observe(document.body,{childList:true,subtree:true,characterData:true});
+if(window.ResizeObserver)new ResizeObserver(later).observe(document.body);
+window.addEventListener('load',later);window.addEventListener('resize',later);
+window.addEventListener('message',function(e){var d=e.data;if(d&&d.sbView){var r=document.documentElement.style;r.setProperty('--vt',Math.round(d.sbView.top)+'px');r.setProperty('--vh',Math.round(d.sbView.vh)+'px')}});
+document.addEventListener('DOMContentLoaded',function(){later();try{parent.postMessage({sbReady:true},'*')}catch(e){}});
+})();
 </script>
 <button class="theme-toggle" id="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema">🌙</button>
 
