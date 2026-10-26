@@ -8,12 +8,161 @@
 
 .hero.compact{padding:20px 27px;min-height:150px}.hero.compact h2{font-size:24px;margin:7px 0 14px;max-width:650px}.hero.compact p{display:none}.hero.compact .hero-art{width:96px;height:96px}.hero.compact .hero-art strong{font-size:37px}.hero.compact .hero-art small{font-size:5px;letter-spacing:1px}.hero.compact .eyebrow{font-size:8px}.hero.compact button{font-size:11px;min-height:33px;padding:7px 12px}
 
-.navitem .icon{width:24px;text-align:center;font-size:16px;line-height:1}.area-button{gap:8px;font-size:12px}.panel-head h2,h1{font-feature-settings:normal}.tag{white-space:nowrap}.area-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-top:1px solid var(--border)}.area-row button{min-height:32px;padding:5px 11px;font-size:11px}</style></head><body>
+.navitem .icon{width:24px;text-align:center;font-size:16px;line-height:1}.area-button{gap:8px;font-size:12px}.panel-head h2,h1{font-feature-settings:normal}.tag{white-space:nowrap}.area-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-top:1px solid var(--border)}.area-row button{min-height:32px;padding:5px 11px;font-size:11px}
+/* ═══ V3 · diseño compacto ═══ */
+header{height:58px}
+main{padding:20px 30px 40px}
+@media(min-width:1500px){main{padding-top:24px}}
+.page-heading{margin-bottom:12px;align-items:center}
+h1{font-size:26px;letter-spacing:-1px}
+.page-heading p{margin-top:4px}
+.eyebrow{margin-bottom:5px}
+.scope-row{padding:0 0 10px;margin-bottom:4px;gap:6px}
+.scope-row button{min-height:28px;padding:3px 11px}
+button{min-height:34px;padding:7px 12px}
+.panel{padding:16px 18px;margin-bottom:14px;border-radius:14px}
+.panel-head{margin-bottom:10px}
+.panel-head h2{font-size:14px}
+.item{padding:8px 0;gap:9px}
+.item-title{margin:4px 0 4px}
+.empty{padding:14px 8px}
+.empty .empty-icon{font-size:18px;margin-bottom:4px}
+.empty button{margin-top:8px}
+.hero,.hero.compact{padding:16px 22px;min-height:0;border-radius:14px;margin-bottom:0}
+.hero h2,.hero.compact h2{font-size:19px;line-height:1.3;margin:4px 0 0;max-width:820px;font-weight:550}
+.hero p{display:none}
+.hero .hero-art,.hero.compact .hero-art{width:70px;height:70px}
+.hero-art strong{font-size:26px;letter-spacing:-1px}
+.hero-art small{font-size:5px;letter-spacing:1px}
+.stats{margin:12px 0 14px}
+.stat{padding:10px 16px}
+.stat b{font-size:20px}
+.dashboard-grid{gap:14px}
+.summary-row{margin:10px 0}
+.toolbar{margin:4px 0 10px}
+.link-row{padding:10px 0}
+.note-card{padding:12px;margin:8px 0}
+.section-label{margin:12px 0 6px}
+dialog{padding:22px}
+label{margin:11px 0 5px}
+input,select,textarea{padding:9px 11px}
+.dialog-actions{margin-top:16px;padding-top:12px}
+@media(max-width:760px){main{padding:14px 14px 30px}h1{font-size:22px}.hero,.hero.compact{padding:14px 16px}.hero h2,.hero.compact h2{font-size:16px}.hero .hero-art{display:none}.panel{padding:13px 14px}.stats{grid-template-columns:repeat(2,1fr)}}
+
+/* Plan del día */
+.tl-row{display:grid;grid-template-columns:46px 14px 1fr auto;align-items:center;gap:8px;padding:7px 4px;border-radius:9px;cursor:pointer}
+.tl-row:hover{background:#F5F6F1}
+.tl-time{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.tl-dot{width:9px;height:9px;border-radius:50%;background:#C9CFC3;justify-self:center}
+.tl-main{min-width:0}.tl-main b{display:block;font-size:12.5px;font-weight:550;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tl-main small{font-size:10px;color:var(--muted)}
+.tl-row .check{margin:0}
+.tl-row.done .tl-main b{text-decoration:line-through;opacity:.5}
+.tl-row.past{opacity:.55}
+.k-evento .tl-dot{background:#1D2020}.k-reunion .tl-dot{background:#9C8BD8}.k-tarea .tl-dot{background:#B7D94B}.k-habito .tl-dot,.k-rutina .tl-dot{background:#7FA58F}.k-meta .tl-dot{background:#38604B}
+.tl-now{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:650;color:#A3443D;margin:4px 0}
+.tl-now span{width:46px;text-align:left}
+.tl-now::after{content:'';flex:1;height:1px;background:#A3443D;opacity:.5}
+/* Consejos y roles */
+.tip{display:flex;gap:10px;padding:8px 0;border-top:1px solid #ECEEE8}.tip:first-child{border-top:0;padding-top:0}
+.tip span{font-size:17px;line-height:1.2}.tip p{margin:0;font-size:12px;line-height:1.5}.tip a{color:#5F5383;white-space:nowrap}
+.role-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid #ECEEE8}.role-row:first-child{border-top:0}
+.role-emo{font-size:18px;width:26px;text-align:center}
+.role-main{flex:1;min-width:0}.role-main b{font-size:12.5px;font-weight:600;display:block}.role-main small{display:block;font-size:10px;color:var(--muted)}
+.role-main .role-sug{color:#615677}
+.role-ok{color:#38604B;font-weight:700}
+.role-row button{font-size:11px;min-height:28px;padding:3px 8px}
+.mini-row{display:flex;gap:10px;align-items:baseline;padding:6px 0;border-top:1px solid #ECEEE8;cursor:pointer;font-size:12px}.mini-row:first-child{border-top:0}
+.mini-row span{flex-shrink:0;width:92px;color:var(--muted);font-size:10.5px}.mini-row b{font-weight:500;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.goal-mini{padding:7px 0;border-top:1px solid #ECEEE8;cursor:pointer}.goal-mini:first-child{border-top:0}.goal-mini b{font-size:12px;font-weight:550}.goal-mini .progress{margin:6px 0 3px}.goal-mini small{font-size:10px;color:var(--muted)}
+/* Calendario */
+.cal-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.cal-toolbar button{min-height:32px;padding:4px 11px}
+.cal-title{font-size:15px;font-weight:650;margin-left:6px;text-transform:capitalize}
+.seg{display:flex;border:1px solid var(--border);border-radius:9px;overflow:hidden;background:#fff}.seg button{border:0;border-radius:0;font-size:11px;min-height:32px}.seg button.selected{background:var(--ink);color:#fff}
+.cal-legend{display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:10px;color:var(--muted);margin-bottom:10px}
+.cal-legend span::before{content:'';display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:middle;background:#ccc}
+.cal-legend .k-evento::before{background:#1D2020}.cal-legend .k-reunion::before{background:#9C8BD8}.cal-legend .k-tarea::before{background:#B7D94B}.cal-legend .k-rutina::before{background:#7FA58F}.cal-legend .k-meta::before{background:#38604B}
+.cal-legend button{font-size:11px;min-height:26px;padding:2px 8px}
+.cal-grid{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:14px}
+.cal-head{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--border)}.cal-head span{font-size:10px;color:var(--muted);padding:7px 8px;text-transform:uppercase;letter-spacing:.06em}
+.cal-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
+.cal-cell{min-height:92px;border-right:1px solid #EEF0EA;border-bottom:1px solid #EEF0EA;padding:5px;cursor:pointer;display:flex;flex-direction:column;gap:2px;min-width:0}
+.cal-cell:nth-child(7n){border-right:0}
+.cal-cell:hover{background:#FAFBF7}
+.cal-cell.out{background:#FAFAF8}.cal-cell.out .cal-num{opacity:.4}
+.cal-cell.sel{box-shadow:inset 0 0 0 2px #B7D94B}
+.cal-num{font-size:11px;font-weight:600;width:22px;height:22px;display:grid;place-items:center;border-radius:50%}
+.cal-cell.today .cal-num{background:var(--ink);color:#fff}
+.cal-chip{display:block;width:100%;text-align:left;font-size:10px;min-height:0;padding:2px 5px;border-radius:5px;border:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#F0F2EB;color:var(--ink);line-height:1.4}
+.cal-chip i{font-style:normal;opacity:.6;margin-right:3px}
+.cal-chip.k-evento{background:#1D2020;color:#fff}.cal-chip.k-reunion{background:#ECE9F4;color:#4D4166}.cal-chip.k-tarea{background:#F2F8DA;color:#3F4A1C}.cal-chip.k-rutina{background:#E7EFE9;color:#2E5040}.cal-chip.k-meta{background:#DCE8DF;color:#20402E;font-weight:600}
+.cal-chip.done{opacity:.45;text-decoration:line-through}
+.cal-more{font-size:9.5px;color:var(--muted);padding-left:4px}
+.cal-week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;margin-bottom:14px}
+.cw-col{background:#fff;border:1px solid var(--border);border-radius:12px;padding:6px;display:flex;flex-direction:column;gap:3px;min-height:180px;min-width:0}
+.cw-col.today{border-color:#B7D94B;box-shadow:inset 0 0 0 1px #B7D94B}
+.cw-head{border:0;background:transparent;text-align:left;font-size:11px;min-height:0;padding:2px 4px 6px}
+.cw-add{margin-top:auto;border:1px dashed #D3D8CE;background:transparent;min-height:24px;padding:0;font-size:12px;color:var(--muted)}
+.cal-empty{font-size:10px;color:#C2C7BD;padding:2px 5px}
+.ag-date{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:12px 0 4px}.ag-date:first-child{margin-top:0}.ag-date.today{color:#5A7047}
+.ag-row{display:grid;grid-template-columns:78px 4px 1fr;gap:10px;align-items:center;padding:7px 4px;border-radius:9px;cursor:pointer}
+.ag-row:hover{background:#F5F6F1}
+.ag-time{font-size:11px;color:var(--muted)}.ag-time small{display:block;font-size:9.5px;opacity:.75}
+.ag-bar{height:100%;min-height:28px;border-radius:3px;background:#C9CFC3}
+.ag-row.k-evento .ag-bar{background:#1D2020}.ag-row.k-reunion .ag-bar{background:#9C8BD8}.ag-row.k-tarea .ag-bar{background:#B7D94B}.ag-row.k-rutina .ag-bar{background:#7FA58F}.ag-row.k-meta .ag-bar{background:#38604B}
+.ag-main b{display:block;font-size:12.5px;font-weight:550}.ag-main small{font-size:10px;color:var(--muted)}
+.ag-row.done .ag-main b{text-decoration:line-through;opacity:.5}
+@media(max-width:760px){.cal-cell{min-height:58px;padding:3px}.cal-chip{font-size:0;height:6px;padding:0;border-radius:3px}.cal-chip i{display:none}.cal-more{font-size:8px}.cal-week{grid-template-columns:1fr}.cw-col{min-height:0}}
+/* Hábitos */
+.hab-today{display:flex;align-items:center;gap:10px;padding:6px 0;border-top:1px solid #ECEEE8}.hab-today:first-child{border-top:0}
+.hab-today .check{margin:0}.ht-title{flex:1;font-size:12.5px;font-weight:500}.hab-today small{font-size:10px;color:var(--muted)}
+.hab-today.done .ht-title{text-decoration:line-through;opacity:.5}
+.hab-nav{display:flex;align-items:center;gap:8px;margin-bottom:8px}.hab-nav b{font-size:12px;min-width:120px;text-align:center}.hab-nav button{min-height:28px;padding:2px 10px}
+.disabled-btn{opacity:.3;pointer-events:none}
+.hab-scroll{overflow-x:auto}
+.hab-grid{width:100%;border-collapse:collapse;font-size:12px}
+.hab-grid th{font-size:10px;color:var(--muted);font-weight:600;padding:4px 2px;text-align:center}
+.hab-grid th small{display:block;font-size:9px;font-weight:400}
+.hab-grid th.today{color:var(--ink)}.hab-grid th.today small{background:var(--acid);border-radius:99px}
+.hab-grid td{padding:3px 2px;text-align:center;border-top:1px solid #F0F1EC}
+.hab-grid td.hn{text-align:left;max-width:190px;padding-right:8px}.hab-grid td.hn span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500}.hab-grid td.hn small{font-size:9.5px;color:var(--muted)}
+.hab-grid tr.grp td{text-align:left;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding-top:10px;border-top:0}
+.hc{width:26px;height:26px;min-height:0;padding:0;border-radius:7px;font-size:12px;font-weight:700;display:inline-grid;place-items:center;border:1px solid #DDE1D8;background:#fff;color:#fff}
+.hc.on{background:#38604B;border-color:#38604B}.hc.miss{background:#F7E7E3;border-color:#EBCFC8;color:#A3443D}.hc.off{background:#F3F4F0;border-color:#F3F4F0}.hc.fut{background:transparent;border-style:dashed;border-color:#E3E6DF}.hc.open:hover{border-color:#38604B}
+.hc:disabled{cursor:default}
+.hm{font-weight:650;color:var(--muted);font-size:11px}.hm.ok{color:#38604B}
+.bar-row{display:grid;grid-template-columns:minmax(0,1.3fr) 1fr 40px;grid-template-rows:auto auto;column-gap:10px;align-items:center;padding:6px 0;font-size:12px}
+.bar-row small{grid-column:1/-1;font-size:9.5px;color:var(--muted);margin-top:-2px}
+.bar-row span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar{height:7px;background:#EDEFE9;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:#38604B;border-radius:99px}.bar.lav i{background:#9C8BD8}
+.bar-row b{font-size:12px;text-align:right}
+.hist-legend{display:flex;gap:6px;align-items:center;font-size:9.5px;color:var(--muted);margin-bottom:6px}
+.hist-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;padding:4px 0}
+.hist-row span{font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hist{display:grid;grid-template-columns:repeat(12,13px);gap:3px}
+.hist i,.hist-legend i{display:inline-block;width:13px;height:13px;border-radius:3px;background:#EDEFE9}
+.hist i.g1,.hist-legend i.g1{background:#DCE8B0}.hist i.g2,.hist-legend i.g2{background:#A9C77A}.hist i.g3,.hist-legend i.g3{background:#38604B}.hist i.na{background:transparent;border:1px dashed #E3E6DF}
+.hab-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid #ECEEE8}
+.hab-move{display:flex;flex-direction:column}.hab-move button{min-height:0;height:16px;width:22px;padding:0;border:0;background:transparent;color:var(--muted);font-size:10px}
+.hab-main{flex:1;min-width:0}.hab-main b{display:block;font-size:12.5px;font-weight:550}.hab-main small{font-size:10px;color:var(--muted)}
+.hab-act button{font-size:11px;min-height:28px;padding:3px 8px}
+.alert-row{margin-top:6px}
+.hint.warn{margin:0 0 14px}
+/* Roles */
+.role-edit-row{display:grid;grid-template-columns:56px 1fr auto;gap:8px;margin-bottom:6px}
+.role-edit-row input{padding:7px 9px}
+.role-edit-row button{min-height:30px}
+.dashboard-grid>div{min-width:0}
+@media(max-width:1100px){.dashboard-grid{grid-template-columns:minmax(0,1fr)}}
+.cal-title{text-transform:none}
+.note-mini{display:flex;gap:8px;align-items:baseline;padding:6px 0;border-top:1px solid #ECEEE8;cursor:pointer;font-size:12px}.note-mini:first-child{border-top:0}.note-mini b{font-weight:500;flex:1;min-width:0}.note-mini small{font-size:10px;color:var(--muted);flex-shrink:0}
+@media(max-width:760px){.hc{width:22px;height:22px;border-radius:6px;font-size:10px}.hab-grid td.hn{max-width:104px}.hab-grid td.hn small{display:none}.hab-grid td{padding:2px 1px}.tl-row{grid-template-columns:38px 10px 1fr auto;gap:6px}.mini-row span{width:74px}.hist{grid-template-columns:repeat(12,10px);gap:2px}.hist i{width:10px;height:10px}.page-heading{flex-wrap:wrap}.heading-actions button{min-height:32px}}
+</style></head><body>
 <aside><a href="#hoy" class="brand" aria-label="Inicio"><b>1<span>%</span></b><div>a la vez<small>TU SEGUNDO CEREBRO</small></div></a><button class="capture" onclick="edit('note')">＋ Capturar <kbd>C</kbd></button><div class="navlabel">TU ESPACIO</div><nav id="nav"></nav><div class="navlabel area-label">VIDA & EMPRESAS</div><div id="area-nav"></div><div class="aside-end"><span class="dot"></span> <span id="save-state">Abriendo…</span><button class="navitem" onclick="go('ajustes')">⚙ Ajustes y respaldo</button><a href="Mi-segundo-cerebro-anterior.html">Ver herramienta anterior ↗</a><div class="avatar">A <span>Ana<small>Un poco mejor cada día.</small></span></div></div></aside>
 <div class="app"><header><div id="breadcrumb">Mi espacio / Hoy</div><button class="search-trigger" onclick="openSearch()">⌕ <span>Buscar en tu cerebro</span><kbd>/</kbd></button><button class="mini-capture" aria-label="Capturar" onclick="edit('note')">＋</button><span class="header-avatar">A</span></header><main id="view"></main><footer>1% A LA VEZ <span>Todo lo importante, en su lugar.</span><button id="sync-foot" onclick="go('ajustes')">Abriendo…</button></footer></div>
 <dialog id="editor"><form id="edit-form"></form></dialog><dialog id="search-modal"><div class="dialog-head"><h2>Encuentra lo importante.</h2><button aria-label="Cerrar búsqueda" onclick="closeDialog('search-modal')">×</button></div><label for="search-input">Buscar en tareas, metas, rutinas y memoria</label><input id="search-input" type="search" placeholder="Un nombre, una idea, una empresa…" oninput="drawSearch()"><div id="search-results" aria-live="polite"></div></dialog>
 <dialog id="phone-modal"><div class="dialog-head"><h2>Llévalo al iPhone.</h2><button aria-label="Cerrar" onclick="closeDialog('phone-modal')">×</button></div><div id="phone-content"></div></dialog>
-<dialog id="login-modal"><div class="dialog-head"><h2>Entra a tu cuenta.</h2><button aria-label="Cerrar" onclick="closeDialog('login-modal')">×</button></div><form onsubmit="doLogin(event)"><p>Tu información vive en una nube privada. Inicia sesión para verla en todos tus dispositivos. Sin sesión, la app sigue funcionando con los datos de este dispositivo.</p><label for="login-email">Correo</label><input id="login-email" type="email" autocomplete="username" required><label for="login-pass">Contraseña</label><input id="login-pass" type="password" autocomplete="current-password" required><div id="login-error" class="inline-error" role="alert"></div><div class="dialog-actions"><button type="button" onclick="closeDialog('login-modal')">Ahora no</button><button class="primary" type="submit">Entrar</button></div></form></dialog><dialog id="area-modal"><div class="dialog-head"><h2 id="area-title">Área</h2><button aria-label="Cerrar" onclick="closeDialog('area-modal')">×</button></div><div id="area-content"></div></dialog><input type="file" id="import-file" accept="application/json,.json" hidden><div id="toast" role="status" aria-live="polite"></div><script>
+<dialog id="login-modal"><div class="dialog-head"><h2>Entra a tu cuenta.</h2><button aria-label="Cerrar" onclick="closeDialog('login-modal')">×</button></div><form onsubmit="doLogin(event)"><p>Tu información vive en una nube privada. Inicia sesión para verla en todos tus dispositivos. Sin sesión, la app sigue funcionando con los datos de este dispositivo.</p><label for="login-email">Correo</label><input id="login-email" type="email" autocomplete="username" required><label for="login-pass">Contraseña</label><input id="login-pass" type="password" autocomplete="current-password" required><div id="login-error" class="inline-error" role="alert"></div><div class="dialog-actions"><button type="button" onclick="closeDialog('login-modal')">Ahora no</button><button class="primary" type="submit">Entrar</button></div></form></dialog><dialog id="event-modal"><form id="event-form" onsubmit="saveEvent(event)"></form></dialog><dialog id="area-modal"><div class="dialog-head"><h2 id="area-title">Área</h2><button aria-label="Cerrar" onclick="closeDialog('area-modal')">×</button></div><div id="area-content"></div></dialog><input type="file" id="import-file" accept="application/json,.json" hidden><div id="toast" role="status" aria-live="polite"></div><script>
 const CoreFactory=()=>{
  const areas=['Personal','Lazo','Bufalera','Quesería','Colfarming','Ciento Once','Inmoglobal','Café La Tribuna','Cabalgatas'];
  const defaultAreas=[['Personal','🌿','personal'],['Lazo','🐎','personal'],['Bufalera','🐃','empresa'],['Quesería','🧀','empresa'],['Colfarming','🌾','empresa'],['Ciento Once','🏗️','empresa'],['Inmoglobal','🏢','empresa'],['Café La Tribuna','☕','empresa'],['Cabalgatas','🐴','empresa']].map(([name,emoji,kind])=>({name,emoji,kind}));
@@ -30,9 +179,9 @@ const CoreFactory=()=>{
  function flexDone(r,logs,s=today()){return occurrences(r,weekStart(s),shift(weekStart(s),6)).filter(d=>logs[key(r,d)]?.done).length}
  function occurrences(r,from,to){const result=[];let cursor=from<r.start?r.start:from;for(let guard=0;cursor<=to&&guard<3700;guard++,cursor=shift(cursor,1))if(dueOn(r,cursor))result.push(cursor);return result}
  const key=(r,s)=>r.id+'@'+s;
- const blank=()=>({version:2,tasks:[],goals:[],routines:[],notes:[],logs:{},reviews:[],settings:{feedToken:''},legacyBackup:null});
+ const blank=()=>({version:2,tasks:[],goals:[],routines:[],notes:[],logs:{},reviews:[],events:[],settings:{feedToken:''},legacyBackup:null});
  const normalize=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
- function validate(x){if(!x||x.version!==2)throw Error('Este archivo no es un backup de la versión 2. Usa la opción de importar la versión anterior.');for(const k of ['tasks','goals','routines','notes','reviews'])if(!Array.isArray(x[k]))throw Error('Falta la colección '+k);if(!x.logs||typeof x.logs!=='object'||Array.isArray(x.logs))throw Error('Historial inválido');if(!x.settings||typeof x.settings!=='object')throw Error('Configuración inválida');const al=x.settings.areas;if(al!==undefined&&(!Array.isArray(al)||!al.length||al.length>40||al.some(a=>!a||typeof a.name!=='string'||!/^[\p{L}\p{N} &.\-]{1,40}$/u.test(a.name)||typeof a.emoji!=='string'||a.emoji.length>12||!['personal','empresa'].includes(a.kind))||new Set(al.map(a=>a.name)).size!==al.length||!al.some(a=>a.name==='Personal')))throw Error('Áreas inválidas');const names=al?al.map(a=>a.name):areas;for(const value of Object.values(x.logs))if(!value||typeof value.done!=='boolean')throw Error('Registro de cumplimiento inválido');const seen=new Set();for(const k of ['tasks','goals','routines','notes'])for(const n of x[k]){if(!n||typeof n.id!=='string'||!(/^[A-Za-z0-9_-]{1,100}$/.test(n.id))||typeof n.title!=='string'||!n.title.trim()||seen.has(n.id))throw Error('Hay registros inválidos o duplicados');seen.add(n.id);if(!names.includes(n.area))throw Error('Área no reconocida');if(n.due&&!validDate(n.due))throw Error('Fecha inválida');if(k==='routines'&&(!Object.keys(frequencies).includes(n.freq)||!validDate(n.start)||!Array.isArray(n.days)||!n.days.length||n.days.some(d=>!Number.isInteger(d)||d<1||d>31)||!Number.isInteger(n.weekday)||n.weekday<0||n.weekday>6))throw Error('Periodicidad inválida');if(k==='routines'&&n.freq==='flex'&&(!Number.isInteger(n.weeklyTarget)||n.weeklyTarget<1||n.weeklyTarget>7))throw Error('Meta semanal inválida');if(k==='tasks'&&!['pending','doing','done'].includes(n.status))throw Error('Estado inválido');if((k==='tasks'||k==='routines')&&n.time&&!/^([01]\d|2[0-3]):[0-5]\d$/.test(n.time))throw Error('Hora inválida');if(k==='goals'&&(!Number.isFinite(n.target)||n.target<=0||!Number.isFinite(n.current)||!Number.isFinite(n.base)||n.base===n.target))throw Error('Medición de meta inválida');if(k==='notes'&&n.url&&!/^https?:\/\//i.test(n.url))throw Error('Enlace inválido')}return x}
+ function validate(x){if(!x||x.version!==2)throw Error('Este archivo no es un backup de la versión 2. Usa la opción de importar la versión anterior.');for(const k of ['tasks','goals','routines','notes','reviews'])if(!Array.isArray(x[k]))throw Error('Falta la colección '+k);if(!x.logs||typeof x.logs!=='object'||Array.isArray(x.logs))throw Error('Historial inválido');if(!x.settings||typeof x.settings!=='object')throw Error('Configuración inválida');const al=x.settings.areas;if(al!==undefined&&(!Array.isArray(al)||!al.length||al.length>40||al.some(a=>!a||typeof a.name!=='string'||!/^[\p{L}\p{N} &.\-]{1,40}$/u.test(a.name)||typeof a.emoji!=='string'||a.emoji.length>12||!['personal','empresa'].includes(a.kind))||new Set(al.map(a=>a.name)).size!==al.length||!al.some(a=>a.name==='Personal')))throw Error('Áreas inválidas');const names=al?al.map(a=>a.name):areas;if(x.events===undefined)x.events=[];if(!Array.isArray(x.events))throw Error('Eventos inválidos');for(const value of Object.values(x.logs))if(!value||typeof value.done!=='boolean')throw Error('Registro de cumplimiento inválido');const seen=new Set();for(const k of ['tasks','goals','routines','notes'])for(const n of x[k]){if(!n||typeof n.id!=='string'||!(/^[A-Za-z0-9_-]{1,100}$/.test(n.id))||typeof n.title!=='string'||!n.title.trim()||seen.has(n.id))throw Error('Hay registros inválidos o duplicados');seen.add(n.id);if(!names.includes(n.area))throw Error('Área no reconocida');if(n.due&&!validDate(n.due))throw Error('Fecha inválida');if(k==='routines'&&(!Object.keys(frequencies).includes(n.freq)||!validDate(n.start)||!Array.isArray(n.days)||!n.days.length||n.days.some(d=>!Number.isInteger(d)||d<1||d>31)||!Number.isInteger(n.weekday)||n.weekday<0||n.weekday>6))throw Error('Periodicidad inválida');if(k==='routines'&&n.freq==='flex'&&(!Number.isInteger(n.weeklyTarget)||n.weeklyTarget<1||n.weeklyTarget>7))throw Error('Meta semanal inválida');if(k==='tasks'&&!['pending','doing','done'].includes(n.status))throw Error('Estado inválido');if((k==='tasks'||k==='routines')&&n.time&&!/^([01]\d|2[0-3]):[0-5]\d$/.test(n.time))throw Error('Hora inválida');if(k==='goals'&&(!Number.isFinite(n.target)||n.target<=0||!Number.isFinite(n.current)||!Number.isFinite(n.base)||n.base===n.target))throw Error('Medición de meta inválida');if(k==='notes'&&n.url&&!/^https?:\/\//i.test(n.url))throw Error('Enlace inválido')}for(const ev of x.events){if(!ev||typeof ev.id!=='string'||!/^[A-Za-z0-9_-]{1,100}$/.test(ev.id)||typeof ev.title!=='string'||!ev.title.trim()||seen.has(ev.id))throw Error('Evento inválido');seen.add(ev.id);if(!names.includes(ev.area))throw Error('Área no reconocida');if(!validDate(ev.date))throw Error('Fecha inválida');if((ev.time&&!/^([01]\d|2[0-3]):[0-5]\d$/.test(ev.time))||(ev.end&&!/^([01]\d|2[0-3]):[0-5]\d$/.test(ev.end)))throw Error('Hora inválida')}return x}
  function migrate(old){if(!old||(!Array.isArray(old.habits)&&!Array.isArray(old.brainNotes)&&!Array.isArray(old.quickTasks)))throw Error('No se reconoce el archivo anterior');const n=blank();n.legacyBackup=old;const map={personal:'Personal',vaqueria:'Lazo',lazo:'Lazo',bufalera:'Bufalera',queseria:'Quesería',quesera:'Quesería',colfarming:'Colfarming',admin:'Ciento Once',ciento_once:'Ciento Once',cientoonce:'Ciento Once',inmoglobal:'Inmoglobal',cafe:'Café La Tribuna',cafelatribuna:'Café La Tribuna',cabalgatas:'Cabalgatas',cabalgas:'Cabalgatas'};const ar=x=>map[x]||'Personal';const text=x=>String(x||'');
  (old.quickTasks||[]).forEach(t=>{if(!(t.text||t.name))return;n.tasks.push({id:id(),title:text(t.text||t.name),area:ar(t.area),goal:'',due:validDate(t.due||t.date)?(t.due||t.date):'',time:typeof t.remind==='string'&&t.remind.includes('T')?t.remind.slice(11,16):'09:00',status:t.done||t.status==='completado'?'done':'pending',focus:false,body:text(t.notes),archived:false})});
  (old.brainNotes||[]).forEach(t=>{if(t.text)n.notes.push({id:id(),title:text(t.text),body:'',area:areas.includes(t.area)?t.area:'Personal',goal:'',kind:'idea',inbox:!t.archived,archived:!!t.archived,url:'',pinned:false})});
@@ -51,9 +200,9 @@ if(typeof module!=='undefined')module.exports=Core;
 const $=id=>document.getElementById(id), E=Core;
 const KEY='second-brain-v2';let state=E.blank(),page=location.hash.slice(1)||'hoy',scope='Todas',subfilter='active',query='',editType='',editId=null,phonePending=null,importMode='',importCandidate=null,storageOK=true,unreadableRaw=null;
 try{const raw=localStorage.getItem(KEY);if(raw){unreadableRaw=raw;state=E.validate(JSON.parse(raw));unreadableRaw=null}}catch(e){storageOK=false}
-const navs=[['hoy','☀️','Hoy'],['bandeja','📥','Bandeja'],['metas','🎯','Metas y proyectos'],['rutinas','🔁','Hábitos y rutinas'],['memoria','🧠','Memoria'],['entrenamiento','🏋️','Entrenamiento'],['lectura','📚','Lectura'],['productividad','⏱️','Productividad']];
-const PANEL_EMO={'A la mano':'📌','Bandeja de entrada':'📥','Calendario con alarmas':'⏰','Compromisos de hoy':'✅','Hábitos y rutinas de hoy':'🔁','Información importante':'📍','Metas en movimiento':'🚀','Próximos 7 días':'📅','Respaldo y recuperación':'💾','Sincronización y copias':'☁️','Sácalo de tu cabeza.':'💭','Traer tu información anterior':'📦','Tu sistema de rutinas':'⚙️','Tus metas':'🎯','Tus tres prioridades':'⭐','Una estructura más simple':'✨','Áreas y centros de costo':'🏷️'};
-const HEAD_EMO=[['Tu día','☀️'],['Una entrada','📥'],['De la intención','🎯'],['La constancia','🔁'],['Tu memoria','🧠'],['Tu espacio','⚙️'],['Entrenamiento','🏋️'],['Lectura','📚'],['Productividad','⏱️']];
+const navs=[['hoy','☀️','Hoy'],['calendario','📅','Calendario'],['bandeja','📥','Bandeja'],['metas','🎯','Metas y proyectos'],['rutinas','🔁','Hábitos y rutinas'],['memoria','🧠','Memoria'],['entrenamiento','🏋️','Entrenamiento'],['lectura','📚','Lectura'],['productividad','⏱️','Productividad']];
+const PANEL_EMO={'A la mano':'📌','Bandeja de entrada':'📥','Calendario con alarmas':'⏰','Compromisos de hoy':'✅','Hábitos y rutinas de hoy':'🔁','Información importante':'📍','Metas en movimiento':'🚀','Próximos 7 días':'📅','Respaldo y recuperación':'💾','Sincronización y copias':'☁️','Sácalo de tu cabeza.':'💭','Traer tu información anterior':'📦','Tu sistema de rutinas':'⚙️','Tus metas':'🎯','Tus tres prioridades':'⭐','Una estructura más simple':'✨','Áreas y centros de costo':'🏷️','Plan del día':'🗓️','Consejos para hoy':'💡','Tus roles hoy':'⚖️','Hoy':'✅','Seguimiento semanal':'📊','Cumplimiento':'📈','Últimas 12 semanas':'🗓️','Todos tus hábitos y rutinas':'📋','Tus roles':'🧭','Calendarios del iPhone':'🍎'};
+const HEAD_EMO=[['Tu día','☀️'],['Una entrada','📥'],['De la intención','🎯'],['La constancia','🔁'],['Tu memoria','🧠'],['Tu espacio','⚙️'],['Entrenamiento','🏋️'],['Lectura','📚'],['Productividad','⏱️'],['Tu agenda','📅']];
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const uid=()=>E.id(), active=x=>!x.archived, scoped=x=>scope==='Todas'||(scope==='Empresas'?!isPersonalArea(x.area):x.area===scope);
 const format=s=>s?new Intl.DateTimeFormat('es-CO',{timeZone:'UTC',day:'numeric',month:'short'}).format(E.date(s)):'Sin fecha';
@@ -80,7 +229,7 @@ function initAuth(){if(!supa)return;try{
 supa.auth.onAuthStateChange((ev,ss)=>{if(ev==='SIGNED_OUT')onAuth(null);else if(ss&&ss.user&&!authed)onAuth(ss)});
 supa.auth.getSession().then(r=>{const ss=r&&r.data&&r.data.session;if(ss){if(!authed)onAuth(ss)}else{onAuth(null);setTimeout(()=>{if(!authed&&!document.querySelector('dialog[open]'))openLogin()},900)}}).catch(()=>setSync('Guardado en este navegador'))}catch(e){setSync('Guardado en este navegador')}}
 const hhmm=()=>new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
-function hasUserData(s){return !!s&&typeof s==='object'&&(['tasks','goals','routines','notes','reviews'].some(k=>Array.isArray(s[k])&&s[k].length>0)||Object.keys(s.logs||{}).length>0)}
+function hasUserData(s){return !!s&&typeof s==='object'&&(['tasks','goals','routines','notes','reviews','events'].some(k=>Array.isArray(s[k])&&s[k].length>0)||Object.keys(s.logs||{}).length>0)}
 function validState(d){try{E.validate(d);return true}catch(e){return false}}
 function setSync(text,warn){const a=$('save-state'),b=$('sync-foot');if(a)a.textContent=text;if(b)b.textContent=text;if(a)a.parentElement.style.opacity=warn?'1':'';}
 function scheduleSync(){clearTimeout(syncTimer);syncTimer=setTimeout(()=>cloudPush(),1500)}
@@ -163,10 +312,10 @@ function icsShift(iso,time,addMin){const p=iso.split('-'),t=(time||'00:00').spli
 function icsNextDay(iso){const p=iso.split('-');const d=new Date(Date.UTC(+p[0],+p[1]-1,+p[2]+1));return d.getUTCFullYear()+icsPad(d.getUTCMonth()+1)+icsPad(d.getUTCDate())}
 function icsEvent(o){
 const L=['BEGIN:VEVENT','UID:'+o.uid+'@segundocerebro','DTSTAMP:'+o.stamp];
-if(o.time){L.push('DTSTART:'+icsShift(o.date,o.time,0),'DTEND:'+icsShift(o.date,o.time,30))}
+if(o.time){L.push('DTSTART:'+icsShift(o.date,o.time,0),'DTEND:'+(o.end&&o.end>o.time?icsShift(o.date,o.end,0):icsShift(o.date,o.time,30)))}
 else{L.push('DTSTART;VALUE=DATE:'+icsD(o.date),'DTEND;VALUE=DATE:'+icsNextDay(o.date))}
 L.push('SUMMARY:'+icsEsc(o.title));
-if(o.notes)L.push('DESCRIPTION:'+icsEsc(o.notes));
+if(o.notes)L.push('DESCRIPTION:'+icsEsc(o.notes));if(o.location)L.push('LOCATION:'+icsEsc(o.location));
 if(o.rrule)L.push('RRULE:'+o.rrule);
 if(o.alarm!=null&&o.alarm>=0){
 L.push('BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:'+icsEsc(o.title));
@@ -189,6 +338,9 @@ const first=Core.occurrences(r,from,Core.shift(from,14))[0];if(!first)return;
 const rrule={daily:'FREQ=DAILY',weekdays:'FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR',weekly:'FREQ=WEEKLY;BYDAY='+['SU','MO','TU','WE','TH','FR','SA'][Number(r.weekday)]}[r.freq];
 L.push(...icsEvent({uid:'rt-'+r.id,stamp,title:'↻ '+r.title,date:first,time,notes,rrule,alarm:0}))}
 else Core.occurrences(r,from,Core.shift(from,400)).forEach(d=>L.push(...icsEvent({uid:'rt-'+r.id+'-'+d,stamp,title:'↻ '+r.title,date:d,time,notes,alarm:0})))});
+(s.events||[]).forEach(ev=>{
+if(!want('event',ev.id)||ev.archived||!ev.date)return;const rr={daily:'FREQ=DAILY',weekdays:'FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR',weekly:'FREQ=WEEKLY',monthly:'FREQ=MONTHLY',yearly:'FREQ=YEARLY'}[ev.repeat]||'';if(!rr&&ev.date<cut)return;
+L.push(...icsEvent({uid:'ev-'+ev.id,stamp,title:ev.title,date:ev.date,time:ev.allDay?'':(ev.time||'09:00'),end:ev.allDay?'':(ev.end||''),notes:ev.body||'',location:ev.location||'',rrule:rr,alarm:ev.alarm==null?10:ev.alarm}))});
 (s.goals||[]).forEach(g=>{
 if(!want('goal',g.id)||g.archived||!g.due||g.due<cut)return;
 L.push(...icsEvent({uid:'goal-'+g.id,stamp,title:'◎ Fecha objetivo: '+g.title,date:g.due,time:'',notes:g.body||'',alarm:1440}))});
@@ -202,15 +354,15 @@ toast('Calendario descargado: ábrelo en el iPhone y toca “Agregar todo”.')}
 function feedURL(){return SUPA_URL+'/functions/v1/calendar-feed?t='+(state.settings.feedToken||'')}
 function edgeSource(){
 const fns=[icsEsc,icsFold,icsD,icsPad,icsShift,icsNextDay,icsEvent,buildICS].map(f=>f.toString()).join('\n\n');
-return '// @ts-nocheck\n// Función "calendar-feed": entrega tu calendario de Segundo Cerebro a la app Calendario del iPhone.\nimport { createClient } from "https://esm.sh/@supabase/supabase-js@2";\n\nconst Core = ('+CoreFactory.toString()+')();\n\n'+fns+'\n\nDeno.serve(async (req) => {\n  const t = new URL(req.url).searchParams.get("t") || "";\n  const sb = createClient(Deno.env.get("SUPABASE_URL"), Deno.env.get("SUPABASE_SERVICE_ROLE_KEY"));\n  const { data } = await sb.from("dashboard_data").select("data").eq("id", "'+ROW+'").single();\n  const d = data && data.data;\n  const token = d && d.settings && d.settings.feedToken;\n  if (!token || t !== token) return new Response("No autorizado", { status: 401 });\n  return new Response(buildICS(d), { headers: { "Content-Type": "text/calendar; charset=utf-8", "Cache-Control": "no-cache" } });\n});\n'}
+return '// @ts-nocheck\n// Función "calendar-feed": entrega tu calendario de Segundo Cerebro a la app Calendario del iPhone.\nimport { createClient } from "https://esm.sh/@supabase/supabase-js@2";\n\nconst Core = ('+CoreFactory.toString()+')();\n\n'+fns+'\n\nDeno.serve(async (req) => {\n  const u = new URL(req.url), t = u.searchParams.get("t") || "";\n  const cors = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET, OPTIONS" };\n  if (req.method === "OPTIONS") return new Response(null, { headers: cors });\n  const sb = createClient(Deno.env.get("SUPABASE_URL"), Deno.env.get("SUPABASE_SERVICE_ROLE_KEY"));\n  const { data } = await sb.from("dashboard_data").select("data").eq("id", "'+ROW+'").single();\n  const d = data && data.data;\n  const token = d && d.settings && d.settings.feedToken;\n  if (!token || t !== token) return new Response("No autorizado", { status: 401, headers: cors });\n  if (u.searchParams.get("ext") === "1") {\n    const cals = Array.isArray(d.settings.icloud) ? d.settings.icloud.slice(0, 8) : [];\n    const parts = await Promise.all(cals.map(async (c) => {\n      try {\n        const url = String(c.url || "").trim().replace(/^webcal:/i, "https:");\n        if (!/^https:\\/\\//i.test(url)) return "";\n        const ctl = new AbortController(); const tm = setTimeout(() => ctl.abort(), 9000);\n        const r = await fetch(url, { signal: ctl.signal, redirect: "follow" }); clearTimeout(tm);\n        if (!r.ok) return "";\n        const txt = (await r.text()).replace(/\\r\\n/g, "\\n");\n        const evs = txt.match(/BEGIN:VEVENT[\\s\\S]*?END:VEVENT/g) || [];\n        const name = String(c.name || "iPhone").replace(/[\\r\\n]/g, " ");\n        return evs.map((e) => e.replace("BEGIN:VEVENT", "BEGIN:VEVENT\\nX-SB-CAL:" + name)).join("\\n");\n      } catch (_e) { return ""; }\n    }));\n    return new Response("BEGIN:VCALENDAR\\nVERSION:2.0\\nPRODID:-//Segundo Cerebro//ES\\n" + parts.filter(Boolean).join("\\n") + "\\nEND:VCALENDAR\\n", { headers: { ...cors, "Content-Type": "text/calendar; charset=utf-8", "Cache-Control": "no-store" } });\n  }\n  return new Response(buildICS(d), { headers: { ...cors, "Content-Type": "text/calendar; charset=utf-8", "Cache-Control": "no-cache" } });\n});\n'}
 function makeFeedToken(){if(!state.settings.feedToken){state.settings.feedToken=genToken();persist();draw();toast('Suscripción activada. Dale unos segundos para sincronizar y copia el enlace.')}}
 function syncPanelBody(){return `<p>Tu información se guarda en este dispositivo y se sincroniza con la nube, así la ves igual en el iPhone y en el computador. Cada día se guarda además una copia que puedes restaurar.</p><div class="hint ${authed?'neutral':'warn'}">${authed?`Sesión iniciada como <b>${esc(userEmail)}</b>. Solo tu cuenta puede leer y escribir en la nube.`:'Sin sesión: tus datos se guardan solo en este dispositivo. Inicia sesión para sincronizar.'}</div><div class="hint neutral">Una pantalla vacía nunca borra la nube: un dispositivo sin información solo descarga, jamás sube.</div><div class="inline-flex">${authed?btn('🔄 Sincronizar ahora','syncNow()','primary')+btn('🗂️ Ver copias de seguridad','loadBackups()')+btn('🚪 Cerrar sesión','doLogout()'):btn('🔑 Iniciar sesión','openLogin()','primary')+btn('Ver copias de este dispositivo','loadBackups()')}</div><div id="backups-box"></div>`}
 function phonePanelBody(){
 return `<p>Tus tareas con fecha y hora, tus rutinas fijas y las fechas de tus metas entran a la app Calendario del iPhone con su alarma. Sin hora, la alarma suena a las 9:00 a. m.</p>
 <div class="hint neutral"><b>Opción rápida.</b> Descarga el calendario, ábrelo en el iPhone y toca “Agregar todo”. Repite cuando agregues cosas nuevas.</div>
 <button class="primary" onclick="downloadICS()">📅 Descargar calendario</button>
-<details style="margin-top:20px"><summary>Opción automática: se actualiza sola (se configura una vez)</summary><ol>
-<li>En Supabase entra a <b>Edge Functions</b> y crea una función llamada <b>calendar-feed</b>. Pega este código, desactiva “Verify JWT” y despliega.<br><button onclick="copyText(edgeSource(),'Código de la función copiado')" style="margin-top:8px">Copiar código de la función</button></li>
+<details style="margin-top:20px"><summary>Opción automática: se actualiza sola (recomendada)</summary><ol>
+
 <li>${state.settings.feedToken?`En el iPhone: Ajustes → Calendario → Cuentas → Agregar cuenta → Otra → <b>Agregar calendario suscrito</b>, y pega este enlace:<br><input id="feed-url" value="${esc(feedURL())}" readonly style="margin-top:8px"><button onclick="copyText($('feed-url').value,'Enlace copiado')" style="margin-top:8px">Copiar enlace</button>`:`Activa tu enlace privado: <button onclick="makeFeedToken()">Activar suscripción</button>`}</li>
 </ol><p>El iPhone revisa los calendarios suscritos cada cierto tiempo, a veces horas. Para un aviso que suena pronto, usa la opción rápida. El calendario no se entera de lo que marcas como hecho: una tarea completada sale del calendario cuando el iPhone vuelve a revisarlo.</p></details>`}
 function openPhone(type,id,day=''){
@@ -267,6 +419,258 @@ catch(e){state=JSON.parse(prevState);return toast('No se pudo eliminar: '+e.mess
 if(!persist()){state=JSON.parse(prevState);return toast('No se pudo guardar en este dispositivo.')}
 closeDialog('area-modal');draw();toast('Área eliminada')}
 
+// ═══════════════════════════════════════════════
+// V3 · HÁBITOS, CALENDARIO, PLAN DEL DÍA POR ROLES Y CONSEJOS
+// ═══════════════════════════════════════════════
+const toMin=t=>{if(!t)return null;const [h,m]=t.split(':').map(Number);return h*60+m};
+const fromMin=m=>String(Math.floor(m/60)%24).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+const addMin=(t,n)=>t?fromMin(Math.min(toMin(t)+n,23*60+59)):'';
+const nowMin=()=>{const p=new Intl.DateTimeFormat('en-GB',{timeZone:'America/Bogota',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date()).split(':');return +p[0]*60+ +p[1]};
+const DOW=['D','L','M','X','J','V','S'];
+const bDay=iso=>iso?new Date(Date.parse(iso)-5*3600e3).toISOString().slice(0,10):'';
+const fmtTime=t=>{if(!t)return '';const m=toMin(t),h=Math.floor(m/60),mm=String(m%60).padStart(2,'0');return (h%12||12)+':'+mm+(h<12?' a. m.':' p. m.')};
+const dayLabel=d=>{const t=E.today();if(d===t)return 'Hoy';if(d===E.shift(t,1))return 'Mañana';if(d===E.shift(t,-1))return 'Ayer';return new Intl.DateTimeFormat('es-CO',{timeZone:'UTC',weekday:'short',day:'numeric',month:'short'}).format(E.date(d))};
+
+// ── Roles ──
+const DEFAULT_ROLES=[{id:'mama',name:'Mamá',emoji:'👩‍👧'},{id:'esposa',name:'Esposa',emoji:'💑'},{id:'empresaria',name:'Empresaria',emoji:'💼'},{id:'vaquera',name:'Vaquera',emoji:'🤠'},{id:'deportista',name:'Deportista',emoji:'🏃‍♀️'},{id:'yo',name:'Yo misma',emoji:'🌸'}];
+const ROLE_SUGGEST={mama:{t:'Tiempo de calidad con mis hijos (sin celular)',time:'18:30',dur:30},esposa:{t:'Momento a solas con mi esposo',time:'20:00',dur:45},empresaria:{t:'Bloque de enfoque en lo más importante',time:'08:00',dur:90},vaquera:{t:'Caballos y práctica de lazo',time:'16:30',dur:60},deportista:{t:'Entrenar (aunque sean 20 minutos)',time:'05:00',dur:45},yo:{t:'Un espacio para mí: lectura, respiración o descanso',time:'21:00',dur:20}};
+const ROLE_KW=[['deportista',/ejerc|gym|gimnas|entren|correr|trote|running|deport|pesas|pausa activa|yoga|nadar|bici|crossfit|pilates/i],['vaquera',/caball|lazo|cabalg|vaquer|potr|coleo|rodeo|yegua|establo|monta\b/i],['mama',/hij[oa]s?\b|niñ[oa]s|colegio|escuela|pediatr|tarea escolar|mamá|bebé/i],['esposa',/espos[oa]|pareja|marido|aniversario|cena con|cita romántica/i],['yo',/lectura|\bleer\b|suplement|lavarme|\bcara\b|medit|respira|médic|\bsalud\b|dormir|descanso|terapia|\bspa\b|uñas|peluquer|vitamina/i]];
+function roles(){const l=state.settings&&state.settings.roles;return Array.isArray(l)&&l.length?l:DEFAULT_ROLES}
+function roleById(id){return roles().find(r=>r.id===id)}
+function roleOf(item){if(item.role&&roleById(item.role))return item.role;const t=item.title||'';for(const [id,re] of ROLE_KW)if(re.test(t)&&roleById(id))return id;const a=areaCfg().find(x=>x.name===item.area);if(a&&a.role&&roleById(a.role))return a.role;if(a&&/lazo|cabalg/i.test(a.name)&&roleById('vaquera'))return 'vaquera';if(!a)return roleById('empresaria')?'empresaria':roles()[0].id;return a.kind==='personal'?(roleById('yo')?'yo':roles()[0].id):(roleById('empresaria')?'empresaria':roles()[0].id)}
+function roleEmoji(id){const r=roleById(id);return r?r.emoji:''}
+function roleSelect(sel){return `<label for="f-role">Rol (opcional)</label><select name="role" id="f-role"><option value="">Automático (según área y título)</option>${roles().map(r=>`<option value="${esc(r.id)}" ${sel===r.id?'selected':''}>${esc(r.emoji)} ${esc(r.name)}</option>`).join('')}</select>`}
+function rolesPanelBody(){return `<p>Tus roles ordenan el plan del día: la app revisa que cada uno tenga su momento y te sugiere cómo cumplirle. A cada tarea, rutina o evento se le asigna un rol automáticamente, o lo eliges tú al crearlo.</p><div id="roles-edit">${roles().map((r,i)=>`<div class="role-edit-row"><input aria-label="Emoji" value="${esc(r.emoji)}" maxlength="8" data-i="${i}" data-k="emoji"><input aria-label="Nombre" value="${esc(r.name)}" maxlength="30" data-i="${i}" data-k="name"><button class="ghost danger" onclick="removeRole(${i})" aria-label="Quitar ${esc(r.name)}">✕</button></div>`).join('')}</div><div class="inline-flex" style="margin-top:10px">${btn('＋ Rol','addRole()')}${btn('Guardar roles','saveRoles()','primary')}</div>`}
+let rolesDraft=null;
+function readRolesDraft(){const list=roles().map(r=>({...r}));document.querySelectorAll('#roles-edit input').forEach(inp=>{const r=list[+inp.dataset.i];if(r)r[inp.dataset.k]=inp.value.trim()});return list}
+function addRole(){const list=readRolesDraft();list.push({id:'rol'+Date.now().toString(36),name:'Nuevo rol',emoji:'⭐'});state.settings.roles=list;draw()}
+function removeRole(i){const list=readRolesDraft();if(list.length<=1)return toast('Necesitas al menos un rol.');list.splice(i,1);state.settings.roles=list;persist();draw()}
+function saveRoles(){const list=readRolesDraft().filter(r=>r.name);if(!list.length)return toast('Necesitas al menos un rol.');list.forEach(r=>{r.name=r.name.slice(0,30);r.emoji=(r.emoji||'⭐').slice(0,8)});state.settings.roles=list;if(persist()){draw();toast('Roles guardados')}}
+
+// ── Eventos ──
+function evOccurs(ev,day){if(!ev||ev.archived||day<ev.date)return false;const r=ev.repeat||'none';if(r==='none')return day===ev.date;const a=E.date(ev.date),b=E.date(day);if(r==='daily')return true;if(r==='weekdays'){const d=b.getUTCDay();return d>0&&d<6}if(r==='weekly')return a.getUTCDay()===b.getUTCDay();if(r==='monthly')return a.getUTCDate()===b.getUTCDate();if(r==='yearly')return a.getUTCDate()===b.getUTCDate()&&a.getUTCMonth()===b.getUTCMonth();return false}
+let evEditing=null;
+function evInput(label,id,value,type='text',extra=''){return `<label for="${id}">${label}</label><input id="${id}" type="${type}" value="${esc(value)}" ${extra}>`}
+function editEvent(id,prefill){prefill=prefill||{};const ev=id?(state.events||[]).find(e=>e.id===id):null;const n=ev||{date:prefill.date||E.today(),time:prefill.time||'09:00',end:prefill.end||'',allDay:false,area:prefill.area||(scope!=='Todas'&&scope!=='Empresas'?scope:'Personal'),role:prefill.role||'',alarm:10,repeat:'none',title:prefill.title||'',location:'',body:prefill.body||''};evEditing=ev?ev.id:null;
+$('event-form').innerHTML=`<div class="dialog-head"><h2>${ev?'Editar evento':'Nuevo evento'}</h2><button type="button" aria-label="Cerrar" onclick="closeDialog('event-modal')">×</button></div>
+${evInput('¿Qué es?','ev-title',n.title,'text','required maxlength="200" placeholder="Reunión con socios, cita médica, partido de los niños…"')}
+<div class="split"><div>${evInput('Fecha','ev-date',n.date,'date','required')}</div><div><label class="checklabel" style="margin-top:34px"><input type="checkbox" id="ev-allday" ${n.allDay?'checked':''} onchange="evAllDay()"> Todo el día</label></div></div>
+<div class="split" id="ev-times"><div>${evInput('Empieza','ev-time',n.time||'09:00','time')}</div><div>${evInput('Termina','ev-end',n.end||'','time')}</div></div>
+<div class="split"><div><label for="ev-area">Vida o empresa</label><select id="ev-area">${opts(areaNames(),areaNames().includes(n.area)?n.area:'Personal')}</select></div><div>${roleSelect(n.role||'').replace('id="f-role"','id="ev-role"').replace('for="f-role"','for="ev-role"')}</div></div>
+<div class="split"><div><label for="ev-repeat">Se repite</label><select id="ev-repeat">${opts([['none','No se repite'],['daily','Todos los días'],['weekdays','Lunes a viernes'],['weekly','Cada semana'],['monthly','Cada mes'],['yearly','Cada año']],n.repeat||'none')}</select></div><div><label for="ev-alarm">Alarma en el iPhone</label><select id="ev-alarm">${opts([['-1','Sin alarma'],['0','A la hora'],['10','10 min antes'],['30','30 min antes'],['60','1 hora antes'],['1440','1 día antes']],String(n.alarm??10))}</select></div></div>
+${evInput('Lugar (opcional)','ev-location',n.location||'','text','maxlength="200"')}
+<label for="ev-body">Notas (opcional)</label><textarea id="ev-body" rows="2">${esc(n.body||'')}</textarea>
+<div id="ev-error" class="inline-error" role="alert"></div>
+<div class="dialog-actions">${ev?'<button type="button" class="ghost danger left" onclick="deleteEvent()">Eliminar</button>':''}<button type="button" onclick="closeDialog('event-modal')">Cancelar</button><button type="submit" class="primary">Guardar</button></div>`;
+$('event-modal').showModal();evAllDay();setTimeout(()=>{const t=$('ev-title');if(t&&!t.value)t.focus()},50)}
+function evAllDay(){const c=$('ev-allday');if(c)$('ev-times').style.display=c.checked?'none':''}
+function saveEvent(e){e.preventDefault();const er=$('ev-error');er.textContent='';
+const title=$('ev-title').value.trim(),date=$('ev-date').value,allDay=$('ev-allday').checked;let time=allDay?'':$('ev-time').value,end=allDay?'':$('ev-end').value;
+if(!title){er.textContent='Escribe qué es.';return}if(!E.validDate(date)){er.textContent='Elige una fecha válida.';return}
+if(!allDay&&!time){er.textContent='Indica la hora de inicio o marca “Todo el día”.';return}
+if(end&&time&&toMin(end)<=toMin(time))end='';
+const old=evEditing?(state.events||[]).find(x=>x.id===evEditing):null;
+const n={...(old||{}),id:old?old.id:uid(),title,date,allDay,time,end,area:$('ev-area').value,repeat:$('ev-repeat').value,alarm:Number($('ev-alarm').value),location:$('ev-location').value.trim(),body:$('ev-body').value.trim(),archived:false};
+const rl=$('ev-role').value;if(rl)n.role=rl;else delete n.role;
+try{const c=JSON.parse(JSON.stringify(state));c.events=c.events||[];const i=c.events.findIndex(x=>x.id===n.id);if(i>=0)c.events[i]=n;else c.events.push(n);E.validate(c);state=c}catch(err){er.textContent=err.message;return}
+if(!persist()){er.textContent='No se pudo guardar.';return}closeDialog('event-modal');calSel=date;draw();toast(old?'Evento actualizado':'📅 Evento guardado')}
+function deleteEvent(){if(!evEditing)return;if(!confirm('¿Eliminar este evento?'))return;state.events=(state.events||[]).filter(x=>x.id!==evEditing);persist();closeDialog('event-modal');draw();toast('Evento eliminado')}
+
+// ── Calendarios del iPhone (iCloud) ──
+const EXT_KEY='sb2-ext-cache';let extEvents=[],extAt=0,extLoading=false,extError='';
+function extList(){return Array.isArray(state.settings.icloud)?state.settings.icloud:[]}
+function icsUnfold(t){return String(t||'').replace(/\r\n/g,'\n').replace(/\n[ \t]/g,'').split('\n')}
+function icsProp(line){const i=line.indexOf(':');if(i<0)return null;const head=line.slice(0,i),value=line.slice(i+1),parts=head.split(';'),name=parts[0].toUpperCase(),params={};parts.slice(1).forEach(p=>{const j=p.indexOf('=');if(j>0)params[p.slice(0,j).toUpperCase()]=p.slice(j+1).replace(/^"|"$/g,'')});return{name,params,value}}
+function icsText(v){return String(v||'').replace(/\\n/gi,'\n').replace(/\\,/g,',').replace(/\\;/g,';').replace(/\\\\/g,'\\')}
+function tzOffsetMin(tz,ms){try{const p=new Intl.DateTimeFormat('en-US',{timeZone:tz,hourCycle:'h23',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}).formatToParts(new Date(ms));const g=t=>+p.find(x=>x.type===t).value;return Math.round((Date.UTC(g('year'),g('month')-1,g('day'),g('hour')%24,g('minute'))-ms)/60000)}catch(e){return -300}}
+function icsWhen(prop){if(!prop)return null;const v=prop.value.trim();if(/^\d{8}$/.test(v))return{date:v.slice(0,4)+'-'+v.slice(4,6)+'-'+v.slice(6,8),time:'',allDay:true};const m=v.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})?(Z)?$/);if(!m)return null;let ms=Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5]);const tz=prop.params.TZID;
+if(m[7])ms-=5*3600e3;else if(tz&&!/Bogota|Lima|Panama|Guayaquil|SA Pacific/i.test(tz)){const off=tzOffsetMin(tz,ms);ms=ms-off*60000-5*3600e3}
+const d=new Date(ms).toISOString();return{date:d.slice(0,10),time:d.slice(11,16),allDay:false}}
+function parseICS(text){const out=[],overrides=[];let cur=null,cal='';
+for(const line of icsUnfold(text)){if(line==='BEGIN:VEVENT'){cur={ex:new Set()};continue}if(cur&&line==='BEGIN:VALARM'){cur.alarm=true;continue}if(cur&&line==='END:VALARM'){cur.alarm=false;continue}if(cur&&cur.alarm)continue;if(line==='END:VEVENT'){if(cur&&cur.start&&!cur.cancelled)(cur.recur?overrides:out).push(cur);cur=null;continue}
+if(!cur){const p=icsProp(line);if(p&&p.name==='X-WR-CALNAME')cal=icsText(p.value);continue}
+const p=icsProp(line);if(!p)continue;
+if(p.name==='SUMMARY')cur.title=icsText(p.value);else if(p.name==='LOCATION')cur.location=icsText(p.value);else if(p.name==='UID')cur.uid=p.value;else if(p.name==='X-SB-CAL')cur.cal=icsText(p.value);
+else if(p.name==='DTSTART')cur.start=icsWhen(p);else if(p.name==='DTEND')cur.end=icsWhen(p);else if(p.name==='STATUS'&&/CANCELLED/i.test(p.value))cur.cancelled=true;
+else if(p.name==='RRULE'){const r={};p.value.split(';').forEach(kv=>{const [k,v]=kv.split('=');if(k)r[k.toUpperCase()]=v||''});cur.rrule=r}
+else if(p.name==='EXDATE')p.value.split(',').forEach(v=>{const w=icsWhen({params:p.params,value:v});if(w)cur.ex.add(w.date)});
+else if(p.name==='RECURRENCE-ID'){const w=icsWhen(p);if(w)cur.recur=w.date}}
+overrides.forEach(o=>{const m=out.find(x=>x.uid&&x.uid===o.uid&&x.rrule);if(m)m.ex.add(o.recur);out.push({...o,rrule:null})});
+out.forEach(e=>{if(!e.cal)e.cal=cal;if(!e.title)e.title='(Sin título)'});return out}
+const ICS_DAY={SU:0,MO:1,TU:2,WE:3,TH:4,FR:5,SA:6};
+function rruleMatch(e,day){const R=e.rrule,s=E.date(e.start.date),d=E.date(day),iv=Math.max(1,+R.INTERVAL||1),diff=Math.round((d-s)/864e5);if(diff<0)return false;
+const byday=(R.BYDAY||'').split(',').filter(Boolean).map(x=>{const m=x.match(/^([+-]?\d+)?([A-Z]{2})$/);return m?{n:m[1]?+m[1]:0,wd:ICS_DAY[m[2]]}:null}).filter(Boolean);
+const bymd=(R.BYMONTHDAY||'').split(',').filter(Boolean).map(Number),last=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth()+1,0)).getUTCDate(),dd=d.getUTCDate(),wd=d.getUTCDay();
+const nthOk=b=>{if(b.wd!==wd)return false;if(!b.n)return true;return b.n>0?Math.ceil(dd/7)===b.n:Math.ceil((last-dd+1)/7)===-b.n};
+const mdOk=()=>bymd.some(x=>x>0?x===dd:last+x+1===dd);
+if(R.FREQ==='DAILY')return diff%iv===0&&(!byday.length||byday.some(b=>b.wd===wd));
+if(R.FREQ==='WEEKLY'){const wk=Math.floor((diff+((s.getUTCDay()+6)%7))/7);return wk%iv===0&&(byday.length?byday.some(b=>b.wd===wd):wd===s.getUTCDay())}
+const months=(d.getUTCFullYear()-s.getUTCFullYear())*12+d.getUTCMonth()-s.getUTCMonth();
+if(R.FREQ==='MONTHLY')return months%iv===0&&(bymd.length?mdOk():byday.length?byday.some(nthOk):dd===s.getUTCDate());
+if(R.FREQ==='YEARLY'){const years=d.getUTCFullYear()-s.getUTCFullYear();if(years%iv)return false;const bm=(R.BYMONTH||'').split(',').filter(Boolean).map(Number);if(!(bm.length?bm.includes(d.getUTCMonth()+1):d.getUTCMonth()===s.getUTCMonth()))return false;return bymd.length?mdOk():byday.length?byday.some(nthOk):dd===s.getUTCDate()}
+return false}
+function extOccurrences(from,to){const res=[];extEvents.forEach(e=>{const st=e.start.date,span=e.start.allDay&&e.end&&e.end.date>st?Math.max(1,Math.round((E.date(e.end.date)-E.date(st))/864e5)):1;
+const push=day=>{for(let k=0;k<span;k++){const dd=E.shift(day,k);if(dd>=from&&dd<=to)res.push({date:dd,time:e.start.allDay?'':e.start.time,end:e.end&&!e.end.allDay?e.end.time:'',title:e.title,location:e.location||'',cal:e.cal||'iPhone',allDay:!!e.start.allDay,kind:'reunion'})}};
+if(!e.rrule){if(st<=to&&E.shift(st,span-1)>=from)push(st);return}
+let until=e.rrule.UNTIL?icsWhen({params:{},value:e.rrule.UNTIL}):null;until=until?until.date:'9999-12-31';const count=+e.rrule.COUNT||0;let n=0,day=count?st:(st<E.shift(from,-62)?E.shift(from,-62):st);
+for(let g=0;g<4500&&day<=to&&day<=until;g++,day=E.shift(day,1)){if(rruleMatch(e,day)){n++;if(count&&n>count)break;if(!e.ex.has(day)&&E.shift(day,span-1)>=from)push(day)}}});
+return res}
+function loadExtCache(){try{const c=JSON.parse(localStorage.getItem(EXT_KEY)||'null');if(c&&c.ics){extEvents=parseICS(c.ics);extAt=c.at||0}}catch(e){}}
+function refreshExt(force){if(!extList().length||!state.settings.feedToken||!supa||extLoading)return;if(!force&&Date.now()-extAt<10*60000)return;extLoading=true;
+fetch(feedURL()+'&ext=1',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error(r.status===401?'Tu enlace privado aún no llega a la nube. Espera unos segundos y actualiza.':r.status===404?'La función del calendario no está instalada.':'Error '+r.status);return r.text()}).then(t=>{extEvents=parseICS(t);extAt=Date.now();extError='';try{localStorage.setItem(EXT_KEY,JSON.stringify({at:extAt,ics:t}))}catch(e){}extLoading=false;if(['hoy','calendario','ajustes'].includes(page)&&!document.querySelector('dialog[open]'))draw()}).catch(e=>{extLoading=false;extError=e.message||'Sin conexión';if(page==='ajustes'&&!document.querySelector('dialog[open]'))draw()})}
+function icloudPanelBody(){const l=extList();return `<p>Trae a la app las reuniones y citas de tu iPhone. Se actualizan solas cada 10 minutos y solo se leen: se editan en el iPhone.</p>
+${l.length?l.map((c,i)=>`<div class="area-row"><div><b>🍎 ${esc(c.name)}</b><div class="small muted">${esc(c.url.replace(/^(webcal|https):\/\//i,'').slice(0,38))}…</div></div>${btn('Quitar',`removeICloud(${i})`,'danger')}</div>`).join('')+`<p class="small muted">${extLoading?'Actualizando…':extError?'⚠️ '+esc(extError):extAt?'Actualizado '+new Date(extAt).toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'})+' · '+extEvents.length+' eventos':'Aún no se ha actualizado.'}</p>`:''}
+<div class="split"><div><label for="ic-name">Nombre</label><input id="ic-name" placeholder="Trabajo, Familia…" maxlength="40"></div><div><label for="ic-url">Enlace del calendario</label><input id="ic-url" placeholder="webcal://p…icloud.com/published/…"></div></div>
+<div class="inline-flex" style="margin-top:10px">${btn('＋ Agregar calendario','addICloud()','primary')}${l.length?btn('🔄 Actualizar ahora','refreshExt(true);toast(\'Actualizando calendarios…\')'):''}</div>
+<details style="margin-top:14px"><summary>Cómo obtener el enlace en el iPhone</summary><ol><li>Abre la app <b>Calendario</b> y toca <b>Calendarios</b> abajo.</li><li>Toca la <b>ⓘ</b> junto al calendario que quieres traer.</li><li>Activa <b>Calendario público</b> y toca <b>Compartir enlace → Copiar</b>.</li><li>Pégalo aquí con un nombre y toca “Agregar calendario”. Repite con cada calendario.</li></ol><p class="small muted">Un calendario público lo puede ver quien tenga el enlace. Es un enlace largo e imposible de adivinar, pero no lo compartas. Si usas Google o Outlook, también funciona su enlace privado “iCal”.</p></details>`}
+function addICloud(){const name=$('ic-name').value.trim()||'iPhone',url=$('ic-url').value.trim();if(!/^(webcal|https):\/\/\S{8,500}$/i.test(url))return toast('Pega el enlace completo: empieza por webcal:// o https://');const l=extList().slice();if(l.some(c=>c.url===url))return toast('Ese calendario ya está agregado.');if(l.length>=8)return toast('Máximo 8 calendarios.');l.push({name:name.slice(0,40),url});state.settings.icloud=l;if(!state.settings.feedToken)state.settings.feedToken=genToken();if(!persist())return;draw();toast('Calendario agregado. Lo traigo en unos segundos…');setTimeout(()=>refreshExt(true),6000)}
+function removeICloud(i){const l=extList().slice();l.splice(i,1);state.settings.icloud=l;persist();if(!l.length){extEvents=[];try{localStorage.removeItem(EXT_KEY)}catch(e){}}else setTimeout(()=>refreshExt(true),5000);draw()}
+function showExt(i){const x=calCache[i];if(!x)return;$('phone-modal').querySelector('h2').textContent='🍎 '+x.title;$('phone-content').innerHTML=`<p><b>${esc(dayLabel(x.date))}</b>${x.allDay?' · todo el día':' · '+esc(fmtTime(x.time))+(x.end?' – '+esc(fmtTime(x.end)):'')}</p>${x.location?`<p>📍 ${esc(x.location)}</p>`:''}<p class="small muted">Del calendario “${esc(x.cal)}” de tu iPhone. Para cambiarla, edítala allá.</p><div class="dialog-actions">${btn('Cerrar',"closeDialog('phone-modal')",'primary')}</div>`;$('phone-modal').showModal()}
+
+// ── Agregador para calendario y plan ──
+let calCache=[];
+function calItems(from,to,opt={}){const items=[],t=E.today();
+for(let d=from,g=0;d<=to&&g<400;d=E.shift(d,1),g++){
+ (state.events||[]).forEach(ev=>{if(scoped(ev)&&evOccurs(ev,d))items.push({date:d,time:ev.allDay?'':ev.time,end:ev.allDay?'':ev.end,title:ev.title,kind:'evento',id:ev.id,area:ev.area,role:roleOf(ev),allDay:!!ev.allDay,location:ev.location})});
+ state.goals.filter(active).filter(scoped).forEach(gl=>{if(gl.due===d)items.push({date:d,time:'',title:gl.title,kind:'meta',id:gl.id,area:gl.area,role:roleOf(gl),allDay:true})});
+ state.tasks.filter(active).filter(scoped).forEach(tk=>{if(tk.due===d&&(tk.status!=='done'||opt.withDone))items.push({date:d,time:tk.time||'',title:tk.title,kind:'tarea',id:tk.id,area:tk.area,role:roleOf(tk),done:tk.status==='done',focus:tk.focus,allDay:!tk.time})});
+ state.routines.filter(active).filter(scoped).forEach(r=>{if(r.paused||r.freq==='flex')return;if(opt.month&&['daily','weekdays'].includes(r.freq))return;if(E.dueOn(r,d))items.push({date:d,time:r.time,title:r.title,kind:'rutina',id:r.id,area:r.area,role:roleOf(r),done:!!state.logs[E.key(r,d)]?.done})});
+}
+extOccurrences(from,to).forEach(x=>items.push({...x,role:roleOf({title:x.title,area:''})}));
+items.sort((a,b)=>a.date.localeCompare(b.date)||(a.allDay===b.allDay?0:a.allDay?-1:1)||(a.time||'').localeCompare(b.time||''));return items}
+const KIND={evento:['📅','Evento'],reunion:['🍎','iPhone'],tarea:['✅','Tarea'],rutina:['🔁','Rutina'],meta:['🎯','Meta'],habito:['🔁','Hábito']};
+function itemClick(x){const i=calCache.push(x)-1;if(x.kind==='evento')return `editEvent('${x.id}')`;if(x.kind==='tarea')return `edit('task','${x.id}')`;if(x.kind==='rutina'||x.kind==='habito')return `edit('routine','${x.id}')`;if(x.kind==='meta')return `edit('goal','${x.id}')`;return `showExt(${i})`}
+
+// ── Vista Calendario ──
+let calMode='mes',calCursor=null,calSel=null;
+function calShift(n){calCursor=calCursor||E.today();if(calMode==='mes'){const d=E.date(calCursor);calCursor=E.iso(new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth()+n,1,12)))}else calCursor=E.shift(calCursor,n*(calMode==='semana'?7:14));draw()}
+function calToday(){calCursor=E.today();calSel=E.today();draw()}
+function calPick(d){calSel=d;draw();setTimeout(()=>{const el=$('cal-day');if(el)el.scrollIntoView({behavior:'smooth',block:'nearest'})},30)}
+function calChip(x){return `<button class="cal-chip k-${x.kind} ${x.done?'done':''}" onclick="event.stopPropagation();${itemClick(x)}" title="${esc(x.title)}">${x.time?`<i>${esc(x.time)}</i>`:''}${esc(x.title)}</button>`}
+function agendaRow(x){const k=KIND[x.kind]||['•',''];return `<div class="ag-row k-${x.kind} ${x.done?'done':''}" onclick="${itemClick(x)}"><span class="ag-time">${x.allDay||!x.time?'Todo el día':esc(fmtTime(x.time))+(x.end?'<small>'+esc(fmtTime(x.end))+'</small>':'')}</span><span class="ag-bar"></span><div class="ag-main"><b>${esc(x.title)}</b><small>${k[0]} ${k[1]}${x.kind==='reunion'?' · '+esc(x.cal):x.area?' · '+esc(ae(x.area))+' '+esc(x.area):''}${x.location?' · 📍 '+esc(x.location):''} ${roleEmoji(x.role)}</small></div></div>`}
+function calendarView(){calCache=[];calCursor=calCursor||E.today();calSel=calSel||E.today();refreshExt(false);const t=E.today();let grid='',title='',range=[];
+if(calMode==='mes'){const c=E.date(calCursor),y=c.getUTCFullYear(),m=c.getUTCMonth(),first=E.iso(new Date(Date.UTC(y,m,1,12))),last=E.iso(new Date(Date.UTC(y,m+1,0,12))),start=E.weekStart(first),end=E.shift(E.weekStart(last),6);
+ title=new Intl.DateTimeFormat('es-CO',{timeZone:'UTC',month:'long',year:'numeric'}).format(c);title=title.charAt(0).toUpperCase()+title.slice(1);const items=calItems(start,end,{month:true});
+ grid=`<div class="cal-grid"><div class="cal-head">${['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'].map(x=>`<span>${x}</span>`).join('')}</div><div class="cal-days">`;
+ for(let d=start;d<=end;d=E.shift(d,1)){const its=items.filter(x=>x.date===d);grid+=`<div class="cal-cell ${d.slice(0,7)!==first.slice(0,7)?'out':''} ${d===t?'today':''} ${d===calSel?'sel':''}" onclick="calPick('${d}')"><span class="cal-num">${+d.slice(8)}</span>${its.slice(0,3).map(calChip).join('')}${its.length>3?`<span class="cal-more">+${its.length-3} más</span>`:''}</div>`}
+ grid+='</div></div>';range=[calSel,calSel]}
+else if(calMode==='semana'){const ws=E.weekStart(calCursor),we=E.shift(ws,6);title='Semana del '+format(ws)+' al '+format(we);const items=calItems(ws,we);
+ grid=`<div class="cal-week">${Array.from({length:7},(_,i)=>{const d=E.shift(ws,i),its=items.filter(x=>x.date===d);return `<div class="cw-col ${d===t?'today':''}"><button class="cw-head" onclick="calPick('${d}')"><b>${['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'][i]}</b> ${+d.slice(8)}</button>${its.map(calChip).join('')||'<span class="cal-empty">—</span>'}<button class="cw-add" onclick="editEvent(null,{date:'${d}'})">＋</button></div>`}).join('')}</div>`;range=[calSel,calSel]}
+else{const from=calCursor,to=E.shift(calCursor,13);title='Del '+format(from)+' al '+format(to);const items=calItems(from,to,{withDone:false});let h='',cur='';items.forEach(x=>{if(x.date!==cur){cur=x.date;h+=`<div class="ag-date ${x.date===t?'today':''}">${esc(dayLabel(x.date))}</div>`}h+=agendaRow(x)});grid=`<div class="panel">${h||empty('Nada programado.','Crea un evento o conecta tus calendarios del iPhone en Ajustes.')}</div>`}
+const dayItems=calMode==='agenda'?'':(()=>{const its=calItems(calSel,calSel,{withDone:true});return panel(`${dayLabel(calSel)} · ${format(calSel)}`,its.map(agendaRow).join('')||empty('Día libre.','Toca ＋ Evento para programar algo.'),btn('＋ Evento',`editEvent(null,{date:'${calSel}'})`,'ghost'))})();
+return heading('Tu agenda, <em>en un solo lugar.</em>','Eventos, reuniones del iPhone, tareas con fecha, rutinas y metas.',`${btn('＋ Evento',`editEvent(null,{date:'${calSel}'})`,'primary')}`)+scopes()+
+`<div class="cal-toolbar"><div class="inline-flex">${btn('‹','calShift(-1)')}${btn('Hoy','calToday()')}${btn('›','calShift(1)')}<b class="cal-title">${esc(title)}</b></div><div class="seg">${[['mes','Mes'],['semana','Semana'],['agenda','Agenda']].map(([k,l])=>`<button class="${calMode===k?'selected':''}" onclick="calMode='${k}';draw()">${l}</button>`).join('')}</div></div>`+
+`<div class="cal-legend"><span class="k-evento">Evento</span><span class="k-reunion">iPhone</span><span class="k-tarea">Tarea</span><span class="k-rutina">Rutina</span><span class="k-meta">Meta</span>${!extList().length?`<button class="ghost" onclick="go('ajustes')">🍎 Conectar calendarios del iPhone</button>`:extError?`<span class="small" style="color:var(--red)">⚠️ ${esc(extError)}</span>`:''}</div>`+
+grid+`<div id="cal-day">${dayItems}</div>`}
+
+// ── Hábitos y cumplimiento ──
+let habWeek=0;
+function weekDays(offset=0){const ws=E.shift(E.weekStart(),offset*7);return Array.from({length:7},(_,i)=>E.shift(ws,i))}
+function habitTarget(r,days){return r.freq==='flex'?Math.min(r.weeklyTarget,days.filter(d=>d>=r.start).length):days.filter(d=>d>=r.start&&E.dueOn({...r,paused:false},d)).length}
+function habitDone(r,days){return days.filter(d=>state.logs[E.key(r,d)]?.done).length}
+function weekPct(list,offset){const days=weekDays(offset);let t=0,d=0;list.forEach(r=>{if(r.start>days[6])return;const tg=habitTarget(r,days);if(!tg)return;t+=tg;d+=Math.min(tg,habitDone(r,days))});return t?Math.round(d/t*100):null}
+function habitList(){return state.routines.filter(active).filter(scoped).filter(r=>!r.paused)}
+function streaks(list){const ids=new Set(list.map(r=>r.id)),days=new Set();Object.keys(state.logs).forEach(k=>{const i=k.lastIndexOf('@');if(ids.has(k.slice(0,i))&&state.logs[k].done)days.add(k.slice(i+1))});
+const t=E.today();let cur=0,d=days.has(t)?t:E.shift(t,-1);while(days.has(d)){cur++;d=E.shift(d,-1)}
+let best=0,run=0;for(let i=400;i>=0;i--){if(days.has(E.shift(t,-i))){run++;best=Math.max(best,run)}else run=0}return{cur,best,days}}
+function habitAlerts(list){const t=E.today(),y=E.shift(t,-1),y2=E.shift(t,-2),wd=weekDays(0),left=wd.filter(d=>d>=t).length,out=[];
+list.forEach(r=>{if(r.start>t)return;const L=d=>!!state.logs[E.key(r,d)]?.done;
+ if(r.freq==='flex'){const done=habitDone(r,wd),need=habitTarget(r,wd)-done;if(need>left&&need>0)out.push({r,lvl:'risk',txt:`Te faltan ${need} y quedan ${left} ${left===1?'día':'días'}: esta semana ya no alcanza la meta, pero cada día suma.`});else if(need>0&&need===left&&!L(t))out.push({r,lvl:'risk',txt:`Necesitas hacerlo todos los días que quedan (${need}).`});else if(r.weeklyTarget>=5&&r.start<=y2&&!L(y)&&!L(y2)&&!L(t))out.push({r,lvl:'miss',txt:'Dos días sin hacerlo. Hoy no lo dejes pasar.'})}
+ else{const prev=E.occurrences({...r,paused:false},E.shift(t,-40),y).slice(-2);if(prev.length===2&&prev.every(d=>!L(d)))out.push({r,lvl:'miss',txt:'Las dos últimas veces no se cumplió.'})}});return out}
+function moveRoutine(id,dir){const vis=state.routines.filter(active).filter(scoped).map(r=>r.id),i=vis.indexOf(id),j=i+dir;if(i<0||j<0||j>=vis.length)return;const a=state.routines.findIndex(r=>r.id===id),b=state.routines.findIndex(r=>r.id===vis[j]);const tmp=state.routines[a];state.routines[a]=state.routines[b];state.routines[b]=tmp;persist();draw()}
+function togglePause(id){const r=state.routines.find(r=>r.id===id);r.paused=!r.paused;persist();draw();toast(r.paused?'Pausada. Su historial se conserva.':'Reanudada')}
+function routinesView(){const t=E.today(),all=state.routines.filter(active).filter(scoped),list=all.filter(r=>!r.paused),days=weekDays(habWeek),st=streaks(list),wp=weekPct(list,0),m4=(()=>{const v=[0,-1,-2,-3].map(o=>weekPct(list,o)).filter(x=>x!==null);return v.length?Math.round(v.reduce((a,b)=>a+b,0)/v.length):null})();
+const alerts=habitAlerts(list),todayR=dueRoutines(),doneToday=todayR.filter(o=>o.done).length;
+const stats=`<div class="stats">${[[st.cur+' '+(st.cur===1?'día':'días'),'🔥 Racha actual','días seguidos con al menos un hábito'],[st.best+' '+(st.best===1?'día':'días'),'🏆 Mejor racha','últimos 12 meses'],[wp===null?'—':wp+'%','📅 Esta semana','de tu meta semanal'],[m4===null?'—':m4+'%','🗓️ Últimas 4 semanas','promedio']].map(([n,l,s])=>`<div class="stat"><small>${l}</small><b>${n}</b><span>${s}</span></div>`).join('')}</div>`;
+const alertHtml=alerts.length?`<div class="hint warn"><b>⚠️ Nunca falles dos veces.</b> “Perder una vez es un accidente; perder dos veces es el inicio de un nuevo hábito.”${alerts.map(a=>`<div class="alert-row"><b>${esc(a.r.title)}</b> · ${esc(a.txt)}</div>`).join('')}</div>`:'';
+const todayList=todayR.map(o=>{const r=o.r,fx=r.freq==='flex'?` · ${habitDone(r,weekDays(0))}/${r.weeklyTarget} sem.`:'';return `<div class="hab-today ${o.done?'done':''}"><button class="check ${o.done?'done':''}" onclick="toggleRoutine('${r.id}','${o.day}')" aria-label="${o.done?'Desmarcar':'Completar'} ${esc(r.title)}">${o.done?'✓':''}</button><span class="ht-title">${esc(r.title)}</span><small>${esc(fmtTime(r.time))}${fx}</small></div>`}).join('');
+// cuadrícula semanal
+const groups={};all.filter(r=>!r.paused).forEach(r=>{(groups[r.area]=groups[r.area]||[]).push(r)});
+let gridRows='';Object.entries(groups).forEach(([area,rs])=>{gridRows+=`<tr class="grp"><td colspan="9">${esc(ae(area))} ${esc(area)}</td></tr>`;rs.forEach(r=>{const tg=habitTarget(r,days),dn=habitDone(r,days);gridRows+=`<tr><td class="hn"><span>${esc(r.title)}</span><small>${r.freq==='flex'?r.weeklyTarget+'×/sem':esc(freqText(r))}</small></td>${days.map(d=>{const done=!!state.logs[E.key(r,d)]?.done,due=r.freq==='flex'||E.dueOn({...r,paused:false},d),can=d<=t&&d>=r.start&&(due||done);const cls=done?'on':d>t||d<r.start?'fut':due?(r.freq!=='flex'&&d<t?'miss':'open'):'off';return `<td><button class="hc ${cls}" ${can?`onclick="toggleRoutine('${r.id}','${d}')"`:'disabled'} aria-label="${esc(r.title)} ${d}">${done?'✓':cls==='miss'?'✕':''}</button></td>`}).join('')}<td class="hm ${tg&&dn>=tg?'ok':''}">${dn}/${tg||'—'}</td></tr>`})});
+const wkTitle=habWeek===0?'Esta semana':habWeek===-1?'Semana pasada':'Semana del '+format(days[0]);
+const grid=`<div class="hab-nav">${btn('‹',`habWeek--;draw()`)}<b>${wkTitle}</b>${btn('›',`habWeek=Math.min(0,habWeek+1);draw()`,habWeek===0?'disabled-btn':'')}</div><div class="hab-scroll"><table class="hab-grid"><thead><tr><th></th>${days.map((d,i)=>`<th class="${d===t?'today':''}">${'LMXJVSD'[i]}<small>${+d.slice(8)}</small></th>`).join('')}<th>Meta</th></tr></thead><tbody>${gridRows||'<tr><td colspan="9">'+empty('Aún no tienes hábitos.','Crea el primero con ＋ Nuevo hábito.')+'</td></tr>'}</tbody></table></div><p class="small muted">Toca un cuadro para marcar o desmarcar ese día. ✓ cumplido · ✕ no cumplido · gris: no aplica.</p>`;
+// cumplimiento por área
+const byArea=Object.entries(groups).map(([area,rs])=>{const w=weekPct(rs,0),p=[0,-1,-2,-3].map(o=>weekPct(rs,o)).filter(x=>x!==null),avg=p.length?Math.round(p.reduce((a,b)=>a+b,0)/p.length):null;return `<div class="bar-row"><span>${esc(ae(area))} ${esc(area)}</span><div class="bar"><i style="width:${w||0}%"></i></div><b>${w===null?'—':w+'%'}</b><small>4 sem: ${avg===null?'—':avg+'%'}</small></div>`}).join('');
+const byRole=roles().map(ro=>{const rs=list.filter(r=>roleOf(r)===ro.id);if(!rs.length)return '';const w=weekPct(rs,0);return `<div class="bar-row"><span>${esc(ro.emoji)} ${esc(ro.name)}</span><div class="bar lav"><i style="width:${w||0}%"></i></div><b>${w===null?'—':w+'%'}</b><small>${rs.length} hábitos</small></div>`}).join('');
+// historial 12 semanas
+const hist=list.map(r=>`<div class="hist-row"><span title="${esc(r.title)}">${esc(r.title)}</span><div class="hist">${Array.from({length:12},(_,i)=>{const o=i-11,ds=weekDays(o);if(r.start>ds[6])return '<i class="na"></i>';const tg=habitTarget(r,ds),dn=habitDone(r,ds),p=tg?dn/tg:0;return `<i class="${p>=1?'g3':p>=.7?'g2':p>0?'g1':'g0'}" title="Semana del ${format(ds[0])}: ${dn}/${tg}"></i>`}).join('')}</div></div>`).join('');
+// lista compacta
+const shown=all.filter(r=>subfilter==='paused'?r.paused:!r.paused);
+const listHtml=shown.map(r=>{const next=nextDate(r);return `<div class="hab-row"><div class="hab-move"><button onclick="moveRoutine('${r.id}',-1)" aria-label="Subir">↑</button><button onclick="moveRoutine('${r.id}',1)" aria-label="Bajar">↓</button></div><div class="hab-main"><b>${esc(r.title)}</b><small>${tag(r.area)} ${esc(freqText(r))} · ${esc(fmtTime(r.time))} · ${roleEmoji(roleOf(r))}${next&&!r.paused?' · Próxima: '+esc(dayLabel(next)):''}</small></div><div class="hab-act">${btn(r.paused?'Reanudar':'Pausar',`togglePause('${r.id}')`,'ghost')}${btn('Editar',`edit('routine','${r.id}')`,'ghost')}</div></div>`}).join('');
+const overdue=dueRoutines(E.shift(t,-60),E.shift(t,-1)).filter(x=>!x.done&&!['daily','weekdays'].includes(x.r.freq));
+return heading('La constancia <em>también se gestiona.</em>','Tus hábitos personales y las rutinas de tus empresas, con su cumplimiento.',btn('＋ Nuevo hábito',"edit('routine',null,{freq:'flex',weeklyTarget:5})",'primary'))+scopes()+stats+alertHtml+
+`<div class="dashboard-grid"><div>${panel('Hoy',todayList||empty('Nada pendiente hoy.','Tus hábitos aparecen aquí el día que tocan.'),`<small>${doneToday}/${todayR.length} hechos</small>`)}${panel('Seguimiento semanal',grid)}</div><div>${panel('Cumplimiento',(byArea||empty('Sin datos aún.','Marca tus hábitos y aquí verás tu avance.'))+(byRole?`<div class="section-label">Por rol</div>${byRole}`:''))}${panel('Últimas 12 semanas',hist?`<div class="hist-legend"><i class="g0"></i>0 <i class="g1"></i>algo <i class="g2"></i>70% <i class="g3"></i>meta</div>${hist}`:empty('Sin historial aún.',''))}</div></div>`+
+(overdue.length?`<details class="panel"><summary><b>${overdue.length} rutinas periódicas pendientes</b> · últimos 60 días</summary>${overdue.map(o=>routineRow(o.r,o.day)).join('')}</details>`:'')+
+panel('Todos tus hábitos y rutinas',`<div class="toolbar">${btn('Activas',"subfilter='active';draw()",subfilter!=='paused'?'selected':'')}${btn('Pausadas',"subfilter='paused';draw()",subfilter==='paused'?'selected':'')}</div>${listHtml||empty(subfilter==='paused'?'Sin rutinas pausadas.':'Empieza pequeño. Hazlo repetible.','')}`,btn('＋ Nuevo',"edit('routine',null,{freq:'flex',weeklyTarget:5})",'ghost'))+
+`<details class="panel"><summary><b>Plantillas sugeridas</b> para rutinas de empresa</summary><div class="template-grid">${templates.map((tp,i)=>`<div class="template"><small>${tp.area}</small><b>${tp.title}</b><p>${freqText({...tp,weekday:tp.weekday||1})}</p>${btn('Revisar y adoptar',`adoptTemplate(${i})`)}</div>`).join('')}</div></details>`}
+
+// ── Plan del día ──
+function habitDur(r){return /ejerc|gym|entren|correr|trote|deport|pesas|crossfit|pilates|cabalg|lazo/i.test(r.title)?60:/lectura|leer/i.test(r.title)?30:15}
+function dayPlan(){const t=E.today(),now=nowMin(),fixed=[],busy=[];
+calItems(t,t,{withDone:true}).forEach(x=>{if(x.kind==='evento'||x.kind==='reunion'){fixed.push({...x,start:x.time,stop:x.time?(x.end||addMin(x.time,60)):''});if(x.time)busy.push([toMin(x.time),toMin(x.end||addMin(x.time,60))])}else if(x.kind==='meta')fixed.push({...x,start:''})});
+dueRoutines().forEach(o=>{const r=o.r,s=r.time||'';fixed.push({kind:'habito',id:r.id,title:r.title,start:s,stop:s?addMin(s,habitDur(r)):'',role:roleOf(r),done:o.done,area:r.area,day:o.day,flex:r.freq==='flex'});if(s&&!o.done)busy.push([toMin(s),toMin(s)+habitDur(r)]);});
+const tasks=state.tasks.filter(active).filter(scoped).filter(x=>x.status!=='done'&&((x.due&&x.due<=t)||(x.focus&&!x.due))).sort((a,b)=>((b.due===t&&b.time?1:0)-(a.due===t&&a.time?1:0))||(b.focus-a.focus)||(a.due||'9').localeCompare(b.due||'9'));
+const doneToday=state.tasks.filter(active).filter(scoped).filter(x=>x.status==='done'&&bDay(x.completedAt)===t&&(x.focus||x.due===t));
+const windows=[[8*60,12*60],[14*60,18*60]],planned=[],unplaced=[];let cursor=Math.ceil(Math.max(now,0)/15)*15;
+const free=(s,e)=>!busy.some(([a,b])=>s<b&&e>a);
+const findSlot=(dur,from)=>{for(const [ws,we] of windows){for(let x=Math.max(ws,Math.ceil(from/15)*15);x+dur<=we;x+=15)if(free(x,x+dur))return x}return null};
+tasks.forEach(tk=>{const dur=tk.focus?60:30,base={kind:'tarea',id:tk.id,title:tk.title,role:roleOf(tk),focus:tk.focus,over:tk.due&&tk.due<t,area:tk.area};
+ if(tk.due===t&&tk.time){const s0=toMin(tk.time);if(s0>=now-15&&free(s0,s0+dur)){busy.push([s0,s0+dur]);planned.push({...base,start:tk.time,stop:fromMin(s0+dur)});return}
+  const x=findSlot(dur,Math.max(cursor,s0));if(x!==null){busy.push([x,x+dur]);planned.push({...base,start:fromMin(x),stop:fromMin(x+dur),suggested:true,was:tk.time})}else unplaced.push(tk);return}
+ const x=findSlot(dur,cursor);if(x!==null){busy.push([x,x+dur]);planned.push({...base,start:fromMin(x),stop:fromMin(x+dur),suggested:true})}else unplaced.push(tk)});
+doneToday.forEach(tk=>planned.push({kind:'tarea',id:tk.id,title:tk.title,start:'',role:roleOf(tk),done:true,area:tk.area}));
+const all=[...fixed,...planned].sort((a,b)=>(a.start?1:0)-(b.start?1:0)||(a.start||'').localeCompare(b.start||''));
+return{all,unplaced,now}}
+function planRow(x,now){const k=KIND[x.kind]||['•',''],past=x.start&&toMin(x.stop||x.start)<now;let act='';
+if(x.kind==='tarea')act=`<button class="check ${x.done?'done':''}" onclick="event.stopPropagation();toggleTask('${x.id}')" aria-label="Completar">${x.done?'✓':''}</button>`;
+else if(x.kind==='habito')act=`<button class="check ${x.done?'done':''}" onclick="event.stopPropagation();toggleRoutine('${x.id}','${x.day}')" aria-label="Completar">${x.done?'✓':''}</button>`;
+const label=x.kind==='tarea'?(x.focus?'⭐ Prioridad':x.over?'⏳ Vencida':'✅ Compromiso')+(x.was?' · era a las '+fmtTime(x.was)+', propuesta':x.suggested?' · propuesta':''):k[0]+' '+k[1]+(x.kind==='reunion'?' · '+x.cal:'');
+return `<div class="tl-row k-${x.kind} ${x.done?'done':''} ${past&&!x.done?'past':''}" onclick="${itemClick(x)}"><span class="tl-time">${x.start?esc(x.start):'—'}</span><span class="tl-dot"></span><div class="tl-main"><b>${esc(x.title)}</b><small>${esc(label)}${x.location?' · 📍 '+esc(x.location):''} · ${roleEmoji(x.role)}</small></div>${act}</div>`}
+function planHtml(p){let h='',nowPut=false;const timed=p.all.filter(x=>x.start),untimed=p.all.filter(x=>!x.start);
+untimed.forEach(x=>h+=planRow(x,p.now));
+timed.forEach(x=>{if(!nowPut&&toMin(x.start)>p.now){h+=`<div class="tl-now"><span>${fromMin(p.now)}</span>Ahora</div>`;nowPut=true}h+=planRow(x,p.now)});
+if(!nowPut&&timed.length)h+=`<div class="tl-now"><span>${fromMin(p.now)}</span>Ahora</div>`;
+if(p.unplaced.length)h+=`<div class="hint neutral" style="margin-top:12px"><b>Sin espacio hoy (${p.unplaced.length}):</b> ${p.unplaced.slice(0,5).map(x=>`<a href="#" onclick="event.preventDefault();edit('task','${x.id}')">${esc(x.title)}</a>`).join(' · ')}. Reprográmalas, delégalas o quita una prioridad.</div>`;
+return h||empty('Tu día está libre.','Agrega eventos, elige prioridades o marca tus hábitos.')}
+function roleBalance(p){const t=E.today(),ws=weekDays(0);
+return roles().map(ro=>{const today=p.all.filter(x=>x.role===ro.id),doneT=today.filter(x=>x.done).length;
+ const week=state.tasks.filter(x=>x.status==='done'&&bDay(x.completedAt)>=ws[0]&&roleOf(x)===ro.id).length+state.routines.filter(r=>roleOf(r)===ro.id).reduce((n,r)=>n+habitDone(r,ws),0)+(state.events||[]).filter(ev=>roleOf(ev)===ro.id).reduce((n,ev)=>n+ws.filter(d=>d<=t&&evOccurs(ev,d)).length,0);
+ const sug=ROLE_SUGGEST[ro.id]||{t:'Un momento para este rol',time:'19:00',dur:30};
+ const area=ro.id==='vaquera'&&areaNames().includes('Lazo')?'Lazo':ro.id==='empresaria'?(areaCfg().find(a=>a.kind==='empresa')||{name:'Personal'}).name:'Personal';
+ return `<div class="role-row ${today.length?'ok':''}"><span class="role-emo">${esc(ro.emoji)}</span><div class="role-main"><b>${esc(ro.name)}</b><small>${today.length?`Hoy: ${today.length} ${today.length===1?'momento':'momentos'}${doneT?' · '+doneT+' hecho'+(doneT>1?'s':''):''}`:'Sin espacio hoy'} · Semana: ${week}</small>${today.length?'':`<small class="role-sug">💡 ${esc(sug.t)}</small>`}</div>${today.length?'<span class="role-ok">✓</span>':btn('＋ Agendar',`editEvent(null,{date:'${t}',time:'${sug.time}',end:'${addMin(sug.time,sug.dur)}',title:'${esc(sug.t).replace(/'/g,'')}',role:'${ro.id}',area:'${esc(area)}'})`,'ghost')}</div>`}).join('')}
+function coachTips(p){const t=E.today(),tips=[],tasks=state.tasks.filter(active).filter(scoped).filter(x=>x.status!=='done'),over=tasks.filter(x=>x.due&&x.due<t).sort((a,b)=>a.due.localeCompare(b.due)),focus=tasks.filter(x=>x.focus),dueToday=tasks.filter(x=>x.due===t);
+const list=habitList(),alerts=habitAlerts(list),st=streaks(list),meet=p.all.filter(x=>x.kind==='reunion'||x.kind==='evento').length,dow=E.date(t).getUTCDay(),hour=Math.floor(nowMin()/60);
+if(over.length)tips.push({p:9,i:'⏳',t:`Tienes ${over.length} ${over.length===1?'tarea vencida':'tareas vencidas'}. Empieza por «${over[0].title}»: ciérrala, reprográmala o delégala antes de las 10 a. m.`,a:`go('metas');subfilter='overdue';draw()`,al:'Ver vencidas'});
+if(!focus.length&&tasks.length)tips.push({p:8,i:'⭐',t:'Aún no eliges tus tres prioridades. Elige lo que mueve tus metas y le cumple a tus socios; lo demás espera.',a:`go('metas')`,al:'Elegir'});
+alerts.filter(a=>a.lvl==='miss').slice(0,1).forEach(a=>tips.push({p:8,i:'🔁',t:`«${a.r.title}»: ${a.txt} Nunca falles dos veces.`,a:`go('rutinas')`,al:'Ver hábitos'}));
+alerts.filter(a=>a.lvl==='risk').slice(0,1).forEach(a=>tips.push({p:6,i:'📈',t:`«${a.r.title}»: ${a.txt}`,a:`go('rutinas')`,al:'Ver'}));
+if(p.unplaced.length)tips.push({p:7,i:'🧩',t:`Hoy no te cabe todo: ${p.unplaced.length} ${p.unplaced.length===1?'tarea queda':'tareas quedan'} sin espacio. Decide qué se mueve a mañana para no cargar culpas.`});
+if(dueToday.length+focus.length>6)tips.push({p:6,i:'🎯',t:'Día cargado. Haz primero lo más difícil (tu “rana”) y agrupa llamadas y correos en un solo bloque.'});
+if(meet>=4)tips.push({p:5,i:'🗣️',t:`Tienes ${meet} reuniones o eventos. Deja 10 minutos entre una y otra y anota acuerdos en Bandeja al salir.`});
+state.goals.filter(active).filter(scoped).forEach(g=>{if(g.due&&g.due>=t&&g.due<=E.shift(t,3)&&E.progress(g)<80)tips.push({p:7,i:'🏁',t:`«${g.title}» vence ${dayLabel(g.due).toLowerCase()} y va en ${E.progress(g)}%. Define hoy el siguiente paso concreto.`,a:`edit('goal','${g.id}')`,al:'Actualizar'});else if(!state.tasks.some(x=>x.goal===g.id&&x.status!=='done'&&active(x)))tips.push({p:4,i:'🧭',t:`La meta «${g.title}» no tiene un siguiente paso. Sin acción, una meta es solo un deseo.`,a:`edit('task',null,{goal:'${g.id}',area:'${esc(g.area)}'})`,al:'Crear paso'})});
+const missingRoles=roles().filter(ro=>!p.all.some(x=>x.role===ro.id));if(missingRoles.length&&missingRoles.length<roles().length)tips.push({p:5,i:'⚖️',t:`Hoy no hay espacio para: ${missingRoles.map(r=>r.emoji+' '+r.name).join(', ')}. Un bloque corto también cuenta.`});
+if(dow===0||dow===5&&hour>=15)tips.push({p:6,i:'🗒️',t:'Momento de tu revisión semanal: 15 minutos para cerrar pendientes, revisar metas y agendar lo importante de la próxima semana (familia, socios y entrenos).'});
+const inbox=state.notes.filter(active).filter(n=>n.inbox).length;if(inbox>=5)tips.push({p:4,i:'📥',t:`Tienes ${inbox} capturas sin organizar. Dedica 10 minutos a darles lugar.`,a:`go('bandeja')`,al:'Organizar'});
+if(st.cur>=3)tips.push({p:3,i:'🔥',t:`Llevas ${st.cur} días seguidos cumpliendo hábitos. Lo que repites te define.`});
+if(!tips.length)tips.push({p:1,i:'✨',t:'Todo al día. Aprovecha para adelantar algo de tu meta más importante o regálate un rato para ti.'});
+return tips.sort((a,b)=>b.p-a.p).slice(0,4)}
+function greet(){const h=Math.floor(nowMin()/60);return h<12?'Buenos días':h<19?'Buenas tardes':'Buenas noches'}
+function todayView(){calCache=[];refreshExt(false);const t=E.today(),p=dayPlan(),tips=coachTips(p);
+const tasks=state.tasks.filter(active).filter(scoped).filter(x=>x.status!=='done'),focuses=tasks.filter(x=>x.focus),over=tasks.filter(x=>x.due&&x.due<t),todayR=dueRoutines(),done=todayR.filter(o=>o.done).length,meets=p.all.filter(x=>x.kind==='reunion'||x.kind==='evento').length;
+const upcoming=calItems(E.shift(t,1),E.shift(t,7)).slice(0,8);
+const pinned=state.notes.filter(active).filter(scoped).filter(n=>n.pinned),goals=state.goals.filter(active).filter(scoped);
+const hero=`<section class="hero compact"><div><div class="eyebrow">${esc(greet().toUpperCase())}, ANA · ${esc(longDate().toUpperCase())}</div><h2>${focuses.length?`Tu foco hoy es <span>${esc(focuses[0].title)}</span>`:`<span>${esc(tips[0].i)}</span> ${esc(tips[0].t)}`}</h2></div><div class="hero-art" aria-hidden="true"><strong>1%</strong><small>CADA DÍA</small></div></section>`;
+const stats=`<div class="stats">${[[over.length,'⏳ Vencidas','atender',"go('metas');subfilter='overdue';draw()"],[todayR.length-done,'🔁 Hábitos por hacer',done+' hechos',"go('rutinas')"],[meets,'📅 Eventos hoy','ver agenda',"go('calendario')"],[state.notes.filter(active).filter(scoped).filter(n=>n.inbox).length,'📥 Capturas','organizar',"go('bandeja')"]].map(([n,l,s,a])=>`<button class="stat" onclick="${a}"><small>${l}</small><b>${n}</b><span>${s} ↗</span></button>`).join('')}</div>`;
+const left=panel('Plan del día',planHtml(p),btn('＋ Evento',`editEvent(null,{date:'${t}'})`,'ghost'))+
+ panel('Tus tres prioridades',focuses.map(taskRow).join('')||empty('Elige lo que mueve tus metas.','Marca con ☆ hasta tres tareas para enfocarte hoy.',btn('Elegir prioridades',"go('metas')")),btn('＋ Tarea',"edit('task')",'ghost'));
+const right=panel('Consejos para hoy',tips.map(x=>`<div class="tip"><span>${x.i}</span><p>${esc(x.t)}${x.a?` <a href="#" onclick="event.preventDefault();${x.a}">${esc(x.al)} ↗</a>`:''}</p></div>`).join(''))+
+ panel('Tus roles hoy',roleBalance(p),`<small><a href="#" onclick="event.preventDefault();go('ajustes')">Editar</a></small>`)+
+ panel('Sácalo de tu cabeza.',`<button class="quick-input" onclick="edit('note')">＋ ¿Qué necesitas recordar?</button>`)+
+ panel('Próximos 7 días',upcoming.length?upcoming.map(x=>`<div class="mini-row" onclick="${itemClick(x)}"><span>${esc(dayLabel(x.date))}${x.time?' · '+esc(x.time):''}</span><b>${(KIND[x.kind]||['•'])[0]} ${esc(x.title)}</b></div>`).join(''):empty('Semana despejada.',''),btn('Agenda ↗',"go('calendario')",'ghost'))+
+ panel('Metas en movimiento',goals.length?goals.slice(0,4).map(g=>`<div class="goal-mini" onclick="edit('goal','${g.id}')"><b>${esc(g.title)}</b><div class="progress"><span style="width:${E.progress(g)}%"></span></div><small>${E.progress(g)}%${g.due?' · '+esc(dayLabel(g.due)):''}</small></div>`).join(''):empty('Define tu próxima meta.','',btn('Crear meta',"edit('goal')")))+
+ (pinned.length?panel('A la mano',pinned.slice(0,8).map(n=>`<div class="note-mini" onclick="edit('note','${n.id}',null,true)"><span>${esc(ae(n.area))}</span><b>${esc(n.title)}</b><small>${esc(n.area)}</small></div>`).join(''),btn('Memoria ↗',"go('memoria')",'ghost')):'');
+return heading('Tu día, <em>con intención.</em>','Lo que importa hoy para ti, tu familia, tus socios y tu cuerpo.',`${btn('＋ Evento',`editEvent(null,{date:'${t}'})`)}${btn('＋ Capturar',"edit('note')",'primary')}`)+scopes()+hero+stats+`<div class="dashboard-grid"><div>${left}</div><div>${right}</div></div>`}
+
 function toast(text){$('toast').textContent=text;$('toast').classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>$('toast').classList.remove('show'),4500)}
 function go(p){if(page!==p){subfilter='active';query=''}page=p;location.hash=p;draw();window.scrollTo({top:0,behavior:'instant'})}
 window.addEventListener('hashchange',()=>{const p=location.hash.slice(1);if(p!==page){page=p;draw()}});
@@ -292,11 +696,11 @@ function draw(){
  $('nav').innerHTML=navs.map(([p,icon,label],i)=>`<button class="navitem ${page===p?'active':''}" onclick="go('${p}')"><span class="icon">${icon}</span>${label}${p==='bandeja'&&inbox?`<span class="counter">${inbox}</span>`:''}</button>`).join('');
  $('area-nav').innerHTML=['Todas',...areaNames()].map(a=>`<button class="area-button ${scope===a?'active':''}" onclick="filterArea('${a}')">${a==='Todas'?'🌎':ae(a)} ${a==='Todas'?'Todo mi mundo':a}</button>`).join('')+'<button class="area-button" onclick="editArea()">＋ Nueva área</button>';
  $('breadcrumb').textContent='Mi espacio / '+(navs.find(n=>n[0]===page)?.[2]||'Ajustes');
- const views={hoy:todayView,bandeja:inboxView,metas:goalsView,rutinas:routinesView,memoria:memoryView,ajustes:settingsView};
+ const views={hoy:todayView,calendario:calendarView,bandeja:inboxView,metas:goalsView,rutinas:routinesView,memoria:memoryView,ajustes:settingsView};
  $('view').innerHTML=views[page]?views[page]():legacyView();
  if(!storageOK)$('view').insertAdjacentHTML('afterbegin','<div class="backup-warning">No pudimos leer o guardar en este navegador. No reemplazaremos tus datos. Descarga un respaldo desde Ajustes antes de continuar.</div>');
 }
-function todayView(){
+function todayViewOld(){
  const tasks=state.tasks.filter(active).filter(scoped).filter(t=>t.status!=='done');
  const focuses=tasks.filter(t=>t.focus),todayR=dueRoutines(),done=todayR.filter(o=>o.done).length,over=tasks.filter(t=>t.due&&t.due<E.today());
  const scheduled=tasks.filter(t=>t.due&&t.due<=E.today()&&!t.focus).sort((a,b)=>a.due.localeCompare(b.due));
@@ -325,7 +729,7 @@ function goalsView(){const goals=state.goals.filter(active).filter(scoped);let t
 function freqText(r){if(r.freq==='flex')return r.weeklyTarget+' días por semana · tú eliges';if(['quarterly','halfyear','yearly'].includes(r.freq))return E.frequencies[r.freq]+' · día(s) '+r.days.join(', ');if(r.freq==='weekly')return 'Cada '+['domingo','lunes','martes','miércoles','jueves','viernes','sábado'][r.weekday];if(r.freq==='monthly')return 'Día(s) '+r.days.join(', ')+' de cada mes';if(r.freq==='closing')return 'Cierre de mes · vence el '+r.days[0]+' del mes siguiente';return E.frequencies[r.freq]}
 function nextDate(r){if(r.freq==='flex'){const current=E.flexDone(r,state.logs);return current<r.weeklyTarget&&!state.logs[E.key(r,E.today())]?.done?E.today():E.shift(E.weekStart(),7)}return E.occurrences(r,E.today(),E.shift(E.today(),400)).find(d=>!state.logs[E.key(r,d)]?.done)||''}
 const templates=[{title:'Revisar cartera y ventas',area:'Bufalera',freq:'weekly',weekday:1,days:[1],body:'Revisar saldos vencidos, ventas de la semana y definir acciones de cobro.'},{title:'Informe mensual a socios',area:'Bufalera',freq:'closing',days:[10],body:'Preparar el informe del mes cerrado. Fecha límite: día 10 del mes siguiente.'},{title:'Liquidación de leche',area:'Quesería',freq:'monthly',days:[11,26],body:'Conciliar volúmenes, precios y remisiones antes de liquidar proveedores.'}];
-function routinesView(){const list=state.routines.filter(active).filter(scoped);const past=dueRoutines(E.shift(E.today(),-6),E.today()),pastDone=past.filter(x=>x.done).length;const overdue=dueRoutines(E.shift(E.today(),-60),E.shift(E.today(),-1)).filter(x=>!x.done&&!['daily','weekdays'].includes(x.r.freq));const shown=list.filter(r=>subfilter==='paused'?r.paused:!r.paused);return heading('La constancia <em>también se gestiona.</em>','Hábitos personales y rutinas periódicas para tus empresas.',btn('＋ Nueva rutina',"edit('routine')",'primary'))+scopes()+`<div class="summary-row"><span><b>${pastDone}/${past.length}</b> ejecuciones con fecha fija · últimos 7 días</span><span><b>${past.length?Math.round(pastDone/past.length*100)+'%':'—'}</b> cumplimiento</span><span>Zona horaria: Colombia</span></div><div class="toolbar">${btn('Activas',"subfilter='active';draw()",subfilter!=='paused'?'selected':'')}${btn('Pausadas',"subfilter='paused';draw()",subfilter==='paused'?'selected':'')}</div>`+
+function routinesViewOld(){const list=state.routines.filter(active).filter(scoped);const past=dueRoutines(E.shift(E.today(),-6),E.today()),pastDone=past.filter(x=>x.done).length;const overdue=dueRoutines(E.shift(E.today(),-60),E.shift(E.today(),-1)).filter(x=>!x.done&&!['daily','weekdays'].includes(x.r.freq));const shown=list.filter(r=>subfilter==='paused'?r.paused:!r.paused);return heading('La constancia <em>también se gestiona.</em>','Hábitos personales y rutinas periódicas para tus empresas.',btn('＋ Nueva rutina',"edit('routine')",'primary'))+scopes()+`<div class="summary-row"><span><b>${pastDone}/${past.length}</b> ejecuciones con fecha fija · últimos 7 días</span><span><b>${past.length?Math.round(pastDone/past.length*100)+'%':'—'}</b> cumplimiento</span><span>Zona horaria: Colombia</span></div><div class="toolbar">${btn('Activas',"subfilter='active';draw()",subfilter!=='paused'?'selected':'')}${btn('Pausadas',"subfilter='paused';draw()",subfilter==='paused'?'selected':'')}</div>`+
  (overdue.length?`<details class="panel"><summary><b>${overdue.length} ejecuciones pendientes</b> · últimos 60 días</summary><p class="small muted">Completa cada fecha por separado. Las ejecuciones nuevas no borran las pendientes.</p>${overdue.map(o=>routineRow(o.r,o.day)).join('')}</details>`:'')+
  (shown.map(r=>{const dates=Array.from({length:7},(_,i)=>E.shift(E.today(),i-6)),next=nextDate(r);return `<article class="routine-card"><div><h3>${esc(r.title)} ${r.paused?'<span class="tag">Pausada</span>':''}</h3><div class="item-meta">${tag(r.area)}<span>${esc(freqText(r))}</span></div><div class="details">${esc(r.owner||'Ana')} · ${esc(r.time)}${r.freq==='flex'?' · '+E.flexDone(r,state.logs)+'/'+r.weeklyTarget+' días esta semana':''}${r.goal?' · ◎ '+esc(titleFor(r.goal)):''}<br>${next?'Próxima: '+format(next):'Sin ejecución pendiente'}</div></div><div><div class="week-dots">${dates.map(d=>{const scheduled=r.freq!=='flex'&&E.dueOn(r,d),done=!!state.logs[E.key(r,d)]?.done;return `<div class="week-dot ${done?'success':scheduled&&d<E.today()?'miss':''}" title="${d}: ${done?'completada':scheduled?'programada':'no programada'}">${['D','L','M','M','J','V','S'][E.date(d).getUTCDay()]}<strong>${done?'✓':scheduled?'○':'·'}</strong></div>`}).join('')}</div><div class="small muted" style="font-size:9px;margin-top:7px">✓ Hecho · ○ Programado · · Sin ejecución</div></div><div class="routine-actions">${!r.paused&&E.dueOn(r,E.today())&&(r.freq!=='flex'||E.flexDone(r,state.logs)<r.weeklyTarget||state.logs[E.key(r,E.today())]?.done)?btn(state.logs[E.key(r,E.today())]?.done?'✓ Hoy':'Marcar hoy',`toggleRoutine('${r.id}','${E.today()}')`,state.logs[E.key(r,E.today())]?.done?'':'primary'):''}${!r.paused?btn('📱 iPhone',`openPhone('routine','${r.id}','${next}')`):''}${btn('Editar',`edit('routine','${r.id}')`,'ghost')}</div></article>`}).join('')||panel('Tu sistema de rutinas',empty(subfilter==='paused'?'Sin rutinas pausadas.':'Empieza pequeño. Hazlo repetible.','Cada fecha tiene su propio registro de cumplimiento.')))+
  `<div class="section-label">Plantillas sugeridas · aún no están activas</div><div class="template-grid">${templates.map((t,i)=>`<div class="template"><small>${t.area}</small><b>${t.title}</b><p>${freqText({...t,weekday:t.weekday||1})}</p>${btn('Revisar y adoptar',`adoptTemplate(${i})`)}</div>`).join('')}</div><div class="hint neutral">En meses cortos, un vencimiento del día 29, 30 o 31 se ajusta al último día del mes. Pausar conserva el historial.</div>`;}
@@ -338,7 +742,7 @@ function edit(type,id=null,prefill=null,memory=false){editType=type;editId=id;co
  let content=`<div class="dialog-head"><h2>${id?'Editar · ':''}${names[type]}</h2><button type="button" aria-label="Cerrar" onclick="closeDialog('editor')">×</button></div><p class="dialog-sub">${type==='note'?'Guarda lo importante. Puedes organizarlo después.':type==='routine'?'Una frecuencia clara y una acción que puedas verificar.':'Conecta esta acción con lo que quieres lograr.'}</p>`+field(type==='note'?'¿Qué necesitas recordar?':type==='goal'?'¿Qué quieres lograr?':'¿Qué vas a hacer?','title',n.title||'','text','required maxlength="240"');
  content+=`<div class="split"><div><label for="f-area">Vida o empresa</label><select name="area" id="f-area">${opts(areaNames(),n.area||(scope!=='Todas'&&scope!=='Empresas'?scope:'Personal'))}</select></div><div>`;
  if(type!=='goal')content+=`<label for="f-goal">Conectar con una meta (opcional)</label><select name="goal" id="f-goal">${opts([['','Sin meta'],...state.goals.filter(active).map(g=>[g.id,g.title])],n.goal||'')}</select>`;
- else content+=field('Fecha objetivo','due',n.due||'','date');content+='</div></div>';
+ else content+=field('Fecha objetivo','due',n.due||'','date');content+='</div></div>';if(type==='task'||type==='routine')content+=roleSelect(n.role||'');
  if(type==='task')content+=`<div class="split"><div>${field('Fecha de compromiso','due',n.due||'','date')}</div><div>${field('Hora del aviso · Colombia','time',n.time||'09:00','time')}</div></div><label for="f-status">Estado</label><select name="status" id="f-status">${opts([['pending','Por hacer'],['doing','En marcha'],['done','Terminado']],n.status||'pending')}</select><label class="checklabel"><input type="checkbox" name="focus" ${n.focus?'checked':''}> Incluir entre mis tres prioridades</label>`;
  if(type==='goal')content+=`<div class="split"><div>${field('Valor de partida','base',n.base??0,'number','required step="any"')}</div><div>${field('Resultado objetivo','target',n.target??100,'number','required step="any" min="0.000001"')}</div></div><div class="split"><div>${field('Valor actual','current',n.current??0,'number','required step="any"')}</div><div>${field('Unidad (ej. clientes, kg, COP, %)','unit',n.unit||'','text','required')}</div></div><div class="hint neutral">El avance se calcula desde el valor de partida hacia el resultado. Completar tareas no cambia esta medida automáticamente.</div>`;
  if(type==='routine')content+=`<label for="f-freq">Frecuencia</label><select id="f-freq" name="freq" onchange="frequencyFields()">${opts(Object.entries(E.frequencies),n.freq||'daily')}</select><div class="split"><div id="weekday-field"><label for="f-weekday">Día de la semana</label><select id="f-weekday" name="weekday">${opts([['1','Lunes'],['2','Martes'],['3','Miércoles'],['4','Jueves'],['5','Viernes'],['6','Sábado'],['0','Domingo']],n.weekday??1)}</select></div><div id="quota-field">${field('Días por semana','weeklyTarget',n.weeklyTarget||3,'number','min="1" max="7"')}</div><div id="days-field">${field('Día(s) del mes · ej. 11,26','days',(n.days||[1]).join(','),'text')}</div></div><div class="split"><div>${field('Comienza a partir de','start',n.start||E.today(),'date','required')}</div><div>${field('Hora del aviso · Colombia','time',n.time||'09:00','time','required')}</div></div>${field('Responsable (seguimiento personal)','owner',n.owner||'Ana')}<label class="checklabel"><input type="checkbox" name="paused" ${n.paused?'checked':''}> Pausar esta rutina</label><p class="small muted" id="frequency-help"></p>`;
@@ -348,7 +752,7 @@ function edit(type,id=null,prefill=null,memory=false){editType=type;editId=id;co
  $('edit-form').innerHTML=content;$('editor').showModal();if(type==='routine')frequencyFields();$('f-title').focus();
 }
 function frequencyFields(){const f=$('f-freq').value;$('weekday-field').style.display=f==='weekly'?'block':'none';$('quota-field').style.display=f==='flex'?'block':'none';$('days-field').style.display=['monthly','closing','quarterly','halfyear','yearly'].includes(f)?'block':'none';$('frequency-help').textContent=f==='flex'?'Marca una vez por día hasta cumplir tu meta semanal. La semana va de lunes a domingo. No se crean atrasos diarios.':f==='closing'?'La primera fecha límite será en el mes siguiente al inicio; ej. inicio en octubre y día 10 → vence el 10 de noviembre.':f==='monthly'?'Puedes elegir varios días separados por comas, por ejemplo 11,26.':'Cada ejecución se registra por separado. Al completar hoy no se completan las siguientes fechas.'}
-$('edit-form').onsubmit=e=>{e.preventDefault();const f=new FormData(e.target),type=editType,arr={task:state.tasks,goal:state.goals,routine:state.routines,note:state.notes}[type],old=arr.find(n=>n.id===editId),get=k=>String(f.get(k)||'').trim();try{const n={...old,id:editId||uid(),title:get('title'),area:get('area'),goal:get('goal'),body:get('body'),archived:false};if(!n.title)throw Error('Escribe un título.');if(type==='task'){Object.assign(n,{due:get('due'),time:get('time')||'09:00',status:get('status'),focus:f.has('focus')});if(n.focus&&state.tasks.filter(t=>t.id!==n.id&&active(t)&&t.focus&&t.status!=='done').length>=3)throw Error('Ya tienes tres prioridades. Quita una antes de añadir otra.');if(n.status==='done'&&old?.status!=='done')n.completedAt=new Date().toISOString();if(n.status!=='done')n.completedAt=null;}
+$('edit-form').onsubmit=e=>{e.preventDefault();const f=new FormData(e.target),type=editType,arr={task:state.tasks,goal:state.goals,routine:state.routines,note:state.notes}[type],old=arr.find(n=>n.id===editId),get=k=>String(f.get(k)||'').trim();try{const n={...old,id:editId||uid(),title:get('title'),area:get('area'),goal:get('goal'),body:get('body'),archived:false};if(!n.title)throw Error('Escribe un título.');if(type==='task'||type==='routine'){const rl=get('role');if(rl)n.role=rl;else delete n.role}if(type==='task'){Object.assign(n,{due:get('due'),time:get('time')||'09:00',status:get('status'),focus:f.has('focus')});if(n.focus&&state.tasks.filter(t=>t.id!==n.id&&active(t)&&t.focus&&t.status!=='done').length>=3)throw Error('Ya tienes tres prioridades. Quita una antes de añadir otra.');if(n.status==='done'&&old?.status!=='done')n.completedAt=new Date().toISOString();if(n.status!=='done')n.completedAt=null;}
  if(type==='goal'){Object.assign(n,{base:Number(get('base')),target:Number(get('target')),current:Number(get('current')),unit:get('unit'),due:get('due')});if(n.base===n.target||n.target<=0)throw Error('El objetivo debe ser mayor que cero y diferente del valor de partida.');}
  if(type==='routine'){const freq=get('freq');const weeklyTarget=Number(get('weeklyTarget'))||3;let days=get('days').split(',').map(s=>Number(s.trim()));if(['monthly','closing','quarterly','halfyear','yearly'].includes(freq)&&(!days.length||days.some(d=>!Number.isInteger(d)||d<1||d>31)||freq==='closing'&&days.length!==1))throw Error('Indica días del 1 al 31. Para un cierre mensual, elige un solo día.');if(!['monthly','closing','quarterly','halfyear','yearly'].includes(freq))days=[1];Object.assign(n,{freq,weeklyTarget,days:[...new Set(days)].sort((a,b)=>a-b),weekday:Number(get('weekday')),start:get('start'),time:get('time'),owner:get('owner'),paused:f.has('paused')});}
  if(type==='note'){let url=get('url');if(url&&!/^https?:\/\//i.test(url))throw Error('El enlace debe comenzar por https:// o http://.');Object.assign(n,{kind:old?.kind||'note',url,inbox:f.has('inbox')&&!f.has('pinned'),pinned:f.has('pinned')});}
@@ -360,6 +764,8 @@ function legacyView(){const name=navs.find(n=>n[0]===page)?.[2]||'';return headi
 function settingsView(){return heading('Tu espacio, <em>a tu manera.</em>','Sincronización, copias, datos anteriores y calendario del iPhone.')+`<div class="settings-grid">${panel('Calendario con alarmas',phonePanelBody())}
  ${panel('Sincronización y copias',syncPanelBody())}
  ${panel('Áreas y centros de costo',areasPanelBody())}
+ ${panel('Calendarios del iPhone',icloudPanelBody())}
+ ${panel('Tus roles',rolesPanelBody())}
  ${panel('Respaldo y recuperación',`<p>Además de la nube y de las copias diarias automáticas, puedes descargar un archivo propio. Guárdalo en un lugar seguro de vez en cuando.</p><div class="inline-flex">${btn('💾 Descargar respaldo',"exportBackup()",'primary')}${btn('Restaurar respaldo v2',"pickImport('v2')")}</div><p>Restaurar reemplaza esta versión después de mostrarte un resumen. Primero descarga tu respaldo actual.</p><div class="summary-row"><span>${state.tasks.length} tareas</span><span>${state.goals.length} metas</span><span>${state.routines.length} rutinas</span><span>${state.notes.length} notas</span></div>`)}
  ${panel('Traer tu información anterior',`<p>Importa un backup JSON de la herramienta anterior o incorpora la copia que tengas en este navegador. Se conserva el archivo completo anterior dentro del nuevo respaldo.</p><div class="inline-flex">${btn('Importar archivo anterior',"pickImport('legacy')")}${btn('Buscar datos del navegador',"importBrowser()")}${btn('Traer de la nube anterior',"importCloudLegacy()")}</div><div class="hint neutral">Se trasladan hábitos, tareas rápidas, proyectos y sus tareas, libros y capturas compatibles. Las frecuencias no compatibles quedan pausadas para revisión. Los demás datos siguen disponibles en la herramienta anterior y en el respaldo conservado.</div><a href="Mi-segundo-cerebro-anterior.html" target="_blank">Abrir herramienta anterior ↗</a>`)}
  ${panel('Una estructura más simple',`<p>Hoy reúne prioridades y vencimientos. Bandeja recibe las capturas. Metas conecta resultados y acciones. Rutinas reúne hábitos personales y procesos periódicos de empresas. Memoria conserva lo importante.</p><p>Áreas, Stacking y Revisión salen del menú principal. Las empresas funcionan como filtros. Entrenamiento, Lectura y Productividad conservan sus funciones anteriores.</p><p>Dirección visual inspirada en <a href="https://lab10.ai" target="_blank">LAB10</a>, <a href="https://30x.com" target="_blank">30X</a> y <a href="https://lovable.dev/templates/apps/project-management/agile-sprint-board-template" target="_blank">Agile Sprint Board</a>: fondo claro para trabajar, navegación oscura, lima para el foco y lavanda para detalles.</p>`)}
@@ -376,7 +782,7 @@ let lastToday=E.today();setInterval(()=>{if(E.today()!==lastToday){lastToday=E.t
 function legacySync(){const f=$('legacy-frame');if(!f||!f.contentWindow)return;const r=f.getBoundingClientRect();try{f.contentWindow.postMessage({sbView:{top:Math.max(0,Math.round(-r.top)),vh:window.innerHeight}},'*')}catch(e){}}
 window.addEventListener('message',e=>{const f=$('legacy-frame');if(!f||e.source!==f.contentWindow)return;const d=e.data||{};if(typeof d.sbH==='number')f.style.height=Math.max(300,Math.min(d.sbH,20000))+'px';legacySync()});
 ['scroll','resize'].forEach(ev=>window.addEventListener(ev,()=>requestAnimationFrame(legacySync),{passive:true}));
-draw();localBackupDaily();
+loadExtCache();draw();localBackupDaily();setInterval(()=>{if(!document.hidden)refreshExt(false)},5*60000);
 setSync(supa?'Conectando…':'Guardado en este navegador');
 if(supa){initAuth();
 setInterval(()=>{if(!document.hidden&&!dirty&&!syncing&&!document.querySelector('dialog[open]'))cloudPull()},90000);
